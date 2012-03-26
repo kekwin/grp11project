@@ -16,6 +16,8 @@ import java.util.Date;
 public class FileServer {
   private int height;
   private int width;
+  private int x;
+  private int y;
   
   private int port;
 
@@ -38,7 +40,7 @@ public class FileServer {
     		"<html>\n" +
     		"\t<body>\n" +
     		"\t\t<h2>Det virker!</h2>\n" +
-    		"\t\t<span>height: "+height+" & width: "+width+"</span>" +
+    		"\t\t<span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>" +
     		"\t</body>\n" +
     		"</html>";
   }
@@ -96,6 +98,12 @@ public class FileServer {
         break;
         case "width":
           width = Integer.parseInt(parameter[1]);
+        break;
+        case "x":
+          x = Integer.parseInt(parameter[1]);
+        break;
+        case "y":
+          y = Integer.parseInt(parameter[1]);
         break;
         }
       }
