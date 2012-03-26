@@ -104,7 +104,7 @@ public class Parser {
    *          A line from the kdv_node_unload.txt document.
    * @return A Point object containing the information from the line.
    */
-  public Point createPoint(String input) {
+  private static Point createPoint(String input) {
     Point tmp;
     String[] inputSplit = input.split(",");
     tmp = new Point(Integer.parseInt(inputSplit[2]),
@@ -121,7 +121,7 @@ public class Parser {
    *          A line from the kdv_unload.txt document.
    * @return A Road object containing the information from the line.
    */
-  public Road createRoad(String input) {
+  private static Road createRoad(String input) {
     Road tmp = null;
 
     String[] inputSplit = input.split(",");
