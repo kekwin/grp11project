@@ -20,4 +20,9 @@ public class Point {
   public double getY() {
     return y;
   }
+  
+  public String toString(){
+    return "Point id: " + ID + "x: " + x + "y: " + y;
+    
+  }
 }
