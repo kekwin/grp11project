@@ -18,9 +18,13 @@ import dk.itu.grp11.contrib.DynArray;
  */
 public class Parser {
 
-  File nodes;
-  File connections;
-
+  private File nodes;
+  private File connections;
+  private double minX = 1000000;
+  private double maxX = 0;
+  private double minY = 100000000.0;
+  private double maxY = 0;
+  
   // the constructor takes 2 arguments, the kdv.node_unload.txt file and the
   // kdv_unload.txt file.
   public Parser(File nodeFile, File connectionFile) {
@@ -36,7 +40,8 @@ public class Parser {
    *         kdv_node_unload.txt file.
    */
   public Point[] parsePoints() {
-    DynArray<Point> tmp = new DynArray<Point>();
+    Point[] tmp = new Point[675902]; // NON DYNAMIC
+    //DynArray<Point> tmp = new DynArray<Point>();  DYNARRAY VARIANT
     int index = 0;
     try {
       BufferedReader input = new BufferedReader(new FileReader(nodes));
@@ -49,7 +54,21 @@ public class Parser {
          */
         input.readLine();
         while ((line = input.readLine()) != null) {
-          tmp.add(createPoint(line));
+          Point p = createPoint(line);
+          if (p.getX()>maxX){
+            maxX=p.getX();
+          }
+          if (p.getX()<minX){
+            minX=p.getX();
+          }
+          if (p.getY()>maxY){
+            maxY=p.getY();
+          }
+          if (p.getY()<minY){
+            minY=p.getY();
+          }
+          tmp[index]=p; // NON DYNAMIC
+          // tmp.add(p); DYNARRAY VARIANT
           index++;
         }
       } finally {
@@ -58,8 +77,8 @@ public class Parser {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-
-    return tmp.toArray();
+    return tmp; // NON DYNAMIC
+    //return tmp.toArray();   DYNARRAY VARIANT
   }
 
   /**
@@ -70,7 +89,8 @@ public class Parser {
    *         kdv_unload.txt file.
    */
   public Road[] parseRoads() {
-    DynArray<Road> tmp = new DynArray<Road>();
+    Road[] tmp = new Road[850000]; // NON DYNAMIC
+    //DynArray<Road> tmp = new DynArray<Road>();  DYNARRAY VARIANT
     int index = 0;
     try {
       //HER ER IKKE NOGEN STRINGBUILDER
@@ -84,7 +104,8 @@ public class Parser {
          */
         input.readLine();
         while ((line = input.readLine()) != null) {
-          tmp.add(createRoad(line));
+          tmp[index]=createRoad(line); // NON DYNAMIC
+          // tmp.add(createRoad(line)); DYNARRAY VARIANT
           index++;
         }
       } finally {
@@ -93,7 +114,8 @@ public class Parser {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-    return tmp.toArray();
+    return tmp; // NON DYNAMIC
+    //return tmp.toArray();   DYNARRAY VARIANT
   }
 
   // Creates a point, to be put in the array and parsed.
@@ -133,6 +155,24 @@ public class Parser {
           Integer.parseInt(inputSplit[5]));
 
     }
+    return tmp;
+  }
+  /**
+   * Returns an array containing 4 values, representing the smallest and largest x and y coordinates of all Points.
+   * [0]=minX
+   * [1]=maxX
+   * [2]=minY
+   * [3]=maxY
+   * 
+   * CAN ONLY BE CALLED IF THE PARSEPOINTS() FUNCTION HAS ALREADY BEEN CALLED!
+   * @return A double array of size 4.
+   */
+  public double[] getMinMaxValues(){
+    double[] tmp = new double[4];
+    tmp[0]=minX;
+    tmp[1]=maxX;
+    tmp[2]=minY;
+    tmp[3]=maxY;
     return tmp;
   }
 
