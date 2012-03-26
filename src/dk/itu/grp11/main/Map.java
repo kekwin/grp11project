@@ -2,6 +2,12 @@ package dk.itu.grp11.main;
 
 import java.util.HashMap;
 
+/**
+ * Represents a map with roads
+ * 
+ * @author Group 11
+ *
+ */
 public class Map {
 	private HashMap<Integer, Point> pointMap = new HashMap<Integer, Point>();
 	private Road[] roads;
@@ -27,6 +33,12 @@ public class Map {
 		System.out.println(map.getPart(200, 210, 1000, 750));
 	}
 	
+	/**
+	* Loads a map
+	* 
+	* @param points Top left x-coordinate of viewbox
+	* @param roads Top left y-coordinate of viewbox
+	*/
 	public Map(Point[] points, Road[] roads) {
 		this.roads = roads;
 		
@@ -44,7 +56,7 @@ public class Map {
 	* @param w Width of viewbox
 	* @param h Height of viewbox
 	* 
-	* @return String of SVG elements in the specified viewbox
+	* @return String of SVG elements in the specified viewbox (with linebreaks)
 	*/
 	public String getPart(double x, double y, double w, double h) {
 		String output = "";
@@ -55,9 +67,8 @@ public class Map {
 			double y2 = pointMap.get(roads[i].getP2()).getY();
 			
 			// Checks to see if the road is in the viewbox
-			// TODO Remove name of road before going commercial :)
 			if((x1 <= x+w && x1 >= x) && (y1 <= y+h && y1 >= y) || (x2 <= x+w && x2 >= x) && (y2 <= y+h && y2 >= y))
-				output += roads[i].getName()+": <line id=\"line\" x1=\""+x1+"\" y1=\""+y1+"\" x2=\""+x2+"\" y2=\""+y2+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"/>\n";
+				output += "<line id=\"line\" x1=\""+x1+"\" y1=\""+y1+"\" x2=\""+x2+"\" y2=\""+y2+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"/>\n";
 		}
 		
 		return output;
