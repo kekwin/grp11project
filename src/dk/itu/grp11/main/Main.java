@@ -12,6 +12,7 @@ public class Main {
     Road[] roads = p.parseRoads();
     Map map = new Map(points, roads);
     double[] d = p.getMinMaxValues();
+    //getMinMaxValues i funktion
     System.out.println("minX=" + d[0]);
     System.out.println("maxX=" + d[1]);
     System.out.println("minY=" + d[2]);
