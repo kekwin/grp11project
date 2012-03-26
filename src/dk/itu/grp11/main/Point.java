@@ -1,5 +1,12 @@
 package dk.itu.grp11.main;
 
+/**
+ * Objects of the class Point are single "nodes" from the kdv_node_unload.txt.
+ * @param ID The ID of the point, used to reference points from within roads.
+ * @param x The x-coordinate of the Point.
+ * @param y The y-coordinate of the Point.
+ *
+ */
 public class Point {
 
   private int ID;
