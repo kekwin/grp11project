@@ -21,12 +21,14 @@ public class PointTest {
   //Testing Point with negative ID and positive values
   @Test
   public void test1() {
+    @SuppressWarnings("unused")
     dk.itu.grp11.main.Point point = new Point(-42, 313, 1337);
   }
   
   //Testing Point with negative values
   @Test(expected=NegativeValueException.class)
   public void test2() {
+    @SuppressWarnings("unused")
     dk.itu.grp11.main.Point point = new Point(-42, -313, -1337);
   }
 }
