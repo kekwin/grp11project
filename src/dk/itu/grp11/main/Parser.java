@@ -72,6 +72,7 @@ public class Parser {
     Road[] tmp = new Road[812301]; // LAV RIGTIGT TAL KEWIN
     int index = 0;
     try {
+      //HER ER IKKE NOGEN STRINGBUILDER
       BufferedReader input = new BufferedReader(new FileReader(connections));
       try {
         String line = null;
