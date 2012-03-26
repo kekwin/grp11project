@@ -1,6 +1,7 @@
 package dk.itu.grp11.main;
 
 import java.io.*;
+import dk.itu.grp11.contrib.DynArray;
 
 /**
  * The Parser class is used to parse the information from the two documents
@@ -35,7 +36,7 @@ public class Parser {
    *         kdv_node_unload.txt file.
    */
   public Point[] parsePoints() {
-    Point[] tmp = new Point[675902];
+    DynArray<Point> tmp = new DynArray<Point>();
     int index = 0;
     try {
       BufferedReader input = new BufferedReader(new FileReader(nodes));
@@ -48,7 +49,7 @@ public class Parser {
          */
         input.readLine();
         while ((line = input.readLine()) != null) {
-          tmp[index] = createPoint(line);
+          tmp.add(createPoint(line));
           index++;
         }
       } finally {
@@ -58,7 +59,7 @@ public class Parser {
       ex.printStackTrace();
     }
 
-    return tmp;
+    return tmp.toArray();
   }
 
   /**
@@ -69,7 +70,7 @@ public class Parser {
    *         kdv_unload.txt file.
    */
   public Road[] parseRoads() {
-    Road[] tmp = new Road[812301]; // LAV RIGTIGT TAL KEWIN
+    DynArray<Road> tmp = new DynArray<Road>();
     int index = 0;
     try {
       //HER ER IKKE NOGEN STRINGBUILDER
@@ -83,7 +84,7 @@ public class Parser {
          */
         input.readLine();
         while ((line = input.readLine()) != null) {
-          tmp[index] = createRoad(line);
+          tmp.add(createRoad(line));
           index++;
         }
       } finally {
@@ -92,7 +93,7 @@ public class Parser {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-    return tmp;
+    return tmp.toArray();
   }
 
   // Creates a point, to be put in the array and parsed.
