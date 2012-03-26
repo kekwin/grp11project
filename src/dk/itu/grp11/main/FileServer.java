@@ -20,28 +20,26 @@ public class FileServer {
   private int y;
   
   private int port;
+  private Map map;
 
   private Socket con;
   private BufferedReader in;
   private OutputStream out;
   private PrintStream pout;
 
-  public FileServer(int port) {
+  public FileServer(int port, Map map) {
     this.port = port;
-  }
-  
-  public static void main(String[] args) {
-    FileServer fs = new FileServer(80);
-    fs.run();
+    this.map = map;
   }
   
   private String getOutput() {
     return 
     		"<html>\n" +
-    		"\t<body>\n" +
-    		"\t\t<h2>Det virker!</h2>\n" +
-    		"\t\t<span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>" +
-    		"\t</body>\n" +
+    		"  <body>\n" +
+    		"    <h2>Det virker!</h2>\n" +
+    		"    <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>\n" +
+    		"    <div>"+map.getPart(x, y, width, height)+"</div>\n" + 
+    		"  </body>\n" +
     		"</html>";
   }
 

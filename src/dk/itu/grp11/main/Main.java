@@ -11,7 +11,7 @@ public class Main {
     Point[] points = p.parsePoints();
     Road[] roads = p.parseRoads();
     Map map = new Map(points, roads);
-    System.out.println("Getting part = [0, 0, 10000000, 1000000]");
-    System.out.println(map.getPart(0, 0, 10000000, 10000000));
+    FileServer fs = new FileServer(80, map);
+    fs.run();
   }
 }
