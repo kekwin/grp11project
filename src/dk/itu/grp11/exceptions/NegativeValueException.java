@@ -1,7 +1,9 @@
 package dk.itu.grp11.exceptions;
 
 public class NegativeValueException extends RuntimeException {
-  public NegativeValueException() {
+	private static final long serialVersionUID = -3917374993145240355L;
+
+public NegativeValueException() {
     super();
   }
   
