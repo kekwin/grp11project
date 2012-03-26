@@ -39,7 +39,7 @@ public class Point {
   }
 
   public String toString() {
-    return "Point id: " + ID + "x: " + x + "y: " + y;
+    return "Point id: " + ID + " x:" + x + " y:" + y;
 
   }
 }
