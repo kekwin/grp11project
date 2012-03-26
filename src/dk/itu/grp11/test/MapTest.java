@@ -22,7 +22,7 @@ public class MapTest {
     Road[] roads = new Road[10];
     roads[0] = new Road(1, 2, "Niceness street", 1);
     
-    Map map = new Map(points, roads);
+    Map map = new Map(points, roads, new double[] {}); //Empty double array
     
     assertEquals(map.getPart(320, 330, 150, 100), "<line id=\"line\" x1=\""+300.0+"\" y1=\""+356.0+"\" x2=\""+390.0+"\" y2=\""+377.0+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n");
   }
@@ -41,7 +41,7 @@ public class MapTest {
     roads[1] = new Road(2, 3, "Long street", 1);
     roads[2] = new Road(3, 4, "Fail street", 1);
     
-    Map map = new Map(points, roads);
+    Map map = new Map(points, roads, new double[] {});
     
     assertEquals(map.getPart(320, 330, 150, 100), "<line id=\"line\" x1=\""+300.0+"\" y1=\""+356.0+"\" x2=\""+390.0+"\" y2=\""+377.0+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n"+
                                                   "<line id=\"line\" x1=\""+390.0+"\" y1=\""+377.0+"\" x2=\""+800.0+"\" y2=\""+700.0+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n");
@@ -61,7 +61,7 @@ public class MapTest {
     roads[1] = new Road(2, 3, "Long street", 1);
     roads[2] = new Road(3, 4, "Fail street", 1);
     
-    Map map = new Map(points, roads);
+    Map map = new Map(points, roads, new double[] {});
     
     assertFalse(map.getPart(320, 331, 150, 100).equals("<line id=\"line\" x1=\""+300.0+"\" y1=\""+356.0+"\" x2=\""+390.0+"\" y2=\""+377.0+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n"+
                                                   "<line id=\"line\" x1=\""+390.0+"\" y1=\""+377.0+"\" x2=\""+800.0+"\" y2=\""+700.0+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n"+
@@ -82,7 +82,7 @@ public class MapTest {
     roads[1] = new Road(2, 3, "Long street", 1);
     roads[2] = new Road(3, 4, "Fail street", 1);
     
-    Map map = new Map(points, roads);
+    Map map = new Map(points, roads, new double[] {});
     
     assertEquals(map.getPart(320, 331, 150, 100), "<line id=\"line\" x1=\""+300.0+"\" y1=\""+356.0+"\" x2=\""+390.0+"\" y2=\""+377.0+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n"+
                                                   "<line id=\"line\" x1=\""+390.0+"\" y1=\""+377.0+"\" x2=\""+800.0+"\" y2=\""+700.0+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n"+

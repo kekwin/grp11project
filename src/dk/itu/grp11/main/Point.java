@@ -11,6 +11,8 @@ import dk.itu.grp11.exceptions.NegativeValueException;
  *          The x-coordinate of the Point.
  * @param y
  *          The y-coordinate of the Point.
+ *          
+ * @throws NegativeValueException if x or y value is negative
  * 
  */
 public class Point {

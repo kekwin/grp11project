@@ -10,7 +10,7 @@ public class Main {
     Parser p = new Parser(node, road);
     Point[] points = p.parsePoints();
     Road[] roads = p.parseRoads();
-    Map map = new Map(points, roads);
+    Map map = new Map(points, roads, p.getMinMaxValues());
     double[] d = p.getMinMaxValues();
     //getMinMaxValues i funktion
     System.out.println("minX=" + d[0]);

@@ -11,6 +11,7 @@ import java.util.HashMap;
 public class Map {
   private HashMap<Integer, Point> pointMap = new HashMap<Integer, Point>();
   private Road[] roads;
+  private double[] minMaxValues;
 
 	public static void main(String[] args) {
 		Point[] points = new Point[10];
@@ -24,7 +25,7 @@ public class Map {
 		roads[1] = new Road(2, 3, "Long street", 1);
 		roads[2] = new Road(3, 4, "Fail street", 1);
 		
-		Map map = new Map(points, roads);
+		Map map = new Map(points, roads, new double[] {}); //Empty double array
 		
 		System.out.println("Getting part = [320, 330, 150, 100]");
 		System.out.println(map.getPart(320, 330, 150, 100));
@@ -39,7 +40,7 @@ public class Map {
 	* @param points Top left x-coordinate of viewbox
 	* @param roads Top left y-coordinate of viewbox
 	*/
-	public Map(Point[] points, Road[] roads) {
+	public Map(Point[] points, Road[] roads, double[] minMaxValues) {
 		this.roads = roads;
 		
 		//Creating a map for the points

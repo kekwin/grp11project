@@ -2,6 +2,7 @@ package dk.itu.grp11.main;
 
 import java.io.*;
 import dk.itu.grp11.contrib.DynArray;
+import dk.itu.grp11.exceptions.DataNotInitialized;
 
 /**
  * The Parser class is used to parse the information from the two documents
@@ -18,12 +19,17 @@ import dk.itu.grp11.contrib.DynArray;
  */
 public class Parser {
 
+  private boolean pointsInit = false;
   private File nodes;
   private File connections;
   private double minX = 1000000;
   private double maxX = 0;
   private double minY = 100000000.0;
   private double maxY = 0;
+  public final static int MIN_X = 0;
+  public final static int MAX_X = 1;
+  public final static int MIN_Y = 2;
+  public final static int MAX_Y = 3;
   
   // the constructor takes 2 arguments, the kdv.node_unload.txt file and the
   // kdv_unload.txt file.
@@ -167,7 +173,8 @@ public class Parser {
    * CAN ONLY BE CALLED IF THE PARSEPOINTS() FUNCTION HAS ALREADY BEEN CALLED!
    * @return A double array of size 4.
    */
-  public double[] getMinMaxValues(){
+  public double[] getMinMaxValues() {
+    if(!pointsInit) throw new DataNotInitialized(); //TODO Checks if data has been initializes (parsed)
     double[] tmp = new double[4];
     tmp[0]=minX;
     tmp[1]=maxX;
