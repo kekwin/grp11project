@@ -12,12 +12,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
+import dk.itu.grp11.enums.MinMax;
+
 
 public class FileServer {
   private int height;
   private int width;
   private int x;
   private int y;
+  
+  private int xStart;
+  private int yStart;
+  private int xDiff;
+  private int yDiff;
   
   private int port;
   private Map map;
@@ -38,7 +45,11 @@ public class FileServer {
     		"  <body>\n" +
     		"    <h2>Det virker!</h2>\n" +
     		"    <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>\n" +
-    		"    <div>"+map.getPart(x, y, width, height)+"</div>\n" + 
+    		"    <div>\n" +
+    		"      <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"1080\" width=\"1920\" viewbox=\""+xStart+" "+yStart+" "+xDiff+" "+yDiff+"\">\n" + 
+    		map.getPart(x, y, width, height)+
+    		"      </svg>\n" +
+    		"    </div>\n" + 
     		"  </body>\n" +
     		"</html>";
   }
@@ -106,6 +117,14 @@ public class FileServer {
         }
       }
     }
+    xStart = (int)Math.floor(map.getMinMax(MinMax.MINX.id()));
+    yStart = (int)Math.floor(map.getMinMax(MinMax.MINY.id()));
+    xDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXX.id())-map.getMinMax(MinMax.MINX.id()));
+    yDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXY.id())-map.getMinMax(MinMax.MINY.id()));
+    if (height == 0) height = yDiff;
+    if (width == 0) width = xDiff;
+    if (x == 0) x = xStart;
+    if (y == 0) y = yStart;
   }
 
   private void processRequest() throws IOException {

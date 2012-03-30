@@ -1,4 +1,4 @@
-package dk.itu.grp11.main;
+package dk.itu.grp11.enums;
 
 import java.awt.Color;
 /**

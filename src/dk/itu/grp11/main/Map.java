@@ -47,6 +47,12 @@ public class Map {
 		for(int i = 0; i < points.length && points[i] != null; i++) {
 			pointMap.put(points[i].getID(), points[i]);
 		}
+		
+		this.minMaxValues = minMaxValues;
+	}
+	
+	public double getMinMax(int index) {
+	  return minMaxValues[index];
 	}
 	
 	/**
@@ -69,7 +75,7 @@ public class Map {
 			
 			// Checks to see if the road is in the viewbox
 			if((x1 <= x+w && x1 >= x) && (y1 <= y+h && y1 >= y) || (x2 <= x+w && x2 >= x) && (y2 <= y+h && y2 >= y))
-				output += "<line id=\"line\" x1=\""+x1+"\" y1=\""+y1+"\" x2=\""+x2+"\" y2=\""+y2+"\" style=\"stroke:rgb(0,0,0); stroke-width:2;\"></line>\n";
+				output += "        <line id=\"line\" x1=\""+x1+"\" y1=\""+y1+"\" x2=\""+x2+"\" y2=\""+y2+"\" style=\"stroke:rgb(0,0,0); stroke-width:100;\"></line>\n";
 		}
 		
 		return output;
