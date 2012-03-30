@@ -4,7 +4,7 @@ import java.io.*;
 
 public class Main {
   public static void main(String[] args) {
-    System.out.println("Program compiles as well :D :D :D :D");
+    System.out.println("Program started");
     File node = new File("kdv_node_unload.txt");
     File road = new File("kdv_unload.txt");
     Parser p = new Parser(node, road);

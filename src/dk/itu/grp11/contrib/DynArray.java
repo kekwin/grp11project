@@ -1,15 +1,17 @@
 package dk.itu.grp11.contrib;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Iterator;
 
 public class DynArray<T> implements Iterable<T>  {
-  @SuppressWarnings("unchecked")
-  private T[] data = (T[])new Object[1];
+  private T[] data;
   private int size = 0;
-  public DynArray()
+  private Class<T[]> TClass;
+  public DynArray(Class<T[]> GenericClass)
   {
-    
+    this.TClass = GenericClass;
+    data = TClass.cast(Array.newInstance(TClass.getComponentType(), 1));
   }
   public void add(T input)
   {
@@ -18,8 +20,7 @@ public class DynArray<T> implements Iterable<T>  {
   }
   private void rebuild(int newsize)
   {
-    @SuppressWarnings("unchecked")
-    T[] tmp = (T[])new Object[newsize];
+    T[] tmp = TClass.cast(Array.newInstance(TClass.getComponentType(), newsize));
     for (int i = 0; i < size; i++) tmp[i] = data[i];
     data = tmp;
     tmp = null;
@@ -50,7 +51,7 @@ public class DynArray<T> implements Iterable<T>  {
   }
   public T[] toArray()
   {
-    return Arrays.copyOfRange(data, 0, size);
+    return Arrays.copyOf(data, size);
   }
   public Iterator<T> iterator(){ //return an iterator over the items
       return new DynArrayIterator();

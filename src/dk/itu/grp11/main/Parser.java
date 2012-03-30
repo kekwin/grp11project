@@ -2,6 +2,7 @@ package dk.itu.grp11.main;
 
 import java.io.*;
 import dk.itu.grp11.contrib.DynArray;
+import dk.itu.grp11.enums.MinMax;
 import dk.itu.grp11.exceptions.DataNotInitialized;
 
 /**
@@ -18,7 +19,6 @@ import dk.itu.grp11.exceptions.DataNotInitialized;
  * 
  */
 public class Parser {
-
   private boolean pointsInit = false;
   private File nodes;
   private File connections;
@@ -26,10 +26,6 @@ public class Parser {
   private double maxX = 0;
   private double minY = 100000000.0;
   private double maxY = 0;
-  public final static int MIN_X = 0;
-  public final static int MAX_X = 1;
-  public final static int MIN_Y = 2;
-  public final static int MAX_Y = 3;
   
   // the constructor takes 2 arguments, the kdv.node_unload.txt file and the
   // kdv_unload.txt file.
@@ -46,9 +42,7 @@ public class Parser {
    *         kdv_node_unload.txt file.
    */
   public Point[] parsePoints() {
-    Point[] tmp = new Point[675902]; // NON DYNAMIC
-    //DynArray<Point> tmp = new DynArray<Point>();  DYNARRAY VARIANT
-    int index = 0;
+    DynArray<Point> tmp = new DynArray<Point>(Point[].class);
     try {
       BufferedReader input = new BufferedReader(new FileReader(nodes));
       try {
@@ -73,9 +67,7 @@ public class Parser {
           if (p.getY()<minY){
             minY=p.getY();
           }
-          tmp[index]=p; // NON DYNAMIC
-          // tmp.add(p); DYNARRAY VARIANT
-          index++;
+          tmp.add(p);
         }
       } finally {
         input.close();
@@ -83,8 +75,9 @@ public class Parser {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-    return tmp; // NON DYNAMIC
-    //return tmp.toArray();   DYNARRAY VARIANT
+    pointsInit = true;
+    Object[] tmp2 = tmp.toArray();
+    return (Point[])tmp2;
   }
 
   /**
@@ -95,11 +88,8 @@ public class Parser {
    *         kdv_unload.txt file.
    */
   public Road[] parseRoads() {
-    Road[] tmp = new Road[850000]; // NON DYNAMIC
-    //DynArray<Road> tmp = new DynArray<Road>();  DYNARRAY VARIANT
-    int index = 0;
+    DynArray<Road> tmp = new DynArray<Road>(Road[].class);
     try {
-      //HER ER IKKE NOGEN STRINGBUILDER
       BufferedReader input = new BufferedReader(new FileReader(connections));
       try {
         String line = null;
@@ -110,9 +100,7 @@ public class Parser {
          */
         input.readLine();
         while ((line = input.readLine()) != null) {
-          tmp[index]=createRoad(line); // NON DYNAMIC
-          // tmp.add(createRoad(line)); DYNARRAY VARIANT
-          index++;
+          tmp.add(createRoad(line));
         }
       } finally {
         input.close();
@@ -120,8 +108,7 @@ public class Parser {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-    return tmp; // NON DYNAMIC
-    //return tmp.toArray();   DYNARRAY VARIANT
+    return tmp.toArray();
   }
 
   // Creates a point, to be put in the array and parsed.
@@ -176,10 +163,10 @@ public class Parser {
   public double[] getMinMaxValues() {
     if(!pointsInit) throw new DataNotInitialized(); //TODO Checks if data has been initializes (parsed)
     double[] tmp = new double[4];
-    tmp[0]=minX;
-    tmp[1]=maxX;
-    tmp[2]=minY;
-    tmp[3]=maxY;
+    tmp[MinMax.MINX.id()]=minX;
+    tmp[MinMax.MAXX.id()]=maxX;
+    tmp[MinMax.MINY.id()]=minY;
+    tmp[MinMax.MAXY.id()]=maxY;
     return tmp;
   }
 

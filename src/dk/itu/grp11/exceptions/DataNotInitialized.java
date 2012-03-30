@@ -1,8 +1,10 @@
 package dk.itu.grp11.exceptions;
 
-//TODO Should not extends RuntimeException but a checkedtype
+//TODO Should probably not extend RuntimeException but a checked type
 public class DataNotInitialized extends RuntimeException {
-  public DataNotInitialized() {
+	private static final long serialVersionUID = -7696051533490392426L;
+
+public DataNotInitialized() {
     super();
   }
   
