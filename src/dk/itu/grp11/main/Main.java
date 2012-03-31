@@ -25,6 +25,8 @@ public class Main {
     System.out.println("minY=" + d[2]);
     System.out.println("maxY=" + d[3]);
     FileServer fs = new FileServer(80, map);
-    fs.run();    
+    fs.run(); 
+    System.out.println("");
+    //TEST
   }
 }
