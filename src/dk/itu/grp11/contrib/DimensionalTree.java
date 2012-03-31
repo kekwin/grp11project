@@ -65,7 +65,7 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
     private Value[] query2D(Node h, Interval2D<Key, Key2> rect) {
         
         if (h == null) return null;
-        if (rect.getIntervalX().getD3() != rect.getIntervalY().getD3()) throw new IllegalIntervalException();
+        if (rect.getIntervalX().getD3() != rect.getIntervalY().getD3()) throw new IllegalArgumentException();
         Key d1min = rect.getIntervalX().getLow();
         Key d2min = rect.getIntervalY().getLow();
         Key d1max = rect.getIntervalX().getHigh();
