@@ -44,4 +44,8 @@ public enum RoadType {
     this.stroke = stroke;
     this.color = color;
   }
+  
+  public int id() {
+    return id;
+  }
 }
