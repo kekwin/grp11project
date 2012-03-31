@@ -110,7 +110,7 @@ public class Parser {
             Double xE = points.get(Integer.parseInt(split[1])).getX();
             Double yE = points.get(Integer.parseInt(split[1])).getY();
             Integer type = Integer.parseInt(split[3]);
-            Road value = new Road(Integer.parseInt(split[0]), Integer.parseInt(split[1]), split[2], Integer.parseInt(split[3]));
+            Road value = new Road(Integer.parseInt(split[0]), Integer.parseInt(split[1]), split[2], RoadType.getById(type));
             tmp.insert(xS, yS, type, value);
             tmp.insert(xE, yE, type, value);
           }
