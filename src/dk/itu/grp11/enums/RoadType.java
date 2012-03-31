@@ -1,6 +1,8 @@
 package dk.itu.grp11.enums;
 
 import java.awt.Color;
+
+import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
 /**
  * Describes 
  *
@@ -47,5 +49,17 @@ public enum RoadType {
   
   public int id() {
     return id;
+  }
+  
+  public static RoadType getTypeById(int id) {
+	  for(RoadType rt : RoadType.values()) {
+		  if(rt.id() == id) return rt;
+	  }
+	  throw new RoadTypeDoesNotExistException(); //If no road with such id exist
+  }
+  
+  @Override
+  public String toString() {
+    return "ID:" + id + " STROKE:" + stroke + " COLOR:" + color;
   }
 }

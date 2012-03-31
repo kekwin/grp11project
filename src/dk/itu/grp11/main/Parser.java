@@ -7,7 +7,7 @@ import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.contrib.DynArray;
 import dk.itu.grp11.enums.MinMax;
 import dk.itu.grp11.enums.RoadType;
-import dk.itu.grp11.exceptions.DataNotInitialized;
+import dk.itu.grp11.exceptions.DataNotInitializedException;
 
 /**
  * The Parser class is used to parse the information from the two documents
@@ -176,7 +176,7 @@ public class Parser {
    * @return A double array of size 4.
    */
   public double[] getMinMaxValues() {
-    if(!pointsInit) throw new DataNotInitialized(); //TODO Checks if data has been initializes (parsed)
+    if(!pointsInit) throw new DataNotInitializedException(); //TODO Checks if data has been initializes (parsed)
     double[] tmp = new double[4];
     tmp[MinMax.MINX.id()]=minX;
     tmp[MinMax.MAXX.id()]=maxX;
