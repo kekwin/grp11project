@@ -5,6 +5,7 @@ import java.util.HashMap;
 import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.contrib.Interval;
 import dk.itu.grp11.contrib.Interval2D;
+import dk.itu.grp11.enums.MinMax;
 
 /**
  * Represents a map with roads
@@ -69,6 +70,12 @@ public class Map {
 	public String getPart(double x, double y, double w, double h) {
 		String output = "";
 		
+		//Some test calculations of zoom level
+		zoomLevel(w, h); //All zoomed out
+		zoomLevel(45000, 35000);
+		zoomLevel(4500, 3500);
+		zoomLevel(1, 1);
+		
 		Interval<Double, Integer> i1 = new Interval<Double, Integer>(x, y, 1);
 		Interval<Double, Integer> i2 = new Interval<Double, Integer>(x+w, y+h, 1);
 		Interval2D<Double, Integer> i2D = new Interval2D<Double, Integer>(i1, i2);
@@ -89,5 +96,11 @@ public class Map {
 		
 		
 		return output;
+	}
+	
+	//Just calculating the percentage between viewbox-width and the width of the total map
+	//Probably not the best solution, as numbers gets very very small as you zoom in
+	private void zoomLevel(double w, double h) {
+	  System.out.println(w/(Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))*100);
 	}
 }
