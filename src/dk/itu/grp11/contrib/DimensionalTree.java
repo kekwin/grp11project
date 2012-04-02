@@ -10,7 +10,7 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
   private class Node {
       Key d1, d2;                                               // First two comparable dimensions (Values 0/1)
       Key2 d3;                                                  // Third comparable dimension (Values 0/1/2)
-      Node D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12;   // Tvelve dimensions
+      Node D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12;   // Twelve dimensions
       Value value;                                              // associated data
 
       Node(Key x, Key y, Key2 type, Value value) {

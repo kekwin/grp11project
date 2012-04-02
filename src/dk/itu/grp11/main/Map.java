@@ -69,17 +69,22 @@ public class Map {
 	public String getPart(double x, double y, double w, double h) {
 		String output = "";
 		
-		Interval<Double, Integer> i1 = new Interval<Double, Integer>(x, y, 1);
-		Interval<Double, Integer> i2 = new Interval<Double, Integer>(x+w, y+h, 1);
-		Interval2D<Double, Integer> i2D = new Interval2D<Double, Integer>(i1, i2);
+		int[] roadTypes = {1, 2};
 		
-		long startTime = System.nanoTime(); 
-		Road[] roadsFound = roads.query2D(i2D);
-		System.out.println("Found " + roadsFound.length + " roads in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
-		
-		for (Road roadFound : roadsFound) {
-		  output += "        <line id=\"line\" x1=\""+points.get(roadFound.getP1()).getX()+"\" y1=\""+((h-points.get(roadFound.getP1()).getY())+y)+"\" x2=\""+points.get(roadFound.getP2()).getX()+"\" y2=\""+((h-points.get(roadFound.getP2()).getY())+y)+"\" style=\"stroke:rgb(0,0,0); stroke-width:100;\"></line>\n";
+		for (int roadType : roadTypes) {
+  		Interval<Double, Integer> i1 = new Interval<Double, Integer>(x, y, roadType);
+  		Interval<Double, Integer> i2 = new Interval<Double, Integer>(x+w, y+h, roadType);
+  		Interval2D<Double, Integer> i2D = new Interval2D<Double, Integer>(i1, i2);
+  		
+  		long startTime = System.nanoTime(); 
+  		Road[] roadsFound = roads.query2D(i2D);
+  		System.out.println("Found " + roadsFound.length + " roads in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
+  		for (Road roadFound : roadsFound) {
+        output += "        <line id=\"line\" x1=\""+points.get(roadFound.getP1()).getX()+"\" y1=\""+((h-points.get(roadFound.getP1()).getY())+y)+"\" x2=\""+points.get(roadFound.getP2()).getX()+"\" y2=\""+((h-points.get(roadFound.getP2()).getY())+y)+"\" style=\"stroke:rgb(0,0,0); stroke-width:100;\"></line>\n";
+      }
 		}
+		
+		
 		
 		
 		return output;
