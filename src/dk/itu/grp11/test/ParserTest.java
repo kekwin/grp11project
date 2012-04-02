@@ -21,10 +21,6 @@ public class ParserTest {
     assertEquals(points[0].getX(), 595527.51786, 0);
     assertEquals(points[0].getY(), 6402050.98297, 0);
     
-    assertEquals(points[2341].getID(), 2342); //Random point
-    assertEquals(points[points.length-1].getX(), 585316.51472, 0);
-    assertEquals(points[points.length-1].getY(), 6389822.01337, 0); //TODO hej
-    
     assertEquals(points[points.length-1].getID(), 675902); //The last point
     assertEquals(points[points.length-1].getX(), 692067.66450, 0);
     assertEquals(points[points.length-1].getY(), 6049914.43018, 0);

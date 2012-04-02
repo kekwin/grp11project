@@ -37,12 +37,12 @@ public enum RoadType {
   ANDEN_VEJTUNNEL(45, 20, new Color(0,0,0)),
   MINDRE_VEJTUNNEL(46, 20, new Color(0,0,0)),
   STITUNNEL(48, 20, new Color(0,0,0)),
+  FAERGEFORBINDELSE(80, 20, new Color(0,0,255)),
+  STEDNAVN(99, 20, new Color(0,0,0)),
   
   //TODO Unknown road types in kdv_unload.txt. What to do with them?
-  UKENDT1(99, 20, new Color(0,0,0)),
-  UKENDT2(95, 20, new Color(0,0,0)),
-  UKENDT3(80, 20, new Color(0,0,0)),
-  UKENDT4(0, 20, new Color(0,0,0));
+  UKENDT1(95, 20, new Color(0,0,0)),
+  UKENDT2(0, 20, new Color(0,0,0));
   
   int id;
   int stroke;
