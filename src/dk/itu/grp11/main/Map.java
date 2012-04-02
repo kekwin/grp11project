@@ -2,6 +2,11 @@ package dk.itu.grp11.main;
 
 import java.util.HashMap;
 
+import dk.itu.grp11.contrib.DimensionalTree;
+import dk.itu.grp11.contrib.Interval;
+import dk.itu.grp11.contrib.Interval2D;
+import dk.itu.grp11.enums.MinMax;
+
 /**
  * Represents a map with roads
  * 
@@ -9,11 +14,13 @@ import java.util.HashMap;
  *
  */
 public class Map {
-  private HashMap<Integer, Point> pointMap = new HashMap<Integer, Point>();
-  private Road[] roads;
+  private DimensionalTree<Double, Integer, Road> roads;
+  private HashMap<Integer, Point> points;
   private double[] minMaxValues;
 
-	public static void main(String[] args) {
+  
+  //TODO Needs major rewrite!
+/*	public static void main(String[] args) {
 		Point[] points = new Point[10];
 		points[0] = new Point(1, 300, 356);
 		points[1] = new Point(2, 390, 377);
@@ -32,7 +39,7 @@ public class Map {
 		
 		System.out.println("Getting part = [200, 210, 1000, 750]");
 		System.out.println(map.getPart(200, 210, 1000, 750));
-	}
+	}*/
 	
 	/**
 	* Loads a map
@@ -40,14 +47,9 @@ public class Map {
 	* @param points Top left x-coordinate of viewbox
 	* @param roads Top left y-coordinate of viewbox
 	*/
-	public Map(Point[] points, Road[] roads, double[] minMaxValues) {
+	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, Integer, Road> roads, double[] minMaxValues) {
+	  this.points = points;
 		this.roads = roads;
-		
-		//Creating a map for the points
-		for(int i = 0; i < points.length && points[i] != null; i++) {
-			pointMap.put(points[i].getID(), points[i]);
-		}
-		
 		this.minMaxValues = minMaxValues;
 	}
 	
@@ -67,17 +69,38 @@ public class Map {
 	*/
 	public String getPart(double x, double y, double w, double h) {
 		String output = "";
-		for(int i = 0; i < roads.length && roads[i] != null; i++) {
-			double x1 = pointMap.get(roads[i].getP1()).getX();
-			double y1 = pointMap.get(roads[i].getP1()).getY();
-			double x2 = pointMap.get(roads[i].getP2()).getX();
-			double y2 = pointMap.get(roads[i].getP2()).getY();
-			
-			// Checks to see if the road is in the viewbox
-			if((x1 <= x+w && x1 >= x) && (y1 <= y+h && y1 >= y) || (x2 <= x+w && x2 >= x) && (y2 <= y+h && y2 >= y))
-				output += "        <line id=\"line\" x1=\""+x1+"\" y1=\""+y1+"\" x2=\""+x2+"\" y2=\""+y2+"\" style=\"stroke:rgb(0,0,0); stroke-width:100;\"></line>\n";
+		
+		//Some test calculations of zoom level
+		zoomLevel(w, h); //All zoomed out
+		zoomLevel(45000, 35000);
+		zoomLevel(4500, 3500);
+		zoomLevel(1, 1);
+		
+		Interval<Double, Integer> i1 = new Interval<Double, Integer>(x, y, 1);
+		Interval<Double, Integer> i2 = new Interval<Double, Integer>(x+w, y+h, 1);
+		Interval2D<Double, Integer> i2D = new Interval2D<Double, Integer>(i1, i2);
+		
+		long startTime = System.nanoTime(); 
+		Road[] roadsFound = roads.query2D(i2D);
+		System.out.println("Found " + roadsFound.length + " roads in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
+		
+		for (Road roadFound : roadsFound) {
+		  output += "        <line id=\"line\" "+
+		  		      "x1=\""+points.get(roadFound.getP1()).getX()+"\" "+
+		  		      "y1=\""+((h-points.get(roadFound.getP1()).getY())+y)+"\" "+
+		  		      "x2=\""+points.get(roadFound.getP2()).getX()+"\" " +
+		  					"y2=\""+((h-points.get(roadFound.getP2()).getY())+y)+"\" style=\"" +
+		  					"stroke:rgb("+roadFound.getType().getColorAsString()+"); " +
+		  					"stroke-width:"+roadFound.getType().getStroke()+";\"></line>\n";
 		}
 		
+		
 		return output;
+	}
+	
+	//Just calculating the percentage between viewbox-width and the width of the total map
+	//Probably not the best solution, as numbers gets very very small as you zoom in
+	private void zoomLevel(double w, double h) {
+	  System.out.println(w/(Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))*100);
 	}
 }

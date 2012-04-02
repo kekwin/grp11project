@@ -1,12 +1,15 @@
 package dk.itu.grp11.enums;
 
 import java.awt.Color;
+import java.util.HashMap;
+
+import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
 /**
- * Describes 
+ * Defines different roadtypes, their id, stroke thickness and color of the stroke.
  *
  */
 public enum RoadType {
-  MOTORVEJ(1, 20, new Color(0,0,0)),
+  MOTORVEJ(1, 200, new Color(255,0,0)),
   MOTORTRAFIKVEJ(2, 20, new Color(0,0,0)),
   PRIMAERRUTE_OVER_6M(3, 20, new Color(0,0,0)),
   SEKUNDAERRUTE_OVER_6M(4, 20, new Color(0,0,0)),
@@ -33,15 +36,55 @@ public enum RoadType {
   SEKUNDAERVEJSTUNNEL(44, 20, new Color(0,0,0)),
   ANDEN_VEJTUNNEL(45, 20, new Color(0,0,0)),
   MINDRE_VEJTUNNEL(46, 20, new Color(0,0,0)),
-  STITUNNEL(48, 20, new Color(0,0,0));
+  STITUNNEL(48, 20, new Color(0,0,0)),
+  
+  //TODO Unknown road types in kdv_unload.txt. What to do with them?
+  UKENDT1(99, 20, new Color(0,0,0)),
+  UKENDT2(95, 20, new Color(0,0,0)),
+  UKENDT3(80, 20, new Color(0,0,0)),
+  UKENDT4(0, 20, new Color(0,0,0));
   
   int id;
   int stroke;
   Color color;
+  private static java.util.Map<Integer, RoadType> roadTypes = new HashMap<>();
+  
+  static {
+    for(RoadType rt : RoadType.values()) {
+      roadTypes.put(rt.getId(), rt);
+    }
+  }
   
   RoadType(int id, int stroke, Color color) {
     this.id = id;
     this.stroke = stroke;
     this.color = color;
+  }
+  
+  public int getId() {
+    return id;
+  }
+  
+  public int getStroke() {
+    return stroke;
+  }
+  
+  public Color getColor() {
+    return color;
+  }
+  
+  public String getColorAsString() {
+    return color.getRed() + "," + color.getGreen() + "," + color.getBlue();
+  }
+
+  public static RoadType getById(int id) {
+    if(!roadTypes.containsKey(id))
+      throw new RoadTypeDoesNotExistException(); //If no road with such id exist
+    return roadTypes.get(id);
+  }
+  
+  @Override
+  public String toString() {
+    return "ID:" + id + " STROKE:" + stroke + " COLOR:" + color;
   }
 }

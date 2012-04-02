@@ -46,8 +46,8 @@ public class FileServer {
     		"    <h2>Det virker!</h2>\n" +
     		"    <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>\n" +
     		"    <div>\n" +
-    		"      <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"1080\" width=\"1920\" viewbox=\""+xStart+" "+yStart+" "+xDiff+" "+yDiff+"\">\n" + 
-    		map.getPart(x, y, width, height)+
+    		"      <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"1080\" width=\"1920\" viewbox=\""+xStart+" "+0+" "+xDiff+" "+yDiff+"\">\n" +
+    		map.getPart(x, y, width, height) +
     		"      </svg>\n" +
     		"    </div>\n" + 
     		"  </body>\n" +
@@ -76,9 +76,9 @@ public class FileServer {
         String request = in.readLine();
         con.shutdownInput(); // ignore the rest
         log(con, request);
-        splitRequest(request);
+        boolean loadData = splitRequest(request);
         
-        processRequest();
+        processRequest(loadData);
                 
         pout.flush();
       } catch (IOException e) { 
@@ -93,7 +93,9 @@ public class FileServer {
     }
   }
   
-  private void splitRequest(String request) {
+  private boolean splitRequest(String request) {
+    if (request.indexOf("favicon.ico") != -1) return false;
+    if (request.getClass() != String.class) return false;
     String[] tmp = request.split(" ");
     String[] requestSplit = tmp[1].split("\\?");
     if (requestSplit.length == 2) {
@@ -125,10 +127,13 @@ public class FileServer {
     if (width == 0) width = xDiff;
     if (x == 0) x = xStart;
     if (y == 0) y = yStart;
+    return true;
   }
 
-  private void processRequest() throws IOException {
-    InputStream outStream = new ByteArrayInputStream(getOutput().getBytes("UTF-8"));
+  private void processRequest(boolean loadData) throws IOException {
+    InputStream outStream = null;
+    if (loadData) outStream = new ByteArrayInputStream(getOutput().getBytes("UTF-8"));
+    else outStream = new ByteArrayInputStream("".getBytes("UTF-8"));
     pout.print("HTTP/1.0 200 OK\r\n");
     pout.print("Date: "+new Date()+"\r\n"+
                "Server: IXWT FileServer 1.0\r\n\r\n");

@@ -1,9 +1,13 @@
 package dk.itu.grp11.main;
 
 import java.io.*;
+import java.util.HashMap;
+
+import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.contrib.DynArray;
 import dk.itu.grp11.enums.MinMax;
-import dk.itu.grp11.exceptions.DataNotInitialized;
+import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.exceptions.DataNotInitializedException;
 
 /**
  * The Parser class is used to parse the information from the two documents
@@ -41,8 +45,8 @@ public class Parser {
    * @return An array of all Point objects from the information given in the
    *         kdv_node_unload.txt file.
    */
-  public Point[] parsePoints() {
-    DynArray<Point> tmp = new DynArray<Point>(Point[].class);
+  public HashMap<Integer, Point> parsePoints() {
+    HashMap<Integer, Point> tmp = new HashMap<Integer, Point>();
     try {
       BufferedReader input = new BufferedReader(new FileReader(nodes));
       try {
@@ -67,7 +71,7 @@ public class Parser {
           if (p.getY()<minY){
             minY=p.getY();
           }
-          tmp.add(p);
+          tmp.put(p.getID(), p);
         }
       } finally {
         input.close();
@@ -76,8 +80,7 @@ public class Parser {
       ex.printStackTrace();
     }
     pointsInit = true;
-    Object[] tmp2 = tmp.toArray();
-    return (Point[])tmp2;
+    return tmp;
   }
 
   /**
@@ -87,8 +90,8 @@ public class Parser {
    * @return An array of all Road objects from the information given in the
    *         kdv_unload.txt file.
    */
-  public Road[] parseRoads() {
-    DynArray<Road> tmp = new DynArray<Road>(Road[].class);
+  public DimensionalTree<Double, Integer, Road> parseRoads(HashMap<Integer, Point> points) {
+    DimensionalTree<Double, Integer, Road> tmp = new DimensionalTree<Double, Integer, Road>(Road[].class);
     try {
       BufferedReader input = new BufferedReader(new FileReader(connections));
       try {
@@ -100,7 +103,17 @@ public class Parser {
          */
         input.readLine();
         while ((line = input.readLine()) != null) {
-          tmp.add(createRoad(line));
+          String[] split = splitRoadInput(line);
+          if (split.length == 4) {
+            Double xS = points.get(Integer.parseInt(split[0])).getX();
+            Double yS = points.get(Integer.parseInt(split[0])).getY();
+            Double xE = points.get(Integer.parseInt(split[1])).getX();
+            Double yE = points.get(Integer.parseInt(split[1])).getY();
+            Integer type = Integer.parseInt(split[3]);
+            Road value = new Road(Integer.parseInt(split[0]), Integer.parseInt(split[1]), split[2], RoadType.getById(type));
+            tmp.insert(xS, yS, type, value);
+            tmp.insert(xE, yE, type, value);
+          }
         }
       } finally {
         input.close();
@@ -108,7 +121,7 @@ public class Parser {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-    return tmp.toArray();
+    return tmp;
   }
 
   // Creates a point, to be put in the array and parsed.
@@ -137,18 +150,20 @@ public class Parser {
    *          A line from the kdv_unload.txt document.
    * @return A Road object containing the information from the line.
    */
-  private static Road createRoad(String input) {
-    Road tmp = null;
+  private static String[] splitRoadInput(String input) {
+    String[] tmp = new String[4];
 
     String[] inputSplit = input.split(",");
     if (Integer.parseInt(inputSplit[0]) != Integer.parseInt(inputSplit[1])) {
 
-      tmp = new Road(Integer.parseInt(inputSplit[0]),
-          Integer.parseInt(inputSplit[1]), inputSplit[6],
-          Integer.parseInt(inputSplit[5]));
+      tmp[0] = inputSplit[0];
+      tmp[1] = inputSplit[1];
+      tmp[2] = inputSplit[6];
+      tmp[3] = inputSplit[5];
 
-    }
-    return tmp;
+      return tmp;
+    } else return new String[0];
+    
   }
   /**
    * Returns an array containing 4 values, representing the smallest and largest x and y coordinates of all Points.
@@ -161,7 +176,7 @@ public class Parser {
    * @return A double array of size 4.
    */
   public double[] getMinMaxValues() {
-    if(!pointsInit) throw new DataNotInitialized(); //TODO Checks if data has been initializes (parsed)
+    if(!pointsInit) throw new DataNotInitializedException(); //TODO Checks if data has been initializes (parsed)
     double[] tmp = new double[4];
     tmp[MinMax.MINX.id()]=minX;
     tmp[MinMax.MAXX.id()]=maxX;

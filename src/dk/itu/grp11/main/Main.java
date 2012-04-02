@@ -1,6 +1,9 @@
 package dk.itu.grp11.main;
 
-import java.io.*;
+import java.io.File;
+import java.util.HashMap;
+
+import dk.itu.grp11.contrib.DimensionalTree;
 
 public class Main {
   public static void main(String[] args) {
@@ -8,8 +11,12 @@ public class Main {
     File node = new File("kdv_node_unload.txt");
     File road = new File("kdv_unload.txt");
     Parser p = new Parser(node, road);
-    Point[] points = p.parsePoints();
-    Road[] roads = p.parseRoads();
+    
+    long startTime = System.nanoTime();
+    HashMap<Integer, Point> points = p.parsePoints();
+    DimensionalTree<Double, Integer, Road> roads = p.parseRoads(points);
+    System.out.println("Loaded " + roads.count()/2 + " roads from file in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
+    
     Map map = new Map(points, roads, p.getMinMaxValues());
     double[] d = p.getMinMaxValues();
     //getMinMaxValues i funktion
@@ -18,6 +25,8 @@ public class Main {
     System.out.println("minY=" + d[2]);
     System.out.println("maxY=" + d[3]);
     FileServer fs = new FileServer(80, map);
-    fs.run();    
+    fs.run(); 
+    System.out.println("");
+    //TEST
   }
 }
