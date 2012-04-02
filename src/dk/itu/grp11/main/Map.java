@@ -5,6 +5,7 @@ import java.util.HashMap;
 import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.contrib.Interval;
 import dk.itu.grp11.contrib.Interval2D;
+import dk.itu.grp11.enums.MinMax;
 
 /**
  * Represents a map with roads
@@ -69,6 +70,12 @@ public class Map {
 	public String getPart(double x, double y, double w, double h) {
 		String output = "";
 		
+		//Some test calculations of zoom level
+		zoomLevel(w, h); //All zoomed out
+		zoomLevel(45000, 35000);
+		zoomLevel(4500, 3500);
+		zoomLevel(1, 1);
+		
 		int[] roadTypes = {1, 2};
 		
 		for (int roadType : roadTypes) {
@@ -80,13 +87,21 @@ public class Map {
   		Road[] roadsFound = roads.query2D(i2D);
   		System.out.println("Found " + roadsFound.length + " roads in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
   		for (Road roadFound : roadsFound) {
-        output += "        <line id=\"line\" x1=\""+points.get(roadFound.getP1()).getX()+"\" y1=\""+((h-points.get(roadFound.getP1()).getY())+y)+"\" x2=\""+points.get(roadFound.getP2()).getX()+"\" y2=\""+((h-points.get(roadFound.getP2()).getY())+y)+"\" style=\"stroke:rgb(0,0,0); stroke-width:100;\"></line>\n";
+  		  output += "        <line id=\"line\" "+
+            "x1=\""+points.get(roadFound.getP1()).getX()+"\" "+
+            "y1=\""+((h-points.get(roadFound.getP1()).getY())+y)+"\" "+
+            "x2=\""+points.get(roadFound.getP2()).getX()+"\" " +
+            "y2=\""+((h-points.get(roadFound.getP2()).getY())+y)+"\" style=\"" +
+            "stroke:rgb("+roadFound.getType().getColorAsString()+"); " +
+            "stroke-width:"+roadFound.getType().getStroke()+";\"></line>\n";
       }
-		}
-		
-		
-		
-		
+		}	
 		return output;
+	}
+	
+	//Just calculating the percentage between viewbox-width and the width of the total map
+	//Probably not the best solution, as numbers gets very very small as you zoom in
+	private void zoomLevel(double w, double h) {
+	  System.out.println(w/(Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))*100);
 	}
 }

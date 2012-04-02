@@ -1,5 +1,7 @@
 package dk.itu.grp11.main;
 
+import dk.itu.grp11.enums.RoadType;
+
 /**
  * Objects of the class Road are "connections" from the file kdv_unload.txt, and
  * they are the basis of our visualization part.
@@ -22,11 +24,11 @@ public class Road {
   int P1;
   int P2;
   String name;
-  int type;
+  RoadType type;
 
   // More fields to come
 
-  public Road(int p1, int p2, String name, int type) {
+  public Road(int p1, int p2, String name, RoadType type) {
     this.P1 = p1;
     this.P2 = p2;
     this.name = name;
@@ -45,7 +47,7 @@ public class Road {
     return name;
   }
 
-  public int getType() {
+  public RoadType getType() {
     return type;
   }
 
