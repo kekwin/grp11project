@@ -94,7 +94,7 @@ public class Map {
   		Road[] roadsFound = roads.query2D(i2D);
   		System.out.println("Found " + roadsFound.length + " roads in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
   		for (Road roadFound : roadsFound) {
-  		  output += "        <line id=\"line\" "+
+  		  output += "      <line id=\"line\" "+
             "x1=\""+points.get(roadFound.getP1()).getX()+"\" "+
             "y1=\""+((h-points.get(roadFound.getP1()).getY())+y)+"\" "+
             "x2=\""+points.get(roadFound.getP2()).getX()+"\" " +

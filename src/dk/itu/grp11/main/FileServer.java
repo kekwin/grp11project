@@ -40,23 +40,24 @@ public class FileServer {
   }
   
   private String getOutput() {
+    String e = "\n";
     return
-    		"<html>\n" +
-    		"  <head>" + 
-    		"    <style type=\"text/css\">" + 
+    		"<html>" +e+
+    		"  <head>" +e+ 
+    		"    <style type=\"text/css\">" +e+ 
     		"" + getCSS() + 
-    		"    </style>" + 
-    		"  </head>" + 
-    		"  <body>\n" +
-    		"    <div class=\"overlay\">" + 
-    		"      <h2>Det virker!</h2>\n" +
-    		"      <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>\n" +
-    		"      <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewbox=\""+xStart+" "+0+" "+xDiff+" "+yDiff+"\" class=\"map\">\n" +
+    		"    </style>" +e+ 
+    		"  </head>" +e+ 
+    		"  <body>" +e+
+    		"    <div class=\"overlay\">" +e+ 
+    		"      <h2>Det virker!</h2>" +e+
+    		"      <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>" +e+
+    		"    </div>" +e+ 
+    		"    <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewbox=\""+xStart+" "+0+" "+xDiff+" "+yDiff+"\" class=\"map\">" +e+
     		map.getPart(x, y, width, height) +
-    		"      </svg>\n" +
-    		"    </div>" + 
-    		"  </body>\n" +
-    		"</html>";
+    		"    </svg>" +e+
+    		"  </body>" +e+
+    		"</html>"+e;
   }
   
   private String getCSS() {
