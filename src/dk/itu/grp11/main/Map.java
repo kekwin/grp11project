@@ -77,11 +77,17 @@ public class Map {
 		zoomLevel(4500, 3500);
 		zoomLevel(1, 1);
 		
-		int[] roadTypes = {1, 2};
+		RoadType[] roadTypes = {RoadType.MOTORVEJ,
+		                        RoadType.MOTORTRAFIKVEJ,
+		                        RoadType.MOTORTRAFIKVEJSTUNNEL,
+		                        RoadType.MOTORTRAFIKVEJSARKOERSEL,
+		                        RoadType.MOTORVEJSAFKOERSEL,
+		                        RoadType.MOTORVEJSTUNNEL,
+		                        };
 		
-		for (int roadType : roadTypes) {
-  		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, y, RoadType.getById(roadType));
-  		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(x+w, y+h, RoadType.getById(roadType));
+		for (RoadType roadType : roadTypes) {
+  		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, y, roadType);
+  		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(x+w, y+h, roadType);
   		Interval2D<Double, RoadType> i2D = new Interval2D<Double, RoadType>(i1, i2);
   		
   		long startTime = System.nanoTime(); 
