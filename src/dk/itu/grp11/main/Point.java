@@ -3,10 +3,11 @@ package dk.itu.grp11.main;
 import dk.itu.grp11.exceptions.NegativeValueException;
 
 /**
- * Objects of the class Point are single "nodes" from the kdv_node_unload.txt.
+ * A point representing a location in (x,y) coordinate space, specified in double precision.
+ * The point also have a id.
  * 
  * @param ID
- *          The ID of the point, used to reference points from within roads.
+ *          The ID of the point
  * @param x
  *          The x-coordinate of the Point.
  * @param y

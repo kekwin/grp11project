@@ -3,20 +3,16 @@ package dk.itu.grp11.main;
 import dk.itu.grp11.enums.RoadType;
 
 /**
- * Objects of the class Road are "connections" from the file kdv_unload.txt, and
- * they are the basis of our visualization part.
- * 
- * A road is defined by two points, and is simply a line between the two points.
- * 
+ * Defines a road by a start point and endpoint including a name and roadtype.
+
  * @param P1
  *          The ID of the first Point of the road, where the road "starts"
  * @param P2
  *          The ID of the second Point of the road, where the road "ends"
  * @param name
- *          The name of the road, if there is one
+ *          The name of the road
  * @param type
- *          The type of the road, described as an integer, type describes
- *          whether a road is a highway, a tunnel, etc.
+ *          The type of the road, described as a RoadType
  * 
  */
 
@@ -35,10 +31,20 @@ public class Road {
     this.type = type;
   }
 
+  /**
+   * Start point
+   * 
+   * @return id of the start point
+   */
   public int getP1() {
     return P1;
   }
-
+  
+  /**
+   * End point
+   * 
+   * @return id of the end point
+   */
   public int getP2() {
     return P2;
   }
