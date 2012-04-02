@@ -135,7 +135,7 @@ public class FileServer {
     if (loadData) outStream = new ByteArrayInputStream(getOutput().getBytes("UTF-8"));
     else outStream = new ByteArrayInputStream("".getBytes("UTF-8"));
     pout.print("HTTP/1.0 200 OK\r\n");
-    pout.print("Date: "+new Date()+"\r\n"+
+    pout.print(": "+new Date()+"\r\n"+
                "Server: IXWT FileServer 1.0\r\n\r\n");
     sendOutput(outStream, out); // send raw output
     log(con, "200 OK");

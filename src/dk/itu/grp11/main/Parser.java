@@ -91,10 +91,8 @@ public class Parser {
    *         kdv_unload.txt file.
    */
   public DimensionalTree<Double, Integer, Road> parseRoads(HashMap<Integer, Point> points) {
-    DimensionalTree<Double, Integer, Road> tmp = new DimensionalTree<Double, Integer, Road>(Road[].class);
-    try {
-      BufferedReader input = new BufferedReader(new FileReader(connections));
-      try {
+    DimensionalTree<Double, Integer, Road> tmp = new DimensionalTree<Double, Integer, Road>(Road[].class);    
+      try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
         String line = null;
         /*
          * readLine is a bit quirky : it returns the content of a line MINUS the
@@ -114,10 +112,7 @@ public class Parser {
             tmp.insert(xS, yS, type, value);
             tmp.insert(xE, yE, type, value);
           }
-        }
-      } finally {
-        input.close();
-      }
+        } 
     } catch (IOException ex) {
       ex.printStackTrace();
     }

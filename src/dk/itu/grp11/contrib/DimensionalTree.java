@@ -1,6 +1,6 @@
 package dk.itu.grp11.contrib;
 
-public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparable<Key2>, Value> {
+public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparable<Key2>,  Value> {
   private Node root;
   private int count;
   private Class<Value[]> valueClass;
