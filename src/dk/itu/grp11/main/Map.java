@@ -18,36 +18,13 @@ import dk.itu.grp11.enums.RoadType;
 public class Map {
   private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
-  private double[] minMaxValues;
-
-  
-  //TODO Needs major rewrite!
-/*	public static void main(String[] args) {
-		Point[] points = new Point[10];
-		points[0] = new Point(1, 300, 356);
-		points[1] = new Point(2, 390, 377);
-		points[2] = new Point(3, 800, 700);
-		points[3] = new Point(4, 430, 431);
-		
-		Road[] roads = new Road[10];
-		roads[0] = new Road(1, 2, "Niceness street", 1);
-		roads[1] = new Road(2, 3, "Long street", 1);
-		roads[2] = new Road(3, 4, "Fail street", 1);
-		
-		Map map = new Map(points, roads, new double[] {}); //Empty double array
-		
-		System.out.println("Getting part = [320, 330, 150, 100]");
-		System.out.println(map.getPart(320, 330, 150, 100));
-		
-		System.out.println("Getting part = [200, 210, 1000, 750]");
-		System.out.println(map.getPart(200, 210, 1000, 750));
-	}*/
+  private double[] minMaxValues; //Minimum/maximum x and y coordinates in the map
 	
 	/**
-	* Loads a map
+	* Loads a map by points and roads
 	* 
-	* @param points Top left x-coordinate of viewbox
-	* @param roads Top left y-coordinate of viewbox
+	* @param points All points in the network
+	* @param roads All roads in the network
 	*/
 	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, double[] minMaxValues) {
 	  this.points = points;
@@ -71,13 +48,8 @@ public class Map {
 	*/
 	public String getPart(double x, double y, double w, double h) {
 		String output = "";
-		/*
-		//Some test calculations of zoom level
-		System.out.println("All zoomed out: " + zoomLevel(w, h));
-		System.out.println("200%: " + zoomLevel(w/2, h/2));
-		System.out.println("1000%: " + zoomLevel(w/10, h/10));
-		System.out.println("Zoomed in to 1 px: " + zoomLevel(1, 1));
-		*/
+
+		// Calculate road types to include by calling zoomLevel()
 		DynArray<RoadType> roadTypes = new DynArray<RoadType>(RoadType[].class);
 		System.out.print("Showing roadtypes (zoom level = " + zoomLevel(w, h) + "):");
 	  for(RoadType rt : RoadType.values()) {
@@ -88,6 +60,7 @@ public class Map {
     }
 	  System.out.println();
 		
+	  // Adding all calculated road types within the viewbox
 		for (RoadType roadType : roadTypes) {
   		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, y, roadType);
   		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(x+w, y+h, roadType);
@@ -109,6 +82,16 @@ public class Map {
 		return output;
 	}
 	
+	/**
+	 * Calculates a zoomlevel.
+	 * 
+	 * (total map width)/(viewbox width)
+	 * 
+	 * @param w width of the viewbox
+	 * @param h height of the viewbox
+	 * @return zoom level as int. 1 if w = (total map width). 2 if w = (total map width)/2.
+	 *         w if w = (total map width)/(total map width).
+	 */
 	private int zoomLevel(double w, double h) {
 	  return (int)((Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))/w);
 	}

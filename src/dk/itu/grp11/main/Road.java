@@ -4,26 +4,24 @@ import dk.itu.grp11.enums.RoadType;
 
 /**
  * Defines a road by a start point and endpoint including a name and roadtype.
-
- * @param P1
- *          The ID of the first Point of the road, where the road "starts"
- * @param P2
- *          The ID of the second Point of the road, where the road "ends"
- * @param name
- *          The name of the road
- * @param type
- *          The type of the road, described as a RoadType
  * 
+ * @author Group 11
  */
 
 public class Road {
-  int P1;
-  int P2;
-  String name;
-  RoadType type;
-
-  // More fields to come
-
+  private int P1;
+  private int P2;
+  private String name;
+  private RoadType type;
+  
+  
+  /**
+   * 
+   * @param p1 ID of the first Point
+   * @param p2 ID of the second Point
+   * @param name name of the road
+   * @param type type of road
+   */
   public Road(int p1, int p2, String name, RoadType type) {
     this.P1 = p1;
     this.P2 = p2;
