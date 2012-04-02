@@ -82,7 +82,7 @@ public class Map {
 		System.out.print("Showing roadtypes (zoom level = " + zoomLevel(w, h) + "):");
 	  for(RoadType rt : RoadType.values()) {
       if(rt.getZoomLevel() <= zoomLevel(w, h)) {
-        System.out.print(" " + rt.getId());
+        System.out.print("\n  " + rt.name());
         roadTypes.add(rt);
       }
     }
@@ -95,13 +95,13 @@ public class Map {
   		
   		long startTime = System.nanoTime(); 
   		Road[] roadsFound = roads.query2D(i2D);
-  		System.out.println("Found " + roadsFound.length + " roads in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
+  		System.out.println("Found " + roadsFound.length + " roads of type "+roadType.name()+" in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
   		for (Road roadFound : roadsFound) {
   		  output += "      <line id=\"line\" "+
             "x1=\""+points.get(roadFound.getP1()).getX()+"\" "+
-            "y1=\""+((h-points.get(roadFound.getP1()).getY())+y)+"\" "+
+            "y1=\""+((h-points.get(roadFound.getP1()).getY()))+"\" "+
             "x2=\""+points.get(roadFound.getP2()).getX()+"\" " +
-            "y2=\""+((h-points.get(roadFound.getP2()).getY())+y)+"\" style=\"" +
+            "y2=\""+((h-points.get(roadFound.getP2()).getY()))+"\" style=\"" +
             "stroke:rgb("+roadFound.getType().getColorAsString()+"); " +
             "stroke-width:"+roadFound.getType().getStroke()+";\"></line>\n";
       }

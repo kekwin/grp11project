@@ -3,6 +3,8 @@ package dk.itu.grp11.main;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,13 +50,15 @@ public class FileServer {
     		"    <style type=\"text/css\">" +e+ 
     		"" + getCSS() + 
     		"    </style>" +e+ 
+    		"    <script type=\"text/JavaScript\" src=\"jQuery.min.js\"></script>" +e+
+    		"    <script type=\"text/JavaScript\" src=\"load.js\"></script>" +e+ 
     		"  </head>" +e+ 
     		"  <body>" +e+
     		"    <div class=\"overlay\">" +e+ 
     		"      <h2>Det virker!</h2>" +e+
     		"      <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>" +e+
     		"    </div>" +e+ 
-    		"    <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewbox=\""+xStart+" "+0+" "+xDiff+" "+yDiff+"\" class=\"map\">" +e+
+    		"    <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewbox=\""+x+" -"+y+" "+width+" "+height+"\" class=\"map\">" +e+
     		map.getPart(x, y, width, height) +
     		"    </svg>" +e+
     		"  </body>" +e+
@@ -80,7 +84,11 @@ public class FileServer {
         s+"  left: 0;" +e+
         s+"  right: 0;" +e+
         s+"  z-index: 0;" +e+
-        s+"}"+e;
+        s+"}"+e+
+        s+"#select-area {" +e+
+        s+"  position: absolute;" +e+
+        s+"  background: black;" +e+
+        s+"}" +e;
   }
 
   public void run() {
@@ -105,10 +113,7 @@ public class FileServer {
         String request = in.readLine();
         con.shutdownInput(); // ignore the rest
         log(con, request);
-        boolean loadData = false;
-        if (request != null) loadData = splitRequest(request);
-        
-        processRequest(loadData);
+        if (request != null) parseRequest(request);
                 
         pout.flush();
       } catch (IOException e) { 
@@ -123,9 +128,11 @@ public class FileServer {
     }
   }
   
-  private boolean splitRequest(String request) {
-    if (request.getClass() != String.class) return false;
-    if (request.indexOf("favicon.ico") != -1) return false;
+  private void parseRequest(String request) throws IOException {
+    if (request.getClass() != String.class) { processRequest("NoClass"); return; }
+    if (request.indexOf("favicon.ico") != -1) { processRequest("favicon.ico"); return; }
+    if (request.indexOf("jQuery.min.js") != -1) { processRequest("jQuery.min.js"); return; }
+    if (request.indexOf("load.js") != -1) { processRequest("load.js"); return; }
     String[] tmp = request.split(" ");
     String[] requestSplit = tmp[1].split("\\?");
     if (requestSplit.length == 2) {
@@ -157,14 +164,21 @@ public class FileServer {
     if (width == 0) width = xDiff;
     if (x == 0) x = xStart;
     if (y == 0) y = yStart;
-    return true;
+    processRequest(null);
   }
 
-  private void processRequest(boolean loadData) throws IOException {
+  private void processRequest(String file) throws IOException {
     InputStream outStream = null;
-    if (loadData) outStream = new ByteArrayInputStream(getOutput().getBytes("UTF-8"));
-    else outStream = new ByteArrayInputStream("".getBytes("UTF-8"));
+    String contenttype = "text/html";
+    if (file == null) {
+      outStream = new ByteArrayInputStream(getOutput().getBytes("UTF-8"));
+    } else {
+      File f = new File("src\\dk\\itu\\grp11\\contrib\\"+file);
+      outStream = new FileInputStream(f);
+      contenttype = "text/javascript";
+    }
     pout.print("HTTP/1.0 200 OK\r\n");
+    pout.print("Content-Type: "+contenttype+"\r\n");
     pout.print(": "+new Date()+"\r\n"+
                "Server: IXWT FileServer 1.0\r\n\r\n");
     sendOutput(outStream, out); // send raw output
