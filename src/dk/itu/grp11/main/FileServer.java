@@ -40,18 +40,45 @@ public class FileServer {
   }
   
   private String getOutput() {
-    return 
+    return
     		"<html>\n" +
+    		"  <head>" + 
+    		"    <style type=\"text/css\">" + 
+    		"" + getCSS() + 
+    		"    </style>" + 
+    		"  </head>" + 
     		"  <body>\n" +
-    		"    <h2>Det virker!</h2>\n" +
-    		"    <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>\n" +
-    		"    <div>\n" +
-    		"      <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"1080\" width=\"1920\" viewbox=\""+xStart+" "+0+" "+xDiff+" "+yDiff+"\">\n" +
+    		"    <div class=\"overlay\">" + 
+    		"      <h2>Det virker!</h2>\n" +
+    		"      <span>x: "+x+" y: "+y+" & height: "+height+" & width: "+width+"</span>\n" +
+    		"      <svg id=\"map\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewbox=\""+xStart+" "+0+" "+xDiff+" "+yDiff+"\" class=\"map\">\n" +
     		map.getPart(x, y, width, height) +
     		"      </svg>\n" +
-    		"    </div>\n" + 
+    		"    </div>" + 
     		"  </body>\n" +
     		"</html>";
+  }
+  
+  private String getCSS() {
+    String s = "      ";
+    String e = "\n";
+    return 
+        s+"html {" +e+
+        s+"  height: 100%;" +e+
+        s+"  width: 100%;" +e+
+        s+"}" +e+
+        s+"div.overlay {" +e+
+        s+"  position: relative;" +e+
+        s+"  z-index: 1;" +e+
+        s+"}" +e+
+        s+"svg.map {" +e+
+        s+"  position: absolute;" +e+
+        s+"  top: 0;" +e+
+        s+"  bottom: 0;" +e+
+        s+"  left: 0;" +e+
+        s+"  right: 0;" +e+
+        s+"  z-index: 0;" +e+
+        s+"}"+e;
   }
 
   public void run() {
@@ -76,7 +103,8 @@ public class FileServer {
         String request = in.readLine();
         con.shutdownInput(); // ignore the rest
         log(con, request);
-        boolean loadData = splitRequest(request);
+        boolean loadData = false;
+        if (request != null) loadData = splitRequest(request);
         
         processRequest(loadData);
                 
@@ -94,8 +122,8 @@ public class FileServer {
   }
   
   private boolean splitRequest(String request) {
-    if (request.indexOf("favicon.ico") != -1) return false;
     if (request.getClass() != String.class) return false;
+    if (request.indexOf("favicon.ico") != -1) return false;
     String[] tmp = request.split(" ");
     String[] requestSplit = tmp[1].split("\\?");
     if (requestSplit.length == 2) {
