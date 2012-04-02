@@ -17,7 +17,7 @@ public enum RoadType {
   ANDEN_VEJ(6, 20, new Color(0,0,0), 400),
   STI(8, 20, new Color(0,0,0), 400),
   MARKVEJ(10, 20, new Color(0,0,0), 400),
-  GÅGADER(11, 20, new Color(0,0,0), 400),
+  GÅGADE(11, 20, new Color(0,0,0), 400),
   PROJ_MOTORVEJ(21, 200, new Color(0,0,0), 1),
   PROJ_MOTORTRAFIKVEJ(22, 150, new Color(0,255,0), 2),
   PROJ_PRIMAERVEJ(23, 20, new Color(0,0,0), 400),
