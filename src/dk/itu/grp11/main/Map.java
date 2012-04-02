@@ -77,12 +77,7 @@ public class Map {
 		zoomLevel(4500, 3500);
 		zoomLevel(1, 1);
 		
-		RoadType[] roadTypes = {RoadType.MOTORVEJ,
-		                        RoadType.MOTORTRAFIKVEJ,
-		                        RoadType.MOTORTRAFIKVEJSTUNNEL,
-		                        RoadType.MOTORTRAFIKVEJSARKOERSEL,
-		                        RoadType.MOTORVEJSAFKOERSEL,
-		                        RoadType.MOTORVEJSTUNNEL,
+		RoadType[] roadTypes = {RoadType.MOTORVEJ
 		                        };
 		
 		for (RoadType roadType : roadTypes) {

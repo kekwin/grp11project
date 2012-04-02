@@ -43,7 +43,8 @@ public class FileServer {
     String e = "\n";
     return
     		"<html>" +e+
-    		"  <head>" +e+ 
+    		"  <head>" +e+
+    		"    <title>Map of Denmark</title>" +e+
     		"    <style type=\"text/css\">" +e+ 
     		"" + getCSS() + 
     		"    </style>" +e+ 
