@@ -9,44 +9,45 @@ import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
  *
  */
 public enum RoadType {
-  MOTORVEJ(1, 200, new Color(255,0,0)),
-  MOTORTRAFIKVEJ(2, 20, new Color(0,0,0)),
-  PRIMAERRUTE_OVER_6M(3, 20, new Color(0,0,0)),
-  SEKUNDAERRUTE_OVER_6M(4, 20, new Color(0,0,0)),
-  VEJ_3_TIL_6M(5, 20, new Color(0,0,0)),
-  ANDEN_VEJ(6, 20, new Color(0,0,0)),
-  STI(8, 20, new Color(0,0,0)),
-  MARKVEJ(10, 20, new Color(0,0,0)),
-  GÅGADER(11, 20, new Color(0,0,0)),
-  PROJ_MOTORVEJ(21, 20, new Color(0,0,0)),
-  PROJ_MOTORTRAFIKVEJ(22, 20, new Color(0,0,0)),
-  PROJ_PRIMAERVEJ(23, 20, new Color(0,0,0)),
-  PROJ_SEKUNDAERVEJ(24, 20, new Color(0,0,0)),
-  PROJ_VEJ_3_TIL_6M(25, 20, new Color(0,0,0)),
-  PROJ_VEJ_UNDER_3M(26, 20, new Color(0,0,0)),
-  PROJ_STI(28, 20, new Color(0,0,0)),
-  MOTORVEJSAFKOERSEL(31, 20, new Color(0,0,0)),
-  MOTORTRAFIKVEJSARKOERSEL(32, 20, new Color(0,0,0)),
-  PRIMAERVEJSAFKOERSEL(33, 20, new Color(0,0,0)),
-  SEKUNDAERVEJSAFKOERSEL(34, 20, new Color(0,0,0)),
-  ANDEN_VEJAFKOERSEL(35, 20, new Color(0,0,0)),
-  MOTORVEJSTUNNEL(41, 20, new Color(0,0,0)),
-  MOTORTRAFIKVEJSTUNNEL(42, 20, new Color(0,0,0)),
-  PRIMAERVEJSTUNNEL(43, 20, new Color(0,0,0)),
-  SEKUNDAERVEJSTUNNEL(44, 20, new Color(0,0,0)),
-  ANDEN_VEJTUNNEL(45, 20, new Color(0,0,0)),
-  MINDRE_VEJTUNNEL(46, 20, new Color(0,0,0)),
-  STITUNNEL(48, 20, new Color(0,0,0)),
-  FAERGEFORBINDELSE(80, 20, new Color(0,0,255)),
-  STEDNAVN(99, 20, new Color(0,0,0)),
+  MOTORVEJ(1, 200, new Color(255,0,0), 1),
+  MOTORTRAFIKVEJ(2, 20, new Color(0,0,0), 2),
+  PRIMAERRUTE_OVER_6M(3, 20, new Color(0,0,0), 4),
+  SEKUNDAERRUTE_OVER_6M(4, 20, new Color(0,0,0), 4),
+  VEJ_3_TIL_6M(5, 20, new Color(0,0,0), 4),
+  ANDEN_VEJ(6, 20, new Color(0,0,0), 4),
+  STI(8, 20, new Color(0,0,0), 4),
+  MARKVEJ(10, 20, new Color(0,0,0), 4),
+  GÅGADER(11, 20, new Color(0,0,0), 4),
+  PROJ_MOTORVEJ(21, 200, new Color(0,0,0), 1),
+  PROJ_MOTORTRAFIKVEJ(22, 20, new Color(0,0,0), 2),
+  PROJ_PRIMAERVEJ(23, 20, new Color(0,0,0), 4),
+  PROJ_SEKUNDAERVEJ(24, 20, new Color(0,0,0), 4),
+  PROJ_VEJ_3_TIL_6M(25, 20, new Color(0,0,0), 4),
+  PROJ_VEJ_UNDER_3M(26, 20, new Color(0,0,0), 4),
+  PROJ_STI(28, 20, new Color(0,0,0), 4),
+  MOTORVEJSAFKOERSEL(31, 200, new Color(0,0,0), 1),
+  MOTORTRAFIKVEJSARKOERSEL(32, 20, new Color(0,0,0), 2),
+  PRIMAERVEJSAFKOERSEL(33, 20, new Color(0,0,0), 4),
+  SEKUNDAERVEJSAFKOERSEL(34, 20, new Color(0,0,0), 4),
+  ANDEN_VEJAFKOERSEL(35, 20, new Color(0,0,0), 4),
+  MOTORVEJSTUNNEL(41, 200, new Color(0,0,0), 1),
+  MOTORTRAFIKVEJSTUNNEL(42, 20, new Color(0,0,0), 2),
+  PRIMAERVEJSTUNNEL(43, 20, new Color(0,0,0), 4),
+  SEKUNDAERVEJSTUNNEL(44, 20, new Color(0,0,0), 4),
+  ANDEN_VEJTUNNEL(45, 20, new Color(0,0,0), 4),
+  MINDRE_VEJTUNNEL(46, 20, new Color(0,0,0), 4),
+  STITUNNEL(48, 20, new Color(0,0,0), 4),
+  FAERGEFORBINDELSE(80, 200, new Color(0,0,255),1),
+  STEDNAVN(99, 20, new Color(0,0,0), 1),
   
   //TODO Unknown road types in kdv_unload.txt. What to do with them?
-  UKENDT1(95, 20, new Color(0,0,0)),
-  UKENDT2(0, 20, new Color(0,0,0));
+  UKENDT1(95, 20, new Color(0,0,0), 4),
+  UKENDT2(0, 20, new Color(0,0,0), 4);
   
-  int id;
-  int stroke;
-  Color color;
+  private int id;
+  private int stroke;
+  private Color color;
+  private int zoomLevel;
   private static java.util.Map<Integer, RoadType> roadTypes = new HashMap<>();
   
   static {
@@ -55,10 +56,11 @@ public enum RoadType {
     }
   }
   
-  RoadType(int id, int stroke, Color color) {
+  RoadType(int id, int stroke, Color color, int zoomLevel) {
     this.id = id;
     this.stroke = stroke;
     this.color = color;
+    this.zoomLevel = zoomLevel;
   }
   
   public int getId() {
@@ -73,6 +75,10 @@ public enum RoadType {
     return color;
   }
   
+  public int getZoomLevel() {
+    return zoomLevel;
+  }
+  
   public String getColorAsString() {
     return color.getRed() + "," + color.getGreen() + "," + color.getBlue();
   }
@@ -85,6 +91,6 @@ public enum RoadType {
   
   @Override
   public String toString() {
-    return "ID:" + id + " STROKE:" + stroke + " COLOR:" + color;
+    return RoadType.class + " ID:" + id + " STROKE:" + stroke + " COLOR:" + color;
   }
 }

@@ -3,6 +3,7 @@ package dk.itu.grp11.main;
 import java.util.HashMap;
 
 import dk.itu.grp11.contrib.DimensionalTree;
+import dk.itu.grp11.contrib.DynArray;
 import dk.itu.grp11.contrib.Interval;
 import dk.itu.grp11.contrib.Interval2D;
 import dk.itu.grp11.enums.MinMax;
@@ -70,15 +71,22 @@ public class Map {
 	*/
 	public String getPart(double x, double y, double w, double h) {
 		String output = "";
-		
+		/*
 		//Some test calculations of zoom level
-		zoomLevel(w, h); //All zoomed out
-		zoomLevel(45000, 35000);
-		zoomLevel(4500, 3500);
-		zoomLevel(1, 1);
-		
-		RoadType[] roadTypes = {RoadType.MOTORVEJ
-		                        };
+		System.out.println("All zoomed out: " + zoomLevel(w, h));
+		System.out.println("200%: " + zoomLevel(w/2, h/2));
+		System.out.println("1000%: " + zoomLevel(w/10, h/10));
+		System.out.println("Zoomed in to 1 px: " + zoomLevel(1, 1));
+		*/
+		DynArray<RoadType> roadTypes = new DynArray<RoadType>(RoadType[].class);
+		System.out.print("Showing roadtypes (zoom level = " + zoomLevel(w, h) + "):");
+	  for(RoadType rt : RoadType.values()) {
+      if(rt.getZoomLevel() <= zoomLevel(w, h)) {
+        System.out.print(" " + rt.getId());
+        roadTypes.add(rt);
+      }
+    }
+	  System.out.println();
 		
 		for (RoadType roadType : roadTypes) {
   		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, y, roadType);
@@ -101,9 +109,7 @@ public class Map {
 		return output;
 	}
 	
-	//Just calculating the percentage between viewbox-width and the width of the total map
-	//Probably not the best solution, as numbers gets very very small as you zoom in
-	private void zoomLevel(double w, double h) {
-	  System.out.println(w/(Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))*100);
+	private int zoomLevel(double w, double h) {
+	  return (int)((Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))/w);
 	}
 }
