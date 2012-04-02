@@ -6,6 +6,7 @@ import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.contrib.Interval;
 import dk.itu.grp11.contrib.Interval2D;
 import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.RoadType;
 
 /**
  * Represents a map with roads
@@ -14,7 +15,7 @@ import dk.itu.grp11.enums.MinMax;
  *
  */
 public class Map {
-  private DimensionalTree<Double, Integer, Road> roads;
+  private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
   private double[] minMaxValues;
 
@@ -47,7 +48,7 @@ public class Map {
 	* @param points Top left x-coordinate of viewbox
 	* @param roads Top left y-coordinate of viewbox
 	*/
-	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, Integer, Road> roads, double[] minMaxValues) {
+	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, double[] minMaxValues) {
 	  this.points = points;
 		this.roads = roads;
 		this.minMaxValues = minMaxValues;
@@ -79,9 +80,9 @@ public class Map {
 		int[] roadTypes = {1, 2};
 		
 		for (int roadType : roadTypes) {
-  		Interval<Double, Integer> i1 = new Interval<Double, Integer>(x, y, roadType);
-  		Interval<Double, Integer> i2 = new Interval<Double, Integer>(x+w, y+h, roadType);
-  		Interval2D<Double, Integer> i2D = new Interval2D<Double, Integer>(i1, i2);
+  		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, y, RoadType.getById(roadType));
+  		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(x+w, y+h, RoadType.getById(roadType));
+  		Interval2D<Double, RoadType> i2D = new Interval2D<Double, RoadType>(i1, i2);
   		
   		long startTime = System.nanoTime(); 
   		Road[] roadsFound = roads.query2D(i2D);

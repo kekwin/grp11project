@@ -89,8 +89,8 @@ public class Parser {
    * @return An array of all Road objects from the information given in the
    *         kdv_unload.txt file.
    */
-  public DimensionalTree<Double, Integer, Road> parseRoads(HashMap<Integer, Point> points) {
-    DimensionalTree<Double, Integer, Road> tmp = new DimensionalTree<Double, Integer, Road>(Road[].class);    
+  public DimensionalTree<Double, RoadType, Road> parseRoads(HashMap<Integer, Point> points) {
+    DimensionalTree<Double, RoadType, Road> tmp = new DimensionalTree<Double, RoadType, Road>(Road[].class);    
       try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
         String line = null;
         /*
@@ -108,8 +108,8 @@ public class Parser {
             Double yE = points.get(Integer.parseInt(split[1])).getY();
             Integer type = Integer.parseInt(split[3]);
             Road value = new Road(Integer.parseInt(split[0]), Integer.parseInt(split[1]), split[2], RoadType.getById(type));
-            tmp.insert(xS, yS, type, value);
-            tmp.insert(xE, yE, type, value);
+            tmp.insert(xS, yS, RoadType.getById(type), value);
+            tmp.insert(xE, yE, RoadType.getById(type), value);
           }
         } 
     } catch (IOException ex) {
