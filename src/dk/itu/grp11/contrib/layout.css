@@ -1,0 +1,87 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+  font: 13px/1.231 arial,helvetica,clean,sans-serif
+}
+div.overlay {
+  position: relative;
+  z-index: 1;
+}
+#map-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
+#select-area {
+  position: absolute;
+  background-color: rgba(0, 162, 232, 0.5);
+  border: 2px solid rgba(0, 162, 232, 1.0);
+}
+div.overlay {
+  position: relative;
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  height: 250px;
+  width: 220px;
+  margin-top: 20px;
+  background: rgba(59, 189, 255, 0.1);
+  border: 1px solid rgba(0,0,0,0.5);
+  border-radius: 10px 10px 10px 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+}
+div.overlay:hover {
+  border: 1px solid rgba(255, 201, 14, 1);
+  background: rgba(255, 242, 0, 0.1);
+}
+img.roadtype {
+  height: 40px;
+  width: 40px;
+}
+div.overlay ul li {
+  list-style: none;
+  display: inline-block;
+  width: 32%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  position: relative;
+}
+div.overlay ul {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+h2 {
+  margin: 0;
+  padding: 0 0 10px 0;
+}
+input[type=radio] {
+  position: absolute;
+  left: 0;
+jquery  top: 0;
+}
+input[type=text] {
+  width: 100%;
+}
+div.loader {
+  height: 150px;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+div.loader img {
+  height: 150px;
+  width: 150px;
+}

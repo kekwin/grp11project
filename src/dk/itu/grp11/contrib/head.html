@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Map of Denmark</title>
+    <link rel=StyleSheet href="layout.css" type="text/css">
+    <script type="text/JavaScript" src="jQuery.min.js"></script>
+    <script type="text/JavaScript" src="jquery.svg.min.js"></script>
+    <script type="text/JavaScript" src="load.js"></script> 
+  </head> 
+  <body>
+  <div class="loader"><img src="ajax-loader.gif" /></div>
+    <div class="overlay"> 
+      <form>
+        <h2>Map Settings</h2>
+        <input type="text" value="From address">
+        <input type="text" value="To address">
+        <ul>
+          <li><input type="radio" name="type"><img src="bike.png" class="roadtype" /></li>
+          <li><input type="radio" name="type"><img src="car.png" class="roadtype" /></li>
+          <li><input type="radio" name="type"><img src="man.png" class="roadtype" /></li>
+        </ul>
+        <input type="submit" value="Find rute">
+      </form>
+    </div>
+    <div id="map-container">
+    </div>
+  </body>
+</html>
