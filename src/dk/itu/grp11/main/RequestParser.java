@@ -39,10 +39,10 @@ public class RequestParser extends Thread {
     }
   }
   private void parseRequest(String request) throws IOException {
-    xStart = (int)Math.floor(map.getMinMax(MapBound.MINX.index()));
-    yStart = (int)Math.floor(map.getMinMax(MapBound.MINY.index()));
-    xDiff = (int)Math.ceil(map.getMinMax(MapBound.MAXX.index())-map.getMinMax(MapBound.MINX.index()));
-    yDiff = (int)Math.ceil(map.getMinMax(MapBound.MAXY.index())-map.getMinMax(MapBound.MINY.index()));
+    xStart = (int)Math.floor(Parser.getMapBound(MapBound.MINX));
+    yStart = (int)Math.floor(Parser.getMapBound(MapBound.MINY));
+    xDiff = (int)Math.ceil(Parser.getMapBound(MapBound.MAXX)-Parser.getMapBound(MapBound.MINX));
+    yDiff = (int)Math.ceil(Parser.getMapBound(MapBound.MAXY)-Parser.getMapBound(MapBound.MINY));
     
     //Get file request and params
     String[] split = request.split("\\?");

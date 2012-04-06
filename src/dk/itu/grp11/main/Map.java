@@ -18,7 +18,6 @@ import dk.itu.grp11.enums.RoadType;
 public class Map {
   private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
-  private double[] minMaxValues; //Minimum/maximum x and y coordinates in the map
 	
 	/**
 	* Loads a map by points and roads
@@ -26,14 +25,9 @@ public class Map {
 	* @param points All points in the network
 	* @param roads All roads in the network
 	*/
-	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, double[] minMaxValues) {
+	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads) {
 	  this.points = points;
 		this.roads = roads;
-		this.minMaxValues = minMaxValues;
-	}
-	
-	public double getMinMax(int index) {
-	  return minMaxValues[index];
 	}
 	
 	public int getZoomLevel(double w, double h) {
@@ -94,6 +88,6 @@ public class Map {
 	 *         w if w = (total map width)/(total map width).
 	 */
 	private int zoomLevel(double w, double h) {
-	  return (int)((Math.ceil(minMaxValues[MapBound.MAXX.index()])-Math.floor(minMaxValues[MapBound.MINX.index()]))/w);
+	  return (int)((Math.ceil(Parser.getMapBound(MapBound.MAXX))-Math.floor(Parser.getMapBound(MapBound.MINX)))/w);
 	}
 }
