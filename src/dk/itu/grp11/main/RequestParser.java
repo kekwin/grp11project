@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
 
-import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.MapBound;
 
 public class RequestParser extends Thread {
   private int xStart;
@@ -39,10 +39,10 @@ public class RequestParser extends Thread {
     }
   }
   private void parseRequest(String request) throws IOException {
-    xStart = (int)Math.floor(map.getMinMax(MinMax.MINX.id()));
-    yStart = (int)Math.floor(map.getMinMax(MinMax.MINY.id()));
-    xDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXX.id())-map.getMinMax(MinMax.MINX.id()));
-    yDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXY.id())-map.getMinMax(MinMax.MINY.id()));
+    xStart = (int)Math.floor(map.getMinMax(MapBound.MINX.index()));
+    yStart = (int)Math.floor(map.getMinMax(MapBound.MINY.index()));
+    xDiff = (int)Math.ceil(map.getMinMax(MapBound.MAXX.index())-map.getMinMax(MapBound.MINX.index()));
+    yDiff = (int)Math.ceil(map.getMinMax(MapBound.MAXY.index())-map.getMinMax(MapBound.MINY.index()));
     
     //Get file request and params
     String[] split = request.split("\\?");

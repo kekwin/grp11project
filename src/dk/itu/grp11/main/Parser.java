@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import dk.itu.grp11.contrib.DimensionalTree;
-import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.exceptions.DataNotInitializedException;
 
@@ -174,10 +174,10 @@ public class Parser {
   public double[] getMinMaxValues() throws DataNotInitializedException {
     if(!pointsInit) throw new DataNotInitializedException(); // Checks if data has been initialized (parsed)
     double[] tmp = new double[4];
-    tmp[MinMax.MINX.id()]=minX;
-    tmp[MinMax.MAXX.id()]=maxX;
-    tmp[MinMax.MINY.id()]=minY;
-    tmp[MinMax.MAXY.id()]=maxY;
+    tmp[MapBound.MINX.index()]=minX;
+    tmp[MapBound.MAXX.index()]=maxX;
+    tmp[MapBound.MINY.index()]=minY;
+    tmp[MapBound.MAXY.index()]=maxY;
     return tmp;
   }
 

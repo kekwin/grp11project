@@ -6,7 +6,7 @@ import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.contrib.DynArray;
 import dk.itu.grp11.contrib.Interval;
 import dk.itu.grp11.contrib.Interval2D;
-import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 
 /**
@@ -94,6 +94,6 @@ public class Map {
 	 *         w if w = (total map width)/(total map width).
 	 */
 	private int zoomLevel(double w, double h) {
-	  return (int)((Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))/w);
+	  return (int)((Math.ceil(minMaxValues[MapBound.MAXX.index()])-Math.floor(minMaxValues[MapBound.MINX.index()]))/w);
 	}
 }
