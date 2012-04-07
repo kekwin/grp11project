@@ -11,21 +11,17 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
 
-import dk.itu.grp11.enums.MinMax;
-
 public class RequestParser extends Thread {
-  private int xStart;
-  private int yStart;
-  private int xDiff;
-  private int yDiff;
   
   private Map map;
   
   private Socket con;
   private OutputStream out;
   private PrintStream pout;
+  private FileServer fileserver;
   
-  public RequestParser(PrintStream pout, OutputStream out, Socket con, Map map) {
+  public RequestParser(FileServer fileserver, PrintStream pout, OutputStream out, Socket con, Map map) {
+    this.fileserver = fileserver;
     this.con = con;
     this.out = out;
     this.pout = pout;
@@ -39,11 +35,6 @@ public class RequestParser extends Thread {
     }
   }
   private void parseRequest(String request) throws IOException {
-    xStart = (int)Math.floor(map.getMinMax(MinMax.MINX.id()));
-    yStart = (int)Math.floor(map.getMinMax(MinMax.MINY.id()));
-    xDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXX.id())-map.getMinMax(MinMax.MINX.id()));
-    yDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXY.id())-map.getMinMax(MinMax.MINY.id()));
-    
     //Get file request and params
     String[] split = request.split("\\?");
     String[] split2 = split[0].split(" ");
@@ -61,7 +52,7 @@ public class RequestParser extends Thread {
     else processRequest(file, params);
   }
   private String getMinMax() {
-    return xStart + " -" + yStart + " " + xDiff + " " + yDiff;
+    return fileserver.getXStart() + " " + fileserver.getYStart() + " " + fileserver.getXDiff() + " " + fileserver.getYDiff();
   }
 
   private void processRequest(String file, HashMap<String, String> params) throws IOException {
@@ -69,10 +60,21 @@ public class RequestParser extends Thread {
     String contenttype = "text/html";
     if (file.indexOf("getMinMax") != -1) {
       outStream = new ByteArrayInputStream(getMinMax().getBytes("UTF-8"));
-    } else if (file.indexOf("getZoomLevel") != -1) { 
-      outStream = new ByteArrayInputStream((""+map.getZoomLevel(Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")))).getBytes("UTF-8"));
-    }else if (file.indexOf("getMap") != -1) {
-      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), xDiff, yDiff, Integer.parseInt(params.get("zoomlevel"))).getBytes("UTF-8"));
+    } else if (file.indexOf("getZoomLevelX") != -1) { 
+      outStream = new ByteArrayInputStream((""+map.getZoomLevelX(Double.parseDouble(params.get("width")))).getBytes("UTF-8"));
+    } else if (file.indexOf("getZoomLevelY") != -1) { 
+      outStream = new ByteArrayInputStream((""+map.getZoomLevelY(Double.parseDouble(params.get("height")))).getBytes("UTF-8"));
+    } else if (file.indexOf("getMap") != -1) {
+      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), fileserver.getYStart(), fileserver.getYDiff(), Integer.parseInt(params.get("zoomlevel"))).getBytes("UTF-8"));
+    } else if (file.indexOf("setCanvas") != -1) {
+      if (params.size() < 4) fileserver.resetMinMax();
+      else {
+        fileserver.setXStart(Integer.parseInt(params.get("x")));
+        fileserver.setYStart(Integer.parseInt(params.get("y")));
+        fileserver.setXDiff(Integer.parseInt(params.get("width")));
+        fileserver.setYDiff(Integer.parseInt(params.get("height")));
+      }
+      outStream = new ByteArrayInputStream(("Success").getBytes("UTF-8"));
     } else {
       File f = null;
       if (file.indexOf(".png") != -1) f = new File("src\\dk\\itu\\grp11\\files\\"+file);
@@ -85,6 +87,7 @@ public class RequestParser extends Thread {
       else if (file.indexOf(".css") != -1) contenttype = "text/css";
       else if (file.indexOf(".png") != -1 || file.indexOf(".gif") != -1) contenttype = "Image";
       else contenttype = "text";
+      if (file.indexOf("head.html") != -1) fileserver.resetMinMax();
     }
     pout.print("HTTP/1.0 200 OK\r\n");
     pout.print("Content-Type: "+contenttype+"\r\n");

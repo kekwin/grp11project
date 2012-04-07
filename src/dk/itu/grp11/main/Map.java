@@ -36,9 +36,12 @@ public class Map {
 	  return minMaxValues[index];
 	}
 	
-	public int getZoomLevel(double w, double h) {
-	  return zoomLevel(w, h);
+	public int getZoomLevelX(double w) {
+	  return zoomLevelX(w);
 	}
+	public int getZoomLevelY(double h) {
+    return zoomLevelY(h);
+  }
 	
 	/**
 	* Get a part of the loaded map
@@ -50,7 +53,7 @@ public class Map {
 	* 
 	* @return String of SVG elements in the specified viewbox (with linebreaks)
 	*/
-	public String getPart(double x, double y, double w, double h, double cW, double cH, int zoomlevel) {
+	public String getPart(double x, double y, double w, double h, double yOff, double cH, int zoomlevel) {
 	  //long partTime = System.nanoTime(); 
 		String output = "var svg = $('#map-container').svg('get');\n";
 
@@ -75,7 +78,7 @@ public class Map {
   		//System.out.println("Found " + roadsFound.length + " roads of type "+roadType.name()+" in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
   		//startTime = System.nanoTime(); 
   		for (Road roadFound : roadsFound) {
-  		  output += "svg.line("+points.get(roadFound.getP1()).getX()+", "+((cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+((cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: "+roadType.getStroke()+"});\n";
+  		  output += "svg.line("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: "+roadType.getStroke()+"});\n";
       }
   		//System.out.println("Wrote output in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
 		}	
@@ -93,7 +96,12 @@ public class Map {
 	 * @return zoom level as int. 1 if w = (total map width). 2 if w = (total map width)/2.
 	 *         w if w = (total map width)/(total map width).
 	 */
-	private int zoomLevel(double w, double h) {
-	  return (int)((Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))/w);
+	private int zoomLevelX(double w) {
+	  int zoomlevel = (int)((Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))/w);
+	  return (zoomlevel < 1 ? 1 : zoomlevel);
 	}
+	private int zoomLevelY(double h) {
+    int zoomlevel = (int)((Math.ceil(minMaxValues[MinMax.MAXY.id()])-Math.floor(minMaxValues[MinMax.MINY.id()]))/h);
+    return (zoomlevel < 1 ? 1 : zoomlevel);
+  }
 }

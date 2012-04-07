@@ -10,8 +10,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
+import dk.itu.grp11.enums.MinMax;
+
 
 public class FileServer {
+  private int xStart;
+  private int yStart;
+  private int xDiff;
+  private int yDiff;
+  
   private int port;
   private Map map;
 
@@ -23,6 +30,14 @@ public class FileServer {
   public FileServer(int port, Map map) {
     this.port = port;
     this.map = map;
+    resetMinMax();
+  }
+  
+  public void resetMinMax() {
+    xStart = (int)Math.floor(map.getMinMax(MinMax.MINX.id()));
+    yStart = (int)Math.floor(map.getMinMax(MinMax.MINY.id()));
+    xDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXX.id())-map.getMinMax(MinMax.MINX.id()));
+    yDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXY.id())-map.getMinMax(MinMax.MINY.id()));
   }
 
   public void run() {
@@ -48,7 +63,7 @@ public class FileServer {
         con.shutdownInput(); // ignore the rest
         log(con, request);
         if (request != null) {
-          RequestParser p = new RequestParser(pout, out, con, map);
+          RequestParser p = new RequestParser(this, pout, out, con, map);
           p.run(request);
         }
                 
@@ -69,6 +84,15 @@ public class FileServer {
     System.err.println(new Date()+" ["+
                        con.getInetAddress().getHostAddress()+
                        ":"+con.getPort()+"] "+msg);
-  }  
+  }
+  
+  public int getXStart() { return xStart; }
+  public int getYStart() { return yStart; }
+  public int getXDiff()  { return xDiff;  }
+  public int getYDiff()  { return yDiff;  }
+  public void setXStart(int xStart) { this.xStart = xStart; }
+  public void setYStart(int yStart) { this.yStart = yStart; }
+  public void setXDiff(int xDiff) { this.xDiff = xDiff; }
+  public void setYDiff(int yDiff) { this.yDiff = yDiff; }
 }
 

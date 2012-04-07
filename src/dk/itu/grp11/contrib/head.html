@@ -9,6 +9,9 @@
   <body>
   <div class="loader"><img src="ajax-loader.gif" /></div>
     <div class="overlay"> 
+    <div class="plus arrow" id="plus"><div>+</div></div>
+    <div class="minus arrow" id="minus"><div>-</div></div>
+    <div class="line"></div>
       <form>
         <h2>Map Settings</h2>
         <input type="text" value="From address">
@@ -21,7 +24,13 @@
         <input type="submit" value="Find rute">
       </form>
     </div>
-    <div id="map-container">
+    <div>
+      <div class="top arrow" id="up"></div>
+      <div class="left arrow" id="left"></div>
+      <div class="right arrow" id="right"></div>
+      <div class="bottom arrow" id="down"></div>
+      <div id="map-container">
+      </div>
     </div>
   </body>
 </html>
