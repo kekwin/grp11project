@@ -8,7 +8,7 @@ import java.util.HashMap;
 import org.junit.Test;
 
 import dk.itu.grp11.contrib.DimensionalTree;
-import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.main.Map;
 import dk.itu.grp11.main.Point;
@@ -30,10 +30,10 @@ public class MapTest {
     roads.insert(points.get(r.getP2()).getX(), points.get(r.getP2()).getY(), RoadType.MINDRE_VEJTUNNEL, r);
     
     double[] bounds = new double[4];
-    bounds[MinMax.MINX.id()] = 320;
-    bounds[MinMax.MAXX.id()] = 320+150;
-    bounds[MinMax.MINY.id()] = 330;
-    bounds[MinMax.MAXY.id()] = 330+100;
+    bounds[MapBound.MINX.index()] = 320;
+    bounds[MapBound.MAXX.index()] = 320+150;
+    bounds[MapBound.MINY.index()] = 330;
+    bounds[MapBound.MAXY.index()] = 330+100;
     
     Map map = new Map(points, roads, bounds);
     

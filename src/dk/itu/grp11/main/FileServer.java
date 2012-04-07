@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
-import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.MapBound;
 
 
 public class FileServer {
@@ -34,10 +34,10 @@ public class FileServer {
   }
   
   public void resetMinMax() {
-    xStart = (int)Math.floor(map.getMinMax(MinMax.MINX.id()));
-    yStart = (int)Math.floor(map.getMinMax(MinMax.MINY.id()));
-    xDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXX.id())-map.getMinMax(MinMax.MINX.id()));
-    yDiff = (int)Math.ceil(map.getMinMax(MinMax.MAXY.id())-map.getMinMax(MinMax.MINY.id()));
+    xStart = (int)Math.floor(Parser.getMapBound(MapBound.MINX));
+    yStart = (int)Math.floor(Parser.getMapBound(MapBound.MINY));
+    xDiff = (int)Math.ceil(Parser.getMapBound(MapBound.MAXX)-Parser.getMapBound(MapBound.MINX));
+    yDiff = (int)Math.ceil(Parser.getMapBound(MapBound.MAXY)-Parser.getMapBound(MapBound.MINY));
   }
 
   public void run() {

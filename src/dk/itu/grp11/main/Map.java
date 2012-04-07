@@ -6,7 +6,7 @@ import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.contrib.DynArray;
 import dk.itu.grp11.contrib.Interval;
 import dk.itu.grp11.contrib.Interval2D;
-import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 
 /**
@@ -18,7 +18,6 @@ import dk.itu.grp11.enums.RoadType;
 public class Map {
   private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
-  private double[] minMaxValues; //Minimum/maximum x and y coordinates in the map
 	
 	/**
 	* Loads a map by points and roads
@@ -26,14 +25,9 @@ public class Map {
 	* @param points All points in the network
 	* @param roads All roads in the network
 	*/
-	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, double[] minMaxValues) {
+	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads) {
 	  this.points = points;
 		this.roads = roads;
-		this.minMaxValues = minMaxValues;
-	}
-	
-	public double getMinMax(int index) {
-	  return minMaxValues[index];
 	}
 	
 	public int getZoomLevelX(double w) {
@@ -97,11 +91,11 @@ public class Map {
 	 *         w if w = (total map width)/(total map width).
 	 */
 	private int zoomLevelX(double w) {
-	  int zoomlevel = (int)((Math.ceil(minMaxValues[MinMax.MAXX.id()])-Math.floor(minMaxValues[MinMax.MINX.id()]))/w);
+	  int zoomlevel = (int)((Math.ceil(Parser.getMapBound(MapBound.MAXX))-Math.floor(Parser.getMapBound(MapBound.MINX)))/w);
 	  return (zoomlevel < 1 ? 1 : zoomlevel);
 	}
 	private int zoomLevelY(double h) {
-    int zoomlevel = (int)((Math.ceil(minMaxValues[MinMax.MAXY.id()])-Math.floor(minMaxValues[MinMax.MINY.id()]))/h);
+    int zoomlevel = (int)((Math.ceil(Parser.getMapBound(MapBound.MAXY))-Math.floor(Parser.getMapBound(MapBound.MINY)))/h);
     return (zoomlevel < 1 ? 1 : zoomlevel);
   }
 }

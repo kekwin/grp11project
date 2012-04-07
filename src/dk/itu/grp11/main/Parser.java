@@ -4,10 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.HashMap;
 
 import dk.itu.grp11.contrib.DimensionalTree;
-import dk.itu.grp11.enums.MinMax;
+import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.exceptions.DataNotInitializedException;
 
@@ -18,13 +19,10 @@ import dk.itu.grp11.exceptions.DataNotInitializedException;
  * 
  */
 public class Parser {
-  private boolean pointsInit = false;
+  private static boolean pointsInit = false;
   private File nodes;
   private File connections;
-  private double minX = 1000000;
-  private double maxX = 0;
-  private double minY = 100000000.0;
-  private double maxY = 0;
+  private static EnumMap<MapBound, Double> mapBounds;
   
   /**
    * 
@@ -34,6 +32,11 @@ public class Parser {
   public Parser(File nodeFile, File connectionFile) {
     nodes = nodeFile;
     connections = connectionFile;
+    mapBounds = new EnumMap<MapBound, Double>(MapBound.class);
+    mapBounds.put(MapBound.MINX, 1000000.0);
+    mapBounds.put(MapBound.MAXX, 0.0);
+    mapBounds.put(MapBound.MINY, 100000000.0);
+    mapBounds.put(MapBound.MAXY, 0.0);
   }
 
   /**
@@ -57,17 +60,17 @@ public class Parser {
         // Finding maximum and minimum x and y coordinates
         while ((line = input.readLine()) != null) {
           Point p = createPoint(line);
-          if (p.getX()>maxX){
-            maxX=p.getX();
+          if (p.getX() > mapBounds.get(MapBound.MAXX)){
+            mapBounds.put(MapBound.MAXX, p.getX());
           }
-          if (p.getX()<minX){
-            minX=p.getX();
+          if (p.getX() < mapBounds.get(MapBound.MINX)){
+            mapBounds.put(MapBound.MINX, p.getX());
           }
-          if (p.getY()>maxY){
-            maxY=p.getY();
+          if (p.getY() > mapBounds.get(MapBound.MAXY)){
+            mapBounds.put(MapBound.MAXY, p.getY());
           }
-          if (p.getY()<minY){
-            minY=p.getY();
+          if (p.getY() < mapBounds.get(MapBound.MINY)){
+            mapBounds.put(MapBound.MINY, p.getY());
           }
           tmp.put(p.getID(), p);
         }
@@ -171,14 +174,9 @@ public class Parser {
    * @return Maximum/minimum x- and y-coordinates.
    * @throws DataNotInitializedException if points has not been initialized.
    */
-  public double[] getMinMaxValues() throws DataNotInitializedException {
+  public static double getMapBound(MapBound mb) throws DataNotInitializedException {
     if(!pointsInit) throw new DataNotInitializedException(); // Checks if data has been initialized (parsed)
-    double[] tmp = new double[4];
-    tmp[MinMax.MINX.id()]=minX;
-    tmp[MinMax.MAXX.id()]=maxX;
-    tmp[MinMax.MINY.id()]=minY;
-    tmp[MinMax.MAXY.id()]=maxY;
-    return tmp;
+    return mapBounds.get(mb);
   }
 
 }
