@@ -6,15 +6,15 @@ import java.io.File;
 
 import org.junit.Test;
 
-import dk.itu.grp11.main.Parser;
-import dk.itu.grp11.main.Point;
-import dk.itu.grp11.main.Road;
+import dk.itu.grp11.data.Parser;
+import dk.itu.grp11.data.Point;
+import dk.itu.grp11.data.Road;
 
 public class ParserTest {
   //Testing to see whether (some) points get the right id and values assigned or not
   @Test
   public void test0() {
-    dk.itu.grp11.main.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
+    dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
     Point[] points = p.parsePoints();
     
     assertEquals(points[0].getID(), 1); //The first point
@@ -28,7 +28,7 @@ public class ParserTest {
   
   @Test
   public void test1() {
-    dk.itu.grp11.main.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
+    dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
     Road[] roads = p.parseRoads();
     
     //TODO Not finished

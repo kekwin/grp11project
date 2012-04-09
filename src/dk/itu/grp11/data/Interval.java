@@ -1,4 +1,4 @@
-package dk.itu.grp11.contrib;
+package dk.itu.grp11.data;
 
 /**
 * 

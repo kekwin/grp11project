@@ -7,12 +7,12 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-import dk.itu.grp11.contrib.DimensionalTree;
+import dk.itu.grp11.data.DimensionalTree;
+import dk.itu.grp11.data.Map;
+import dk.itu.grp11.data.Point;
+import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
-import dk.itu.grp11.main.Map;
-import dk.itu.grp11.main.Point;
-import dk.itu.grp11.main.Road;
 
 public class MapTest {
   @Test

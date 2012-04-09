@@ -3,7 +3,11 @@ package dk.itu.grp11.main;
 import java.io.File;
 import java.util.HashMap;
 
-import dk.itu.grp11.contrib.DimensionalTree;
+import dk.itu.grp11.data.DimensionalTree;
+import dk.itu.grp11.data.Map;
+import dk.itu.grp11.data.Parser;
+import dk.itu.grp11.data.Point;
+import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.RoadType;
 
 public class Main {

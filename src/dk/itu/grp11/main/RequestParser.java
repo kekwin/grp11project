@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
 
+import dk.itu.grp11.data.Map;
+
 public class RequestParser extends Thread {
   
   private Map map;
@@ -77,16 +79,16 @@ public class RequestParser extends Thread {
       outStream = new ByteArrayInputStream(("Success").getBytes("UTF-8"));
     } else {
       File f = null;
-      if (file.indexOf(".png") != -1) f = new File("src\\dk\\itu\\grp11\\files\\"+file);
-      else if (file.indexOf(".gif") != -1) f = new File("src\\dk\\itu\\grp11\\files\\"+file);
-      else if (file.indexOf("svg") != -1) f = new File("src\\dk\\itu\\grp11\\files\\"+file);
-      else f = new File("src\\dk\\itu\\grp11\\contrib\\"+file);
+      if (file.indexOf("head.html") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
+      else if (file.indexOf("layout.css") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
+      else if (file.indexOf("load.js") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
+      else f = new File("src\\dk\\itu\\grp11\\files\\"+file);
       outStream = new FileInputStream(f);
       if (file.indexOf(".js") != -1) contenttype = "text/javascript";
       else if (file.indexOf(".html") != -1) contenttype = "text/html";
       else if (file.indexOf(".css") != -1) contenttype = "text/css";
       else if (file.indexOf(".png") != -1 || file.indexOf(".gif") != -1) contenttype = "Image";
-      else contenttype = "text";
+      else contenttype = "text/plain";
       if (file.indexOf("head.html") != -1) fileserver.resetMinMax();
     }
     pout.print("HTTP/1.0 200 OK\r\n");

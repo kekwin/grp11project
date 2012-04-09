@@ -1,4 +1,4 @@
-package dk.itu.grp11.contrib;
+package dk.itu.grp11.data;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

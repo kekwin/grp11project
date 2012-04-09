@@ -1,4 +1,4 @@
-package dk.itu.grp11.main;
+package dk.itu.grp11.data;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
 
-import dk.itu.grp11.contrib.DimensionalTree;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.exceptions.DataNotInitializedException;

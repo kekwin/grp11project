@@ -10,6 +10,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
+import dk.itu.grp11.data.Map;
+import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.enums.MapBound;
 
 

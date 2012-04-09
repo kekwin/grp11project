@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.RoadType;
-import dk.itu.grp11.main.Road;
 
 public class RoadTest {
   //Testing Point with positive values

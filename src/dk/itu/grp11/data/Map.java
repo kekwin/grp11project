@@ -1,11 +1,7 @@
-package dk.itu.grp11.main;
+package dk.itu.grp11.data;
 
 import java.util.HashMap;
 
-import dk.itu.grp11.contrib.DimensionalTree;
-import dk.itu.grp11.contrib.DynArray;
-import dk.itu.grp11.contrib.Interval;
-import dk.itu.grp11.contrib.Interval2D;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 

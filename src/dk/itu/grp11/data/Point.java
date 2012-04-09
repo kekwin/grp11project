@@ -1,4 +1,4 @@
-package dk.itu.grp11.main;
+package dk.itu.grp11.data;
 
 import dk.itu.grp11.exceptions.NegativeValueException;
 
