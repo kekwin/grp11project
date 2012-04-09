@@ -16,6 +16,8 @@ import dk.itu.grp11.enums.MapBound;
 
 
 public class FileServer {
+  private static int reqCount = 0;
+  
   private int xStart;
   private int yStart;
   private int xDiff;
@@ -83,7 +85,7 @@ public class FileServer {
     
   }
   public static void log(Socket con, String msg) {
-    System.err.println(new Date()+" ["+
+    System.err.println("Req no. "+(reqCount++)+" "+new Date()+" ["+
                        con.getInetAddress().getHostAddress()+
                        ":"+con.getPort()+"] "+msg);
   }

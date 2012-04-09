@@ -67,7 +67,7 @@ h2 {
 input[type=radio] {
   position: absolute;
   left: 0;
-jquery  top: 0;
+  top: 0;
 }
 input[type=text] {
   width: 100%;
@@ -91,6 +91,7 @@ div.arrow {
   background-size: 100%;
   position: absolute;
   cursor: hand;
+  cursor: pointer;
   z-index: 10;
 }
 div.top {
