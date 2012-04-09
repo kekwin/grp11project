@@ -67,17 +67,9 @@ public class FileServer {
         con.shutdownInput(); // ignore the rest
         log(con, request);
         if (request != null) {
-          RequestParser p = new RequestParser(this, pout, out, con, map);
-          p.run(request);
+          RequestParser p = new RequestParser(this, map, con, out, pout, request);
+          p.start();
         }
-                
-        pout.flush();
-      } catch (IOException e) { 
-        System.err.println(e); 
-      }
-      try {
-        if (con!=null) 
-          con.close(); 
       } catch (IOException e) { 
         System.err.println(e); 
       }

@@ -16,22 +16,26 @@ import dk.itu.grp11.data.Map;
 public class RequestParser extends Thread {
   
   private Map map;
+  String request;
   
   private Socket con;
   private OutputStream out;
   private PrintStream pout;
   private FileServer fileserver;
   
-  public RequestParser(FileServer fileserver, PrintStream pout, OutputStream out, Socket con, Map map) {
-    this.fileserver = fileserver;
+  public RequestParser(FileServer fileserver, Map map, Socket con, OutputStream out, PrintStream pout, String request) throws IOException {
     this.con = con;
     this.out = out;
     this.pout = pout;
+    this.fileserver = fileserver;
     this.map = map;
+    this.request = request;
   }
-  public void run(String request) {
+  public void run() {
     try {
       parseRequest(request);
+      pout.flush();
+      con.close();
     } catch (IOException e) {
       System.err.println(e);
     }
