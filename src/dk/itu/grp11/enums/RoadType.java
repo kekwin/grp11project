@@ -9,41 +9,46 @@ import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
  *
  */
 public enum RoadType {
-  MOTORVEJ(1, 200, new Color(255,0,0), 1),
-  MOTORTRAFIKVEJ(2, 150, new Color(0,255,0), 2),
-  PRIMAERRUTE_OVER_6M(3, 100, new Color(0,0,0), 4),
-  SEKUNDAERRUTE_OVER_6M(4, 100, new Color(0,0,0), 4),
-  VEJ_3_TIL_6M(5, 20, new Color(0,0,0), 400),
-  ANDEN_VEJ(6, 20, new Color(0,0,0), 400),
-  STI(8, 20, new Color(0,0,0), 400),
-  MARKVEJ(10, 20, new Color(0,0,0), 400),
-  GÅGADE(11, 20, new Color(0,0,0), 400),
-  PROJ_MOTORVEJ(21, 200, new Color(0,0,0), 1),
-  PROJ_MOTORTRAFIKVEJ(22, 150, new Color(0,255,0), 2),
-  PROJ_PRIMAERVEJ(23, 20, new Color(0,0,0), 400),
-  PROJ_SEKUNDAERVEJ(24, 20, new Color(0,0,0), 400),
-  PROJ_VEJ_3_TIL_6M(25, 20, new Color(0,0,0), 400),
-  PROJ_VEJ_UNDER_3M(26, 20, new Color(0,0,0), 400),
-  PROJ_STI(28, 20, new Color(0,0,0), 400),
-  MOTORVEJSAFKOERSEL(31, 200, new Color(0,0,0), 1),
-  MOTORTRAFIKVEJSARKOERSEL(32, 150, new Color(0,255,0), 2),
-  PRIMAERVEJSAFKOERSEL(33, 100, new Color(0,0,0), 4),
-  SEKUNDAERVEJSAFKOERSEL(34, 100, new Color(0,0,0), 4),
-  ANDEN_VEJAFKOERSEL(35, 20, new Color(0,0,0), 400),
-  MOTORVEJSTUNNEL(41, 200, new Color(0,0,0), 1),
-  MOTORTRAFIKVEJSTUNNEL(42, 150, new Color(0,255,0), 2),
-  PRIMAERVEJSTUNNEL(43, 100, new Color(0,0,0), 4),
-  SEKUNDAERVEJSTUNNEL(44, 100, new Color(0,0,0), 4),
-  ANDEN_VEJTUNNEL(45, 20, new Color(0,0,0), 400),
-  MINDRE_VEJTUNNEL(46, 20, new Color(0,0,0), 400),
-  STITUNNEL(48, 20, new Color(0,0,0), 400),
-  FAERGEFORBINDELSE(80, 200, new Color(0,0,255), 10),
-  STEDNAVN(99, 20, new Color(0,0,0), 1),
-  UKENDT1(95, 20, new Color(0,0,0), 400), //Unknown roadtype, not described by krak
-  UKENDT2(0, 20, new Color(0,0,0), 400); //Unknown roadtype, not described by krak
+  MOTORVEJ(1, 0.3, new Color(255,0,0), 1),
+  MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 1),
+  PROJ_MOTORVEJ(21, 0.1, new Color(0,0,0), 1),
+  PROJ_MOTORTRAFIKVEJ(22, 0.1, new Color(0,255,0), 1),
+  MOTORVEJSTUNNEL(41, 0.1, new Color(0,0,0), 1),
+  MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 1),
+  FAERGEFORBINDELSE(80, 0.1, new Color(0,0,255), 1),
+  
+  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 2),
+  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 2),
+  SEKUNDAERRUTE_OVER_6M(4, 0.1, new Color(150,150,150), 2),
+  MOTORVEJSAFKOERSEL(31, 0.1, new Color(255,100,100), 2),
+  MOTORTRAFIKVEJSARKOERSEL(32, 0.1, new Color(100,255,100), 2),
+  PRIMAERVEJSAFKOERSEL(33, 0.1, new Color(100,100,100), 2),
+  SEKUNDAERVEJSAFKOERSEL(34, 0.1, new Color(150,150,150), 2),
+  PROJ_SEKUNDAERVEJ(24, 0.1, new Color(150,150,150), 2),
+  PRIMAERVEJSTUNNEL(43, 0.1, new Color(0,0,0), 2),
+  SEKUNDAERVEJSTUNNEL(44, 0.1, new Color(150,150,150), 2),
+  
+  VEJ_3_TIL_6M(5, 0.1, new Color(150,150,150), 20),
+  PROJ_VEJ_3_TIL_6M(25, 0.1, new Color(150,150,150), 20),
+  
+  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 40),
+  ANDEN_VEJAFKOERSEL(35, 0.1, new Color(64,128,128), 40),
+  PROJ_VEJ_UNDER_3M(26, 0.1, new Color(64,128,128), 40),
+  ANDEN_VEJTUNNEL(45, 0.1, new Color(64,128,128), 40),
+  
+  STI(8, 0.05, new Color(220,100,60), 80),
+  MARKVEJ(10, 0.1, new Color(126,49,23), 80),
+  GÅGADE(11, 0.1, new Color(185,185,0), 80),
+  PROJ_STI(28, 0.05, new Color(220,100,60), 80),
+  MINDRE_VEJTUNNEL(46, 0.1, new Color(64,128,128), 80),
+  STITUNNEL(48, 0.05, new Color(220,100,60), 80),
+  UKENDT1(95, 0.1, new Color(0,0,0), 80), //Unknown roadtype, not described by krak
+  UKENDT2(0, 0.1, new Color(0,0,0), 80), //Unknown roadtype, not described by krak
+  
+  STEDNAVN(99, 1, new Color(0,0,0), 10000);
   
   private int id;
-  private int stroke;
+  private double stroke;
   private Color color;
   private int zoomLevel;
   private static java.util.Map<Integer, RoadType> roadTypes = new HashMap<>();
@@ -54,7 +59,7 @@ public enum RoadType {
     }
   }
   
-  RoadType(int id, int stroke, Color color, int zoomLevel) {
+  RoadType(int id, double stroke, Color color, int zoomLevel) {
     this.id = id;
     this.stroke = stroke;
     this.color = color;
@@ -65,7 +70,7 @@ public enum RoadType {
     return id;
   }
   
-  public int getStroke() {
+  public double getStroke() {
     return stroke;
   }
   

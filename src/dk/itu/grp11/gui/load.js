@@ -20,8 +20,8 @@ jQuery(function($){
   $('#plus').click(function() {
     $('.loader').css('display', '');
     createSVG();
-    var newXDiff = Math.ceil(xDiff*0.8);
-    var newYDiff = Math.ceil(yDiff*0.8);
+    var newXDiff = Math.ceil(xDiff*0.5);
+    var newYDiff = Math.ceil(yDiff*0.5);
     $.ajax({
       url: zoomLevelUrl,
       cache: false,
@@ -53,8 +53,8 @@ jQuery(function($){
     if (xDiff != fullXDiff && yDiff != fullYDiff) {
       $('.loader').css('display', '');
       createSVG();
-      var newXDiff = Math.ceil(xDiff*1.2);
-      var newYDiff = Math.ceil(yDiff*1.2);
+      var newXDiff = Math.ceil(xDiff*1.5);
+      var newYDiff = Math.ceil(yDiff*1.5);
       if (newXDiff > fullXDiff) newXDiff = fullXDiff;
       if (newYDiff > fullYDiff) newYDiff = fullYDiff;
       $.ajax({
@@ -105,11 +105,11 @@ jQuery(function($){
     $('.loader').css('display', '');
     createSVG();
     if (!up) {
-      newYStart = yStart-Math.floor(yDiff*0.25);
+      newYStart = yStart-Math.floor(yDiff*0.33);
       if (newYStart < fullYStart) newYStart = fullYStart;
     }
     else {
-      newYStart = yStart+Math.floor(yDiff*0.25);
+      newYStart = yStart+Math.floor(yDiff*0.33);
       if (newYStart+yDiff > fullYStart+fullYDiff) newYStart = (fullYStart+fullYDiff)-yDiff;
     }
     
@@ -131,11 +131,11 @@ jQuery(function($){
     $('.loader').css('display', '');
     createSVG();
     if (left) {
-      newXStart = xStart-Math.floor(xDiff*0.25);
+      newXStart = xStart-Math.floor(xDiff*0.33);
       if (newXStart < fullXStart) newXStart = fullXStart;
     }
     else {
-      newXStart = xStart+Math.floor(xDiff*0.25);
+      newXStart = xStart+Math.floor(xDiff*0.33);
       if (newXStart+xDiff > fullXStart+fullXDiff) newXStart = (fullXStart+fullXDiff)-xDiff;
     }
     
