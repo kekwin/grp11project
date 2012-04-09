@@ -31,7 +31,7 @@ public class MapTest {
     
     Map map = new Map(points, roads);
     
-    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 0, 0, 1));
+    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 1));
   }
   
   
