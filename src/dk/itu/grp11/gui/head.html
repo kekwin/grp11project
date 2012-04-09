@@ -14,8 +14,9 @@
     <div class="line"></div>
       <form>
         <h2>Map Settings</h2>
-        <input type="text" value="From address">
-        <input type="text" value="To address">
+		<input type="text" value="From address" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;">
+
+        <input type="text" value="To address" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;">
         <ul>
           <li><input type="radio" name="type"><img src="bike.png" class="roadtype" /></li>
           <li><input type="radio" name="type"><img src="car.png" class="roadtype" /></li>
