@@ -2,12 +2,14 @@ package dk.itu.grp11.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.junit.Test;
 
@@ -37,11 +39,17 @@ public class ParserTest {
     assertEquals(692067.66450, points.get(points.size()).getX(), 0);
     assertEquals(6049914.43018, points.get(points.size()).getY(), 0);
     
-    System.out.println(countRoads(1));
+    /*System.out.println(countRoads(RoadType.MOTORVEJ,
+                                     RoadType.MOTORTRAFIKVEJ,
+                                     RoadType.PROJ_MOTORVEJ,
+                                     RoadType.PROJ_MOTORTRAFIKVEJ,
+                                     RoadType.MOTORVEJSTUNNEL,
+                                     RoadType.MOTORTRAFIKVEJSTUNNEL,
+                                     RoadType.FAERGEFORBINDELSE));*/
   }
   
-  /*@Test
-  public void test1() {
+  @Test
+  public void test1() throws IOException {
     dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
     HashMap<Integer, Point> points = p.parsePoints();
     DimensionalTree<Double, RoadType, Road> roads = p.parseRoads(points);
@@ -51,17 +59,28 @@ public class ParserTest {
     Interval2D<Double, RoadType> rect = new Interval2D<Double, RoadType>(intervalX, intervalY);
     Road[] roadsInViewbox = roads.query2D(rect);
     
-    assertEquals(200000, roadsInViewbox.length);
-  }*/
+    assertEquals(countRoads(RoadType.MOTORVEJ,
+        RoadType.MOTORTRAFIKVEJ,
+        RoadType.PROJ_MOTORVEJ,
+        RoadType.PROJ_MOTORTRAFIKVEJ,
+        RoadType.MOTORVEJSTUNNEL,
+        RoadType.MOTORTRAFIKVEJSTUNNEL,
+        RoadType.FAERGEFORBINDELSE)*2, roadsInViewbox.length);
+  }
   
-  public int countRoads(int zoomLevel) throws IOException {
+  public int countRoads(RoadType... roadTypes) throws IOException {
+    HashSet<RoadType> roadTypesToFind = new HashSet<>();
+    for(RoadType rt : roadTypes) {
+      roadTypesToFind.add(rt);
+    }
+    
     File f = new File("kdv_unload.txt");
     BufferedReader input = new BufferedReader(new FileReader(f));
     String line = input.readLine(); line = input.readLine();
     int count = 0;
     while(line != null) {
       String[] r = line.split(",");
-      if(Integer.parseInt(r[5]) == RoadType.getById(1)) count++;
+      if(roadTypesToFind.contains(RoadType.getById(Integer.parseInt(r[5])))) count++;
       line = input.readLine();
     }
     return count;

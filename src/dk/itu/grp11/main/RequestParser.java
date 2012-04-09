@@ -67,7 +67,7 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("getZoomLevelY") != -1) { 
       outStream = new ByteArrayInputStream((""+map.getZoomLevelY(Double.parseDouble(params.get("height")))).getBytes("UTF-8"));
     } else if (file.indexOf("getMap") != -1) {
-      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), fileserver.getYStart(), fileserver.getYDiff(), Integer.parseInt(params.get("zoomlevel"))).getBytes("UTF-8"));
+      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel"))).getBytes("UTF-8"));
     } else if (file.indexOf("setCanvas") != -1) {
       if (params.size() < 4) fileserver.resetMinMax();
       else {

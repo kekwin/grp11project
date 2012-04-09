@@ -43,7 +43,7 @@ public class Map {
 	* 
 	* @return String of SVG elements in the specified viewbox (with linebreaks)
 	*/
-	public String getPart(double x, double y, double w, double h, double yOff, double cH, int zoomlevel) {
+	public String getPart(double x, double y, double w, double h, int zoomlevel) {
 	  //long partTime = System.nanoTime(); 
 		String output = "var svg = $('#map-container').svg('get');\n";
 
@@ -67,6 +67,8 @@ public class Map {
   		Road[] roadsFound = roads.query2D(i2D);
   		//System.out.println("Found " + roadsFound.length + " roads of type "+roadType.name()+" in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
   		//startTime = System.nanoTime(); 
+  		double yOff = Parser.getMapBound(MapBound.MINY); //Y-axis offset
+  		double cH = Parser.getMapBound(MapBound.MAXY)-Parser.getMapBound(MapBound.MINY); //Canvas height
   		for (Road roadFound : roadsFound) {
   		  output += "svg.line("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%'});\n";
       }
