@@ -26,18 +26,12 @@ public class MapTest {
     Road r = new Road(p1.getID(), p2.getID(), "Niceness street", RoadType.MOTORVEJ);
     
     DimensionalTree<Double, RoadType, Road> roads = new DimensionalTree<Double, RoadType, Road>(Road[].class);
-    roads.insert(points.get(r.getP1()).getX(), points.get(r.getP1()).getY(), RoadType.MINDRE_VEJTUNNEL, r);
-    roads.insert(points.get(r.getP2()).getX(), points.get(r.getP2()).getY(), RoadType.MINDRE_VEJTUNNEL, r);
+    roads.insert(points.get(r.getP1()).getX(), points.get(r.getP1()).getY(), RoadType.MOTORVEJ, r);
+    roads.insert(points.get(r.getP2()).getX(), points.get(r.getP2()).getY(), RoadType.MOTORVEJ, r);
     
-    double[] bounds = new double[4];
-    bounds[MapBound.MINX.index()] = 320;
-    bounds[MapBound.MAXX.index()] = 320+150;
-    bounds[MapBound.MINY.index()] = 330;
-    bounds[MapBound.MAXY.index()] = 330+100;
+    Map map = new Map(points, roads);
     
-    Map map = new Map(points, roads, bounds);
-    
-    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100));
+    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 0, 0, 1));
   }
   
   
