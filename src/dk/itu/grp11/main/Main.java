@@ -23,7 +23,7 @@ public class Main {
     System.out.println("Loaded " + roads.count()/2 + " roads from file in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
     
     Map map = new Map(points, roads);
-    FileServer fs = new FileServer(80, map);
+    FileServer fs = new FileServer(90, map);
     fs.run(); 
     System.out.println("");
     //TEST

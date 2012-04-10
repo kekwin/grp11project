@@ -19,9 +19,9 @@ public enum RoadType {
   MOTORVEJSTUNNEL(41, 0.1, new Color(0,0,0), 1),
   MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 1),
   FAERGEFORBINDELSE(80, 0.1, new Color(0,0,255), 1),
+  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 1),
+  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 1),
   
-  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 2),
-  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 2),
   SEKUNDAERRUTE_OVER_6M(4, 0.1, new Color(150,150,150), 2),
   MOTORVEJSAFKOERSEL(31, 0.1, new Color(255,100,100), 2),
   MOTORTRAFIKVEJSARKOERSEL(32, 0.1, new Color(100,255,100), 2),
