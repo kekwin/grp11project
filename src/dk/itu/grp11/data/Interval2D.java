@@ -3,7 +3,6 @@ package dk.itu.grp11.data;
 
 /**
 * 
-* @author Michael Søby Andersen msoa@itu.dk
 * @author Group 11
 * @version 09/04/2012
 */

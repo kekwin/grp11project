@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 
 
-//TODO Javadoc not finished
 /**
  * 
  * @author Group 11

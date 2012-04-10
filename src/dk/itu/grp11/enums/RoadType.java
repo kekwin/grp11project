@@ -6,6 +6,9 @@ import java.util.HashMap;
 import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
 /**
  * Defines different roadtypes, their id, stroke thickness and color of the stroke.
+ * 
+ * Each road type has these things defined for them, and when they need to be drawn these values are used
+ * in the SVG to define the lines that represent individual roads.
  *
  */
 public enum RoadType {
@@ -65,27 +68,45 @@ public enum RoadType {
     this.color = color;
     this.zoomLevel = zoomLevel;
   }
-  
+  /**
+   * @return the id of the roadtype
+   */
   public int getId() {
     return id;
   }
-  
+  /**
+   * 
+   * @return the stroke width of the roadtype, defined in %.
+   */
   public double getStroke() {
     return stroke;
   }
-  
+  /**
+   * 
+   * @return the color of the roadtype, as a Color object.
+   */
   public Color getColor() {
     return color;
   }
-  
+  /**
+   * 
+   * @return the zoomlevel of the roadtype.
+   */
   public int getZoomLevel() {
     return zoomLevel;
   }
-  
+  /**
+   * 
+   * @return The color of the roadtype, as a string.
+   */
   public String getColorAsString() {
     return color.getRed() + "," + color.getGreen() + "," + color.getBlue();
   }
-
+/**
+ * 
+ * @param id the id of the RoadType, we wish to get.
+ * @return returns the roadtype from the given id.
+ */
   public static RoadType getById(int id) {
     if(!roadTypes.containsKey(id))
       throw new RoadTypeDoesNotExistException(); //If no road with such id exist
