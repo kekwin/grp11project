@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.junit.Test;
 
@@ -17,28 +18,22 @@ import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.main.FileServer;
 
 public class MapTest {
   
   //Testing getPart
   @Test
   public void test0() {
-    Point p1 = new Point(1, 300, 356);
-    Point p2 = new Point(2, 390, 377);
-    HashMap<Integer, Point> points = new HashMap<>();
-    points.put(1, p1);
-    points.put(2, p2);
+    Parser p = new Parser(new File("src/dk/itu/grp11/test/test_points.txt"), new File("src/dk/itu/grp11/test/test_roads.txt"));
     
-    Road r = new Road(p1.getID(), p2.getID(), "Niceness street", RoadType.MOTORVEJ);
-    
-    DimensionalTree<Double, RoadType, Road> roads = new DimensionalTree<Double, RoadType, Road>();
-    roads.insert(points.get(r.getP1()).getX(), points.get(r.getP1()).getY(), RoadType.MOTORVEJ, r);
-    roads.insert(points.get(r.getP2()).getX(), points.get(r.getP2()).getY(), RoadType.MOTORVEJ, r);
-    
+    HashMap<Integer, Point> points = p.parsePoints();
+    DimensionalTree<Double, RoadType, Road> roads = p.parseRoads(points);
     Map map = new Map(points, roads);
     
-    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 0, 0, 1));
-    assertEquals("var svg = $('#map-container').svg('get');\nsvg.line(300.0, -356.0, 390.0, -377.0, {stroke: 'rgb(255,0,0)', strokeWidth: '0.3%'});\n", map.getPart(320, 330, 150, 100, 0, 0, 1));
+    FileServer fs = new FileServer(80, map);
+    System.out.println("Getting part: " + map.getPart(320.0, 330.0, 150.0, 100.0, 1, fs));
+    assertEquals("var svg = $('#map-container').svg('get');\nsvg.line(300.0, "+(377.0-356.0)+", 390.0, 0.0, {stroke: 'rgb(255,0,0)', strokeWidth: '0.3%'});\n", map.getPart(320, 330, 150, 100, 1, fs));
   }
   
   //Testing getZoomLevelX
