@@ -3,18 +3,24 @@ package dk.itu.grp11.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.junit.Test;
 
 import dk.itu.grp11.data.DimensionalTree;
+import dk.itu.grp11.data.Interval;
+import dk.itu.grp11.data.Interval2D;
 import dk.itu.grp11.data.Map;
+import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 
 public class MapTest {
+  
+  //Testing getPart
   @Test
   public void test0() {
     Point p1 = new Point(1, 300, 356);
@@ -31,7 +37,65 @@ public class MapTest {
     
     Map map = new Map(points, roads);
     
-    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 0, 0, 1));
+    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 1));
+  }
+  
+  //Testing getZoomLevelX
+  @Test
+  public void test1() {
+    dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
+    HashMap<Integer, Point> points = p.parsePoints();
+    DimensionalTree<Double, RoadType, Road> roads2 = p.parseRoads(points);
+    
+    Point p1 = new Point(1, 300, 356);
+    Point p2 = new Point(2, 390, 377);
+    HashMap<Integer, Point> points2 = new HashMap<>();
+    points2.put(1, p1);
+    points2.put(2, p2);
+    
+    Road r = new Road(p1.getID(), p2.getID(), "Niceness street", RoadType.MOTORVEJ);
+    DimensionalTree<Double, RoadType, Road> roads = new DimensionalTree<Double, RoadType, Road>(Road[].class);
+    roads2.insert(points.get(r.getP1()).getX(), points2.get(r.getP1()).getY(), RoadType.MOTORVEJ, r);
+    roads2.insert(points.get(r.getP2()).getX(), points2.get(r.getP2()).getY(), RoadType.MOTORVEJ, r);
+    
+    Map map = new Map(points, roads);
+    
+    assertEquals(1, map.getZoomLevelX(Parser.getMapBound(MapBound.MAXX)-Parser.getMapBound(MapBound.MINX)));
+  }
+  
+  //Testing getZoomLevelY
+  @Test
+  public void test2() {
+    dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
+    HashMap<Integer, Point> points = p.parsePoints();
+    DimensionalTree<Double, RoadType, Road> roads2 = p.parseRoads(points);
+    
+    Point p1 = new Point(1, 300, 356);
+    Point p2 = new Point(2, 390, 377);
+    HashMap<Integer, Point> points2 = new HashMap<>();
+    points2.put(1, p1);
+    points2.put(2, p2);
+    
+    Road r = new Road(p1.getID(), p2.getID(), "Niceness street", RoadType.MOTORVEJ);
+    DimensionalTree<Double, RoadType, Road> roads = new DimensionalTree<Double, RoadType, Road>(Road[].class);
+    roads2.insert(points.get(r.getP1()).getX(), points2.get(r.getP1()).getY(), RoadType.MOTORVEJ, r);
+    roads2.insert(points.get(r.getP2()).getX(), points2.get(r.getP2()).getY(), RoadType.MOTORVEJ, r);
+    
+    Map map = new Map(points, roads);
+    
+    assertEquals(1, map.getZoomLevelY(Parser.getMapBound(MapBound.MAXY)-Parser.getMapBound(MapBound.MINY)));
+  }
+  
+  //Testing zoomLevelX
+  @Test
+  public void test3() {
+    
+  }
+  
+  //Testing zoomLevelY
+  @Test
+  public void test4() {
+    
   }
   
   
