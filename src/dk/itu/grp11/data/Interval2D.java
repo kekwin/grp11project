@@ -3,9 +3,9 @@ package dk.itu.grp11.data;
 
 /**
 * 
-* @author Claus L. Henriksen clih@itu.dk
-* @author Pacmans
-* @version 29. Marts 2012
+* @author Michael Søby Andersen msoa@itu.dk
+* @author Group 11
+* @version 09/04/2012
 */
 public class Interval2D<T extends Comparable<T>, T2 extends Comparable<T2>> {
   private final Interval<T, T2> intervalX, intervalY;

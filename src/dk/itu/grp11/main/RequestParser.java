@@ -1,10 +1,13 @@
 package dk.itu.grp11.main;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
@@ -16,24 +19,38 @@ import dk.itu.grp11.data.Map;
 public class RequestParser extends Thread {
   
   private Map map;
+  String request;
   
   private Socket con;
+  private BufferedReader in;
   private OutputStream out;
   private PrintStream pout;
   private FileServer fileserver;
   
-  public RequestParser(FileServer fileserver, PrintStream pout, OutputStream out, Socket con, Map map) {
-    this.fileserver = fileserver;
+  public RequestParser(FileServer fileserver, Map map, Socket con) throws IOException {
     this.con = con;
-    this.out = out;
-    this.pout = pout;
+    
+    in = new BufferedReader
+        (new InputStreamReader(con.getInputStream()));
+    request = in.readLine();
+    con.shutdownInput(); // ignore the rest
+    //log(con, request);
+    
+    out = new BufferedOutputStream(con.getOutputStream());
+    pout = new PrintStream(out);
+    
+    this.fileserver = fileserver;
     this.map = map;
   }
-  public void run(String request) {
-    try {
-      parseRequest(request);
-    } catch (IOException e) {
-      System.err.println(e);
+  public void run() {
+    if (request != null) {
+      try {
+        parseRequest(request);
+        pout.flush();
+        con.close();
+      } catch (IOException e) {
+        System.err.println(e);
+      }
     }
   }
   private void parseRequest(String request) throws IOException {
@@ -67,7 +84,7 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("getZoomLevelY") != -1) { 
       outStream = new ByteArrayInputStream((""+map.getZoomLevelY(Double.parseDouble(params.get("height")))).getBytes("UTF-8"));
     } else if (file.indexOf("getMap") != -1) {
-      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), fileserver.getYStart(), fileserver.getYDiff(), Integer.parseInt(params.get("zoomlevel"))).getBytes("UTF-8"));
+      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), fileserver).getBytes("UTF-8"));
     } else if (file.indexOf("setCanvas") != -1) {
       if (params.size() < 4) fileserver.resetMinMax();
       else {
@@ -96,7 +113,7 @@ public class RequestParser extends Thread {
     pout.print(": "+new Date()+"\r\n"+
                "Server: IXWT FileServer 1.0\r\n\r\n");
     sendOutput(outStream, out); // send raw output
-    FileServer.log(con, "200 OK");
+    fileserver.log("Done processing "+request+" (200 OK)");
   }
   
   private void sendOutput(InputStream outStream, OutputStream out) 
