@@ -13,9 +13,9 @@ public class RoadTest {
   public void test0() {
     Road road = new Road(2947, 5728, "Road name", RoadType.PRIMAERRUTE_OVER_6M);
     
-    assertEquals(road.getP1(), 2947);
-    assertEquals(road.getP2(), 5728);
-    assertEquals(road.getName(), "Road name");
-    assertEquals(road.getType(), RoadType.PRIMAERRUTE_OVER_6M);
+    assertEquals(2947, road.getP1());
+    assertEquals(5728, road.getP2());
+    assertEquals("Road name", road.getName());
+    assertEquals(RoadType.PRIMAERRUTE_OVER_6M, road.getType());
   }
 }
