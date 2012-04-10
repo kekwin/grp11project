@@ -18,7 +18,7 @@ import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 
-public class MapTest { //TODO :)
+public class MapTest {
   
   //Testing getPart
   @Test
