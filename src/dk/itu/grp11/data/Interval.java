@@ -1,15 +1,22 @@
 package dk.itu.grp11.data;
 
 /**
+* Describes a interval
 * 
 * @author Group 11
-* @version 09/04/2012
 *
 */
 public class Interval<T extends Comparable<T>, T2 extends Comparable<T2>> {
   private final T low, high;
   private final T2 d3;
   
+  /**
+   * Constructs a interval between low and high
+   * 
+   * @param low the lower bound
+   * @param high the upper bound
+   * @param d3
+   */
   public Interval(T low, T high, T2 d3){
     if(high.compareTo(low) < 0) throw new IllegalArgumentException();
     this.low = low;
