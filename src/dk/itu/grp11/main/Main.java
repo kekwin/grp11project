@@ -13,8 +13,8 @@ import dk.itu.grp11.enums.RoadType;
 public class Main {
   public static void main(String[] args) {
     System.out.println("Program started");
-    File node = new File("kdv_node_unload.txt");
-    File road = new File("kdv_unload.txt");
+    File node = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
+    File road = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
     Parser p = new Parser(node, road);
     
     long startTime = System.nanoTime();
