@@ -15,7 +15,16 @@ import java.util.Date;
 import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
-
+/**
+ * 
+ * @author Group 11
+ *
+ * @param con Our socket
+ * @param in Our Reader
+ * @param out Sends all the html and svg to the browser
+ * @param pout Tells the browser which content is send, and if it fails
+ * @param fileserver An object of our fileserver class
+ */
 public class RequestParser extends Thread {
   
   private Map map;
@@ -33,15 +42,14 @@ public class RequestParser extends Thread {
     in = new BufferedReader
         (new InputStreamReader(con.getInputStream()));
     request = in.readLine();
-    con.shutdownInput(); // ignore the rest
-    //log(con, request);
-    
+    con.shutdownInput();    
     out = new BufferedOutputStream(con.getOutputStream());
     pout = new PrintStream(out);
     
     this.fileserver = fileserver;
     this.map = map;
   }
+  /** Overrided from Thread, this method is needed for running with multiple threads at the same time. */
   public void run() {
     if (request != null) {
       try {
@@ -53,6 +61,10 @@ public class RequestParser extends Thread {
       }
     }
   }
+  /**Takes a String that could look like this: /getMap?x=943702&y=6366840&width=69061&height=35214&zoomlevel=1&=1334088780921
+   * Then it splits it so we get the data we actually need
+   * The last part is the actual time its parsed, we should never have two identical values here
+   */
   private void parseRequest(String request) throws IOException {
     //Get file request and params
     String[] split = request.split("\\?");
@@ -70,10 +82,17 @@ public class RequestParser extends Thread {
     if (file.length() == 0) processRequest("head.html", null);
     else processRequest(file, params);
   }
+  /** Returns a String containing the values of the XStart YStart, XDiff and YDiff
+   * which is needed when you resize the canvas, when you zoom in on the map */
   private String getMinMax() {
     return fileserver.getXStart() + " " + fileserver.getYStart() + " " + fileserver.getXDiff() + " " + fileserver.getYDiff();
   }
-
+  /**
+   * processRequest takes the file if we look at our other example from line64 it would be getMap
+   * Then it does many checks to see what kind of info it received and acts accordingly 
+   * So if the file is something else than the else if's it sets the set of coordinates used to draw the map
+   * The next bit, decides what the pout will tell the browser about which content will be sent, and if problems occurred 
+   */
   private void processRequest(String file, HashMap<String, String> params) throws IOException {
     InputStream outStream = null;
     String contenttype = "text/html";
@@ -115,7 +134,7 @@ public class RequestParser extends Thread {
     sendOutput(outStream, out); // send raw output
     fileserver.log("Done processing "+request+" (200 OK)");
   }
-  
+  /** We make our output into a byte[] for the browser to read */
   private void sendOutput(InputStream outStream, OutputStream out) 
       throws IOException {
     byte[] buffer = new byte[1000];
