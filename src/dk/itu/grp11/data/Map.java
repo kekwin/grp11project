@@ -1,9 +1,11 @@
 package dk.itu.grp11.data;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.main.FileServer;
 
 /**
  * Represents a map with roads
@@ -43,7 +45,7 @@ public class Map {
 	* 
 	* @return String of SVG elements in the specified viewbox (with linebreaks)
 	*/
-	public String getPart(double x, double y, double w, double h, int zoomlevel) {
+	public String getPart(double x, double y, double w, double h, int zoomlevel, FileServer fs) {
 	  //long partTime = System.nanoTime(); 
 		String output = "var svg = $('#map-container').svg('get');\n";
 
@@ -64,13 +66,14 @@ public class Map {
   		Interval2D<Double, RoadType> i2D = new Interval2D<Double, RoadType>(i1, i2);
   		
   		//long startTime = System.nanoTime(); 
-  		Road[] roadsFound = roads.query2D(i2D);
+  		HashSet<Road> roadsFound = roads.query2D(i2D);
   		//System.out.println("Found " + roadsFound.length + " roads of type "+roadType.name()+" in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
   		//startTime = System.nanoTime(); 
-  		double yOff = Parser.getMapBound(MapBound.MINY); //Y-axis offset
-  		double cH = Parser.getMapBound(MapBound.MAXY)-Parser.getMapBound(MapBound.MINY); //Canvas height
+  		double yOff = fs.getYStart(); //Y-axis offset
+  		double cH = fs.getYDiff(); //Canvas height
   		for (Road roadFound : roadsFound) {
-  		  output += "svg.line("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%'});\n";
+  		  if (roadFound != null)
+  		    output += "svg.line("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%'});\n";
       }
   		//System.out.println("Wrote output in " + ((System.nanoTime() - startTime)/1000000000.0) + "s");
 		}	

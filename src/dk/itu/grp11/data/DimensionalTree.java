@@ -1,5 +1,7 @@
 package dk.itu.grp11.data;
 
+import java.util.HashSet;
+
 
 
 //TODO Javadoc not finished
@@ -14,8 +16,6 @@ package dk.itu.grp11.data;
 public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparable<Key2>,  Value> {
   private Node root;
   private int count;
-  private Class<Value[]> valueClass;
-  DynArray<Value> found;
 
   // helper node data type
   private class Node {
@@ -32,8 +32,8 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
     }
   }
   
-  public DimensionalTree(Class<Value[]> valueClass) {
-    this.valueClass = valueClass;
+  public DimensionalTree() {
+    
   }
   
   /***********************************************************************
@@ -68,12 +68,12 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
   * @param rect the interval
   * @return array of elements
   */
-  public Value[] query2D(Interval2D<Key, Key2> rect) {
-    found = new DynArray<Value>(valueClass);
-    return query2D(root, rect);
+  public HashSet<Value> query2D(Interval2D<Key, Key2> rect) {
+    HashSet<Value> found = new HashSet<Value>();
+    return query2D(root, rect, found);
   }
 
-  private Value[] query2D(Node h, Interval2D<Key, Key2> rect) {
+  private HashSet<Value> query2D(Node h, Interval2D<Key, Key2> rect, HashSet<Value> found) {
     if (h == null) return null;
     if (rect.getIntervalX().getD3() != rect.getIntervalY().getD3()) throw new IllegalArgumentException();
     Key d1min = rect.getIntervalX().getLow();
@@ -83,19 +83,19 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
     Key2 d3 = rect.getIntervalX().getD3();
     if (rect.contains(h.d1, h.d2, h.d3))
         found.add(h.value);
-    if ( less(d1min, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) == -1) query2D(h.D1 , rect);
-    if ( less(d1min, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D2 , rect);
-    if ( less(d1min, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D3 , rect);
-    if ( less(d1min, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) == -1) query2D(h.D4 , rect);
-    if ( less(d1min, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D5 , rect);
-    if ( less(d1min, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D6 , rect);
-    if (!less(d1max, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) == -1) query2D(h.D7 , rect);
-    if (!less(d1max, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D8 , rect);
-    if (!less(d1max, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D9 , rect);
-    if (!less(d1max, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) == -1) query2D(h.D10, rect);
-    if (!less(d1max, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D11, rect);
-    if (!less(d1max, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D12, rect);
-    return found.toArray();
+    if ( less(d1min, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) == -1) query2D(h.D1 , rect, found);
+    if ( less(d1min, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D2 , rect, found);
+    if ( less(d1min, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D3 , rect, found);
+    if ( less(d1min, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) == -1) query2D(h.D4 , rect, found);
+    if ( less(d1min, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D5 , rect, found);
+    if ( less(d1min, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D6 , rect, found);
+    if (!less(d1max, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) == -1) query2D(h.D7 , rect, found);
+    if (!less(d1max, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D8 , rect, found);
+    if (!less(d1max, h.d1) &&  less(d2min, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D9 , rect, found);
+    if (!less(d1max, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) == -1) query2D(h.D10, rect, found);
+    if (!less(d1max, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  0) query2D(h.D11, rect, found);
+    if (!less(d1max, h.d1) && !less(d2max, h.d2) && compare(d3, h.d3) ==  1) query2D(h.D12, rect, found);
+    return found;
   }
  
   /**
