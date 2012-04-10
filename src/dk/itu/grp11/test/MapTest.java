@@ -33,7 +33,8 @@ public class MapTest {
     
     FileServer fs = new FileServer(80, map);
     System.out.println("Getting part: " + map.getPart(320.0, 330.0, 150.0, 100.0, 1, fs));
-    assertEquals("var svg = $('#map-container').svg('get');\nsvg.line(300.0, "+(377.0-356.0)+", 390.0, 0.0, {stroke: 'rgb(255,0,0)', strokeWidth: '0.3%'});\n", map.getPart(320, 330, 150, 100, 1, fs));
+    assertEquals("var svg = $('#map-container').svg('get');\n"+
+                 "svg.line(300.0, "+(377.0-356.0)+", 390.0, 0.0, {stroke: 'rgb(255,0,0)', strokeWidth: '0.3%'});\n", map.getPart(320, 330, 150, 100, 1, fs));
   }
   
   //Testing getZoomLevelX
