@@ -90,7 +90,7 @@ public class Parser {
    * @return DimensionalTree containing all roads
    */
   public DimensionalTree<Double, RoadType, Road> parseRoads(HashMap<Integer, Point> points) {
-    DimensionalTree<Double, RoadType, Road> tmp = new DimensionalTree<Double, RoadType, Road>(Road[].class);    
+    DimensionalTree<Double, RoadType, Road> tmp = new DimensionalTree<Double, RoadType, Road>();    
       try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
         String line = null;
         /*

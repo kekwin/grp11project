@@ -37,7 +37,8 @@ public class MapTest { //TODO :)
     
     Map map = new Map(points, roads);
     
-    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 1));
+    System.out.println("Getting part: " + map.getPart(320, 330, 150, 100, 0, 0, 1));
+    assertEquals("var svg = $('#map-container').svg('get');\nsvg.line(300.0, -356.0, 390.0, -377.0, {stroke: 'rgb(255,0,0)', strokeWidth: '0.3%'});\n", map.getPart(320, 330, 150, 100, 0, 0, 1));
   }
   
   //Testing getZoomLevelX
