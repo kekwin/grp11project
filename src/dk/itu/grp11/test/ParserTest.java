@@ -64,8 +64,8 @@ public class ParserTest {
       Interval<Double, RoadType> intervalX = new Interval<Double, RoadType>(Parser.getMapBound(MapBound.MINX), Parser.getMapBound(MapBound.MAXX), rt);
       Interval<Double, RoadType> intervalY = new Interval<Double, RoadType>(Parser.getMapBound(MapBound.MINY), Parser.getMapBound(MapBound.MAXY), rt);
       Interval2D<Double, RoadType> rect = new Interval2D<Double, RoadType>(intervalX, intervalY);
-      Road[] roadsInViewbox = roads.query2D(rect);
-      roadCount += roadsInViewbox.length;
+      HashSet<Road> roadsInViewbox = roads.query2D(rect);
+      roadCount += roadsInViewbox.size();
     }
     
     // Expecting all roads with zoom level 1 to be included
@@ -76,7 +76,7 @@ public class ParserTest {
         RoadType.PROJ_MOTORTRAFIKVEJ,
         RoadType.MOTORVEJSTUNNEL,
         RoadType.MOTORTRAFIKVEJSTUNNEL,
-        RoadType.FAERGEFORBINDELSE), roadCount/2); // Dividing by two as all roads are represented two times
+        RoadType.FAERGEFORBINDELSE), roadCount);
   }
   
   //Counts number of roads directly from file
