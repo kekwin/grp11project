@@ -2,14 +2,20 @@ package dk.itu.grp11.data;
 
 
 /**
-* 
-* @author Michael Søby Andersen msoa@itu.dk
-* @author Group 11
-* @version 09/04/2012
-*/
+ * Describes an interval in two dimensions, horizontal and vertical
+ * 
+ * @author Group 11
+ */
+
 public class Interval2D<T extends Comparable<T>, T2 extends Comparable<T2>> {
   private final Interval<T, T2> intervalX, intervalY;
   
+  /**
+   * Constructs a 2-dimensional interval
+   * 
+   * @param intervalX the horizontal interval
+   * @param intervalY the vertical interval
+   */
   public Interval2D(Interval<T, T2> intervalX, Interval<T, T2> intervalY){
     this.intervalX = intervalX;
     this.intervalY = intervalY;
