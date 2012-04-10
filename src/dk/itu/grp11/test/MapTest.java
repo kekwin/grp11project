@@ -1,17 +1,13 @@
 package dk.itu.grp11.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.junit.Test;
 
 import dk.itu.grp11.data.DimensionalTree;
-import dk.itu.grp11.data.Interval;
-import dk.itu.grp11.data.Interval2D;
 import dk.itu.grp11.data.Map;
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.data.Point;
