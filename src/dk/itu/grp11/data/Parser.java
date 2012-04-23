@@ -18,6 +18,9 @@ import dk.itu.grp11.exceptions.DataNotInitializedException;
  * 
  */
 public class Parser {
+  
+  private static Parser ps = null;
+  
   private static boolean pointsInit = false;
   private File nodes;
   private File connections;
@@ -36,6 +39,15 @@ public class Parser {
     mapBounds.put(MapBound.MAXX, 0.0);
     mapBounds.put(MapBound.MINY, 100000000.0);
     mapBounds.put(MapBound.MAXY, 0.0);
+  }
+  
+  public static Parser getParser() {
+    if (ps == null) {
+      File node = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
+      File road = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
+      ps = new Parser(node, road);
+    }
+    return ps;
   }
 
   /**

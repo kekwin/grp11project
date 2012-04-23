@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
-import dk.itu.grp11.main.FileServer;
 
 /**
  * Represents a map with roads
@@ -15,6 +14,9 @@ import dk.itu.grp11.main.FileServer;
  *
  */
 public class Map {
+  
+  private static Map map = null;
+  
   private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
 	
@@ -29,6 +31,15 @@ public class Map {
 		this.roads = roads;
 	}
 	
+	public static Map getMap() {
+	  if (map == null) {
+	    HashMap<Integer, Point> points = Parser.getParser().parsePoints();
+	    DimensionalTree<Double, RoadType, Road> roads = Parser.getParser().parseRoads(points);
+	    map = new Map(points, roads);
+	  }
+	  return map;
+	}
+	
 	/**
 	* Get a part of the loaded map
 	* 
@@ -41,7 +52,7 @@ public class Map {
 	* 
 	* @return String of SVG elements in the specified viewbox (with linebreaks)
 	*/
-	public String getPart(double x, double y, double w, double h, int zoomlevel, FileServer fs) {
+	public String getPart(double x, double y, double w, double h, int zoomlevel, Session session) {
 	  StringBuffer outputBuilder = new StringBuffer();
 		outputBuilder.append("var svg = $('#map-container').svg('get');\n");
 
@@ -62,8 +73,8 @@ public class Map {
   		
   		if (roadsFound.size() > 0) {
     		
-    		double yOff = fs.getYStart(); //Y-axis offset
-    		double cH = fs.getYDiff(); //Canvas height
+    		double yOff = session.getYStart(); //Y-axis offset
+    		double cH = session.getYDiff(); //Canvas height
     		int csLimit = 100000; //JavaScript CallStack limit
     		Iterator<Road> i = roadsFound.iterator();
     		while (i.hasNext()) {

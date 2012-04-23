@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
+import dk.itu.grp11.data.Session;
 /**
  * 
  * @author Group 11
@@ -84,8 +85,8 @@ public class RequestParser extends Thread {
   }
   /** Returns a String containing the values of the XStart YStart, XDiff and YDiff
    * which is needed when you resize the canvas, when you zoom in on the map */
-  private String getMinMax() {
-    return fileserver.getXStart() + " " + fileserver.getYStart() + " " + fileserver.getXDiff() + " " + fileserver.getYDiff();
+  private String getMinMax(String sessionID) {
+    return FileServer.sessions.get(sessionID).getXStart() + " " + FileServer.sessions.get(sessionID).getYStart() + " " + FileServer.sessions.get(sessionID).getXDiff() + " " + FileServer.sessions.get(sessionID).getYDiff();
   }
   /**
    * processRequest takes the file if we look at our other example from line64 it would be getMap
@@ -97,20 +98,22 @@ public class RequestParser extends Thread {
     InputStream outStream = null;
     String contenttype = "text/html";
     if (file.indexOf("getMinMax") != -1) {
-      outStream = new ByteArrayInputStream(getMinMax().getBytes("UTF-8"));
+      outStream = new ByteArrayInputStream(getMinMax(params.get("sessionID")).getBytes("UTF-8"));
+    } else if (file.indexOf("generateSessionID") != -1) {
+      outStream = new ByteArrayInputStream(generateSessionID().getBytes("UTF-8"));
     } else if (file.indexOf("getZoomLevelX") != -1) { 
       outStream = new ByteArrayInputStream((""+map.getZoomLevelX(Double.parseDouble(params.get("width")))).getBytes("UTF-8"));
     } else if (file.indexOf("getZoomLevelY") != -1) { 
       outStream = new ByteArrayInputStream((""+map.getZoomLevelY(Double.parseDouble(params.get("height")))).getBytes("UTF-8"));
     } else if (file.indexOf("getMap") != -1) {
-      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), fileserver).getBytes("UTF-8"));
+      outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
     } else if (file.indexOf("setCanvas") != -1) {
-      if (params.size() < 4) fileserver.resetMinMax();
+      if (params.size() < 4) FileServer.sessions.get(params.get("sessionID")).resetMinMax();
       else {
-        fileserver.setXStart(Integer.parseInt(params.get("x")));
-        fileserver.setYStart(Integer.parseInt(params.get("y")));
-        fileserver.setXDiff(Integer.parseInt(params.get("width")));
-        fileserver.setYDiff(Integer.parseInt(params.get("height")));
+        FileServer.sessions.get(params.get("sessionID")).setXStart(Integer.parseInt(params.get("x")));
+        FileServer.sessions.get(params.get("sessionID")).setYStart(Integer.parseInt(params.get("y")));
+        FileServer.sessions.get(params.get("sessionID")).setXDiff(Integer.parseInt(params.get("width")));
+        FileServer.sessions.get(params.get("sessionID")).setYDiff(Integer.parseInt(params.get("height")));
       }
       outStream = new ByteArrayInputStream(("Success").getBytes("UTF-8"));
     } else {
@@ -125,7 +128,6 @@ public class RequestParser extends Thread {
       else if (file.indexOf(".css") != -1) contenttype = "text/css";
       else if (file.indexOf(".png") != -1 || file.indexOf(".gif") != -1) contenttype = "Image";
       else contenttype = "text/plain";
-      if (file.indexOf("head.html") != -1) fileserver.resetMinMax();
     }
     pout.print("HTTP/1.0 200 OK\r\n");
     pout.print("Content-Type: "+contenttype+"\r\n");
@@ -134,6 +136,13 @@ public class RequestParser extends Thread {
     sendOutput(outStream, out); // send raw output
     fileserver.log("Done processing "+request+" (200 OK)");
   }
+  
+  private String generateSessionID() {
+    String sessionID = "asdf"; //""+System.nanoTime()+con.getRemoteSocketAddress();
+    FileServer.sessions.put(sessionID, new Session("asdf"));
+    return sessionID;
+  }
+  
   /** We make our output into a byte[] for the browser to read */
   private void sendOutput(InputStream outStream, OutputStream out) 
       throws IOException {
