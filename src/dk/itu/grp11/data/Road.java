@@ -24,7 +24,7 @@ public class Road {
    * @param name name of the road
    * @param type type of road
    */
-  public Road(int p1, int p2, String name, RoadType type) {
+  public Road(int p1, int p2, String name, RoadType type, double length, double time) {
     this.P1 = p1;
     this.P2 = p2;
     this.name = name;
