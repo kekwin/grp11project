@@ -107,7 +107,7 @@ public class Parser {
             Double xE = points.get(Integer.parseInt(split[1])).getX();
             Double yE = points.get(Integer.parseInt(split[1])).getY();
             Integer type = Integer.parseInt(split[3]);
-            Road value = new Road(Integer.parseInt(split[0]), Integer.parseInt(split[1]), split[2], RoadType.getById(type));
+            Road value = new Road(Integer.parseInt(split[0]), Integer.parseInt(split[1]), split[2], RoadType.getById(type), Double.parseDouble(split[4]), Double.parseDouble(split[5]));
             tmp.insert(xS, yS, RoadType.getById(type), value);
             tmp.insert(xE, yE, RoadType.getById(type), value);
           }
@@ -145,7 +145,7 @@ public class Parser {
    * @return A Road object containing the information from the line.
    */
   private static String[] splitRoadInput(String input) {
-    String[] tmp = new String[4];
+    String[] tmp = new String[6];
 
     String[] inputSplit = input.split(",");
     if (Integer.parseInt(inputSplit[0]) != Integer.parseInt(inputSplit[1])) {
@@ -154,6 +154,8 @@ public class Parser {
       tmp[1] = inputSplit[1];
       tmp[2] = inputSplit[6];
       tmp[3] = inputSplit[5];
+      tmp[4] = inputSplit[2]; //Length
+      tmp[5] = inputSplit[26]; //Time
 
       return tmp;
     } else return new String[0];
