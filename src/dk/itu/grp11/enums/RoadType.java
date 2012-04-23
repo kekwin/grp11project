@@ -135,6 +135,6 @@ public enum RoadType {
   
   @Override
   public String toString() {
-    return RoadType.class + " ID:" + id + " STROKE:" + stroke + " COLOR:" + color;
+    return RoadType.class + "[id=" + id + " stroke=" + stroke + " color=" + color + "]";
   }
 }

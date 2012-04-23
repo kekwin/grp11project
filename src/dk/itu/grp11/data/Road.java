@@ -14,6 +14,8 @@ public class Road {
   private int P2;
   private String name;
   private RoadType type;
+  private double length;
+  private double time;
   private static int nxtID = 0;
   
   
@@ -29,6 +31,8 @@ public class Road {
     this.P2 = p2;
     this.name = name;
     this.type = type;
+    this.length = length;
+    this.time = time;
     this.id = type.getId()+";"+p1+";"+p2+";"+(nxtID++);
   }
 
@@ -58,13 +62,20 @@ public class Road {
     return type;
   }
   
+  public double getLength() {
+    return length;
+  }
+  
+  public double getTime() {
+    return time;
+  }
+  
   public String getId() {
     return id;
   }
 
   public String toString() {
-    return "["+id+"] Road name: " + name + " type: " + type + " P1: " + P1 + " P2: "
-        + P2;
+    return "["+id+"] name='" + name + "' type=" + type + " P1=" + P1 + " P2=" + P2;
   }
 
 }
