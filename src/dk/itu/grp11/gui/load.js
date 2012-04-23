@@ -215,10 +215,12 @@ jQuery(function($){
     yStart = validateYStart(yStart, yDiff);
     if (yStart < fullYStart) yStart = fullYStart;
     if (yStart+yDiff > fullYStart+fullYDiff) yStart = (fullYStart+fullYDiff)-yDiff;
+    $('#map').stop();
     $('#map').animate({
       svgViewBox: xStart+' '+yStart+' '+xDiff+' '+yDiff
-    }, 200);
-    refreshSVG();
+    }, 200, function() {
+      refreshSVG();
+    });
   }
   function zoomSVG(direction, xCoord, yCoord) {
     var svg = document.getElementById("map");
@@ -243,10 +245,12 @@ jQuery(function($){
     yDiff = validateYDiff(yDiff);
     xStart = validateXStart(xStart, xDiff);
     yStart = validateYStart(yStart, yDiff);
+    $('#map').stop();
     $('#map').animate({
       svgViewBox: xStart+' '+yStart+' '+xDiff+' '+yDiff
-    }, 200);
-    refreshSVG();
+    }, 200, function() {
+      refreshSVG();
+    });
   }
   function calculateCoordX(coord) {
     var svg = document.getElementById("map");
@@ -298,15 +302,29 @@ jQuery(function($){
     zoomSVG("out", parseInt(split[2])/2, parseInt(split[3])/2);
   });
   
-  $(document).keypress(function(k) {
+  $(document).bind('keydown',function(k) {
     var svg = document.getElementById("map");
     var viewbox = svg.getAttribute("viewBox");
     var split = viewbox.split(" ");
-         if (k.keyCode == 37) moveSVG("west");
-    else if (k.keyCode == 38) moveSVG("north");
-    else if (k.keyCode == 39) moveSVG("east");
-    else if (k.keyCode == 40) moveSVG("south");
-    else if (k.keyCode == 107) zoomSVG("in", parseInt(split[2])/2, parseInt(split[3])/2);
-    else if (k.keyCode == 107) zoomSVG("out", parseInt(split[2])/2, parseInt(split[3])/2);
+    switch(k.keyCode) {
+    case 37:
+      moveSVG("west");
+      break;
+    case 38:
+      moveSVG("north");
+      break;
+    case 39:
+      moveSVG("east");
+      break;
+    case 40: 
+      moveSVG("south");
+      break;
+    case 107: 
+      zoomSVG("in", parseInt(split[2])/2, parseInt(split[3])/2);
+      break;
+    case 109: 
+      zoomSVG("out", parseInt(split[2])/2, parseInt(split[3])/2);
+      break;
+    }
   });
 });
