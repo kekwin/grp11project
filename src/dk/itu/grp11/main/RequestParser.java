@@ -102,9 +102,9 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("generateSessionID") != -1) {
       outStream = new ByteArrayInputStream(generateSessionID().getBytes("UTF-8"));
     } else if (file.indexOf("getZoomLevelX") != -1) { 
-      outStream = new ByteArrayInputStream((""+map.getZoomLevelX(Double.parseDouble(params.get("width")))).getBytes("UTF-8"));
+      outStream = new ByteArrayInputStream((""+Map.getZoomLevelX(FileServer.sessions.get(params.get("sessionID")).getXDiff())).getBytes("UTF-8"));
     } else if (file.indexOf("getZoomLevelY") != -1) { 
-      outStream = new ByteArrayInputStream((""+map.getZoomLevelY(Double.parseDouble(params.get("height")))).getBytes("UTF-8"));
+      outStream = new ByteArrayInputStream((""+Map.getZoomLevelY(FileServer.sessions.get(params.get("sessionID")).getYDiff())).getBytes("UTF-8"));
     } else if (file.indexOf("getMap") != -1) {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
     } else if (file.indexOf("setCanvas") != -1) {
@@ -120,7 +120,8 @@ public class RequestParser extends Thread {
       File f = null;
       if (file.indexOf("head.html") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
       else if (file.indexOf("layout.css") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
-      else if (file.indexOf("load.js") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
+      else if (file.indexOf("js_functions.js") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
+      else if (file.indexOf("load_new.js") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
       else f = new File("src\\dk\\itu\\grp11\\files\\"+file);
       outStream = new FileInputStream(f);
       if (file.indexOf(".js") != -1) contenttype = "text/javascript";
@@ -138,8 +139,8 @@ public class RequestParser extends Thread {
   }
   
   private String generateSessionID() {
-    String sessionID = "asdf"; //""+System.nanoTime()+con.getRemoteSocketAddress();
-    FileServer.sessions.put(sessionID, new Session("asdf"));
+    String sessionID = ""+System.nanoTime()+con.getRemoteSocketAddress();
+    FileServer.sessions.put(sessionID, new Session(sessionID));
     return sessionID;
   }
   

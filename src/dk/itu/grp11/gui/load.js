@@ -16,11 +16,11 @@ jQuery(function($){
   var move = false;
   var sessionID = null;
   $(window).load(function() {
-    refreshSVG();
+    loadSVG();
   });
-  $(window).resize(function() {
+  /*$(window).resize(function() {
     refreshSVG();
-  });
+  });*/
   $('#plus').click(function() {
     $('.loader').css('display', '');
     createSVG();
@@ -30,7 +30,7 @@ jQuery(function($){
       url: zoomLevelUrl,
       cache: false,
       type: "GET",
-      data: "width="+newXDiff+"&height="+newYDiff,
+      data: "sessionID="+sessionID+"&width="+newXDiff+"&height="+newYDiff,
     }).done(function( zoom ) {
       var xIncr = Math.ceil(newXDiff/slices);
       var yIncr = Math.ceil(newYDiff/slices);
@@ -38,12 +38,12 @@ jQuery(function($){
       var newYStart = yStart+Math.floor((yDiff-newYDiff)/2);
       zoomLevel = parseInt(zoom);
       var svg = document.getElementById("map");
-      svg.setAttribute("viewBox", newXStart+" "+0+" "+newXDiff+" "+newYDiff);
+      svg.setAttribute("viewBox", newXStart+" "+newYStart+" "+newXDiff+" "+newYDiff);
       $.ajax({
         url: "setCanvas",
         cache: false,
         type: "GET",
-        data: "x="+newXStart+"&y="+newYStart+"&width="+newXDiff+"&height="+newYDiff,
+        data: "sessionID="+sessionID+"&x="+newXStart+"&y="+newYStart+"&width="+newXDiff+"&height="+newYDiff,
       }).done(function() {
         load(newXStart, newYStart, newXDiff, newYDiff, xIncr, yIncr, zoomLevel);
         xStart = newXStart;
@@ -65,7 +65,7 @@ jQuery(function($){
         url: zoomLevelUrl,
         cache: false,
         type: "GET",
-        data: "width="+newXDiff+"&height="+newYDiff,
+        data: "sessionID="+sessionID+"&width="+newXDiff+"&height="+newYDiff,
       }).done(function( zoom ) {
         var xIncr = Math.ceil(newXDiff/slices);
         var yIncr = Math.ceil(newYDiff/slices);
@@ -77,12 +77,12 @@ jQuery(function($){
         else newYStart = yStart+Math.floor((yDiff-newYDiff)/2);
         zoomLevel = parseInt(zoom);
         var svg = document.getElementById("map");
-        svg.setAttribute("viewBox", newXStart+" "+0+" "+newXDiff+" "+newYDiff);
+        svg.setAttribute("viewBox", newXStart+" "+newYStart+" "+newXDiff+" "+newYDiff);
         $.ajax({
           url: "setCanvas",
           cache: false,
           type: "GET",
-          data: "x="+newXStart+"&y="+newYStart+"&width="+newXDiff+"&height="+newYDiff,
+          data: "sessionID="+sessionID+"&x="+newXStart+"&y="+newYStart+"&width="+newXDiff+"&height="+newYDiff,
         }).done(function() {
           load(newXStart, newYStart, newXDiff, newYDiff, xIncr, yIncr, zoomLevel);
           xStart = newXStart;
@@ -105,32 +105,7 @@ jQuery(function($){
   $('#right').click(function() {
     moveLeftRight(false);
   });
-  function moveTopBottom(up) {
-    $('.loader').css('display', '');
-    createSVG();
-    if (!up) {
-      newYStart = yStart-Math.floor(yDiff*0.33);
-      if (newYStart < fullYStart) newYStart = fullYStart;
-    }
-    else {
-      newYStart = yStart+Math.floor(yDiff*0.33);
-      if (newYStart+yDiff > fullYStart+fullYDiff) newYStart = (fullYStart+fullYDiff)-yDiff;
-    }
-    
-    var xIncr = Math.ceil(xDiff/slices);
-    var yIncr = Math.ceil(yDiff/slices);
-    $.ajax({
-      url: "setCanvas",
-      cache: false,
-      type: "GET",
-      data: "x="+xStart+"&y="+newYStart+"&width="+xDiff+"&height="+yDiff,
-    }).done(function() {
-      var svg = document.getElementById("map");
-      svg.setAttribute("viewBox", xStart+" "+0+" "+xDiff+" "+yDiff);
-      load(xStart, newYStart, xDiff, yDiff, xIncr, yIncr, zoomLevel);
-      yStart = newYStart;
-    });
-  }
+  
   function moveLeftRight(left) {
     $('.loader').css('display', '');
     createSVG();
@@ -143,21 +118,20 @@ jQuery(function($){
       if (newXStart+xDiff > fullXStart+fullXDiff) newXStart = (fullXStart+fullXDiff)-xDiff;
     }
     
-    var xIncr = Math.ceil(xDiff/slices);
-    var yIncr = Math.ceil(yDiff/slices);
+    
     $.ajax({
       url: "setCanvas",
       cache: false,
       type: "GET",
-      data: "x="+newXStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
+      data: "sessionID="+sessionID+"&x="+newXStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
     }).done(function() {
       var svg = document.getElementById("map");
-      svg.setAttribute("viewBox", newXStart+" "+0+" "+xDiff+" "+yDiff);
+      svg.setAttribute("viewBox", newXStart+" "+newYStart+" "+xDiff+" "+yDiff);
       load(newXStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel);
       xStart = newXStart;
     });
   }
-  function createSessionID() {
+  function loadSVG() {
     $.ajax({
       url: "generateSessionID",
       cache: false,
@@ -165,23 +139,13 @@ jQuery(function($){
       data: ""
     }).done(function(ID) {
       sessionID = ID;
-    });
-  }
-  function refreshSVG() {
-    if (sessionID == null) createSessionID();
-    $('.loader').css('display','');
-    createSVG();
-    $.ajax({
-      url: "setCanvas",
-      cache: false,
-      type: "GET",
-      data: "session="+sessionID,
-    }).done(function() {
+      $('.loader').css('display','');
+      createSVG();
       $.ajax({
         url: "getMinMax",
         cache: false,
         type: "GET",
-        data: ""
+        data: "sessionID="+sessionID
       }).done(function( resp ) {
         var split = resp.split(" ");
         if ($(window).height() < $(window).width()) {
@@ -211,22 +175,11 @@ jQuery(function($){
           url: "setCanvas",
           cache: false,
           type: "GET",
-          data: "x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
+          data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
         }).done(function() {
           var svg = document.getElementById("map");
-          svg.setAttribute("viewBox", xStart+ " "+0+" "+xDiff+" "+yDiff);
-          var xIncr = Math.ceil(xDiff/slices);
-          var yIncr = Math.ceil(yDiff/slices);
-          $.ajax({
-            url: zoomLevelUrl,
-            cache: false,
-            type: "GET",
-            data: "width="+xDiff+"&height="+yDiff,
-          }).done(function( zoom ) {
-            zoomLevel = parseInt(zoom);
-            fullZoomLevel = zoomLevel;
-            load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel);
-          });
+          svg.setAttribute("viewBox", xStart+ " "+yStart+" "+xDiff+" "+yDiff);
+          refreshSVG();
         });
       });
     });
@@ -247,7 +200,7 @@ jQuery(function($){
     });
     $('#map').mouseup(function() {
       move = false;
-      //Draw map
+      refreshSVG();
     });
     $('#map').mousemove(function(e2) {
       if (move) {
@@ -268,34 +221,5 @@ jQuery(function($){
       }
     });
   }
-  function load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel) {
-    for (i=0;i<slices;i++) {
-      for (j=0;j<slices;j++) {
-        var aUrl = "getMap";
-        var aCache = false;
-        var aType = "GET";
-        var aData = "x="+((j*xIncr)+xStart)+"&y="+((i*yIncr)+Math.abs(yStart))+"&width="+xIncr+"&height="+yIncr+"&zoomlevel="+zoomLevel;
-        if (i == slices-1 && j == slices-1) {
-          $.ajax({
-            url: aUrl,
-            cache: aCache,
-            type: aType,
-            data: aData
-          }).done(function( svg ) {
-            eval(svg);
-            $('.loader').css('display', 'none');
-          });
-        } else {
-          $.ajax({
-            url: aUrl,
-            cache: aCache,
-            type: aType,
-            data: aData
-          }).done(function( svg ) {
-            eval(svg);
-          });
-        }
-      }
-    }
-  }
+
 });

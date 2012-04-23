@@ -1,5 +1,7 @@
 package dk.itu.grp11.data;
 
+import java.util.HashSet;
+
 import dk.itu.grp11.enums.MapBound;
 
 public class Session {
@@ -8,6 +10,7 @@ public class Session {
   private int yStart;
   private int xDiff;
   private int yDiff;
+  private HashSet<Integer> roadsDrawn = new HashSet<Integer>();
   
   public Session(String sessionID) {
     this.sessionID = sessionID;
@@ -29,4 +32,6 @@ public class Session {
   public void setYStart(int yStart) { this.yStart = yStart; }
   public void setXDiff(int xDiff) { this.xDiff = xDiff; }
   public void setYDiff(int yDiff) { this.yDiff = yDiff; }
+  public void addRoadID(int ID) { roadsDrawn.add(ID); }
+  public boolean isRoadDrawn(int ID) { return roadsDrawn.contains(ID); }
 }

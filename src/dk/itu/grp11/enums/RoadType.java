@@ -31,22 +31,22 @@ public enum RoadType {
   PRIMAERVEJSTUNNEL(43, 0.1, new Color(0,0,0), 2),
   SEKUNDAERVEJSTUNNEL(44, 0.1, new Color(150,150,150), 2),
   
-  VEJ_3_TIL_6M(5, 0.1, new Color(150,150,150), 20),
-  PROJ_VEJ_3_TIL_6M(25, 0.1, new Color(150,150,150), 20),
+  VEJ_3_TIL_6M(5, 0.1, new Color(150,150,150), 4),
+  PROJ_VEJ_3_TIL_6M(25, 0.1, new Color(150,150,150), 4),
   
-  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 40),
-  ANDEN_VEJAFKOERSEL(35, 0.1, new Color(64,128,128), 40),
-  PROJ_VEJ_UNDER_3M(26, 0.1, new Color(64,128,128), 40),
-  ANDEN_VEJTUNNEL(45, 0.1, new Color(64,128,128), 40),
+  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 8),
+  ANDEN_VEJAFKOERSEL(35, 0.1, new Color(64,128,128), 8),
+  PROJ_VEJ_UNDER_3M(26, 0.1, new Color(64,128,128), 8),
+  ANDEN_VEJTUNNEL(45, 0.1, new Color(64,128,128), 8),
   
-  STI(8, 0.05, new Color(220,100,60), 80),
-  MARKVEJ(10, 0.1, new Color(126,49,23), 80),
-  GÅGADE(11, 0.1, new Color(185,185,0), 80),
-  PROJ_STI(28, 0.05, new Color(220,100,60), 80),
-  MINDRE_VEJTUNNEL(46, 0.1, new Color(64,128,128), 80),
-  STITUNNEL(48, 0.05, new Color(220,100,60), 80),
-  UKENDT1(95, 0.1, new Color(0,0,0), 80), //Unknown roadtype, not described by krak
-  UKENDT2(0, 0.1, new Color(0,0,0), 80), //Unknown roadtype, not described by krak
+  STI(8, 0.05, new Color(220,100,60), 16),
+  MARKVEJ(10, 0.1, new Color(126,49,23), 16),
+  GÅGADE(11, 0.1, new Color(185,185,0), 16),
+  PROJ_STI(28, 0.05, new Color(220,100,60), 16),
+  MINDRE_VEJTUNNEL(46, 0.1, new Color(64,128,128), 16),
+  STITUNNEL(48, 0.05, new Color(220,100,60), 16),
+  UKENDT1(95, 0.1, new Color(0,0,0), 16), //Unknown roadtype, not described by krak
+  UKENDT2(0, 0.1, new Color(0,0,0), 16), //Unknown roadtype, not described by krak
   
   STEDNAVN(99, 1, new Color(0,0,0), 10000);
   

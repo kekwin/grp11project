@@ -168,3 +168,10 @@ div.arrow > div {
 div.minus > div {
   top: 10px;
 }
+#map {
+  -moz-transform: scaleY(-1); /* Gecko */
+  -o-transform: scaleY(-1); /* Operah */
+  -webkit-transform: scaleY(-1); /* webkit */
+  transform: scaleY(-1); /* standard */
+  filter: FlipW; /* IE 6/7/8 */
+}

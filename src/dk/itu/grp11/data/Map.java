@@ -81,9 +81,14 @@ public class Map {
     		  outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
       		for (int j = 0; j < csLimit/2 && i.hasNext(); j++) {
       		  Road roadFound = i.next();
-      		  if (roadFound != null)
-      		    //outputBuilder.append("svg.line("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%'});\n");
-      		    outputBuilder.append(".move("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+").line("+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+")");
+      		  if (roadFound != null) {
+      		    synchronized(session) {
+        		    if (!session.isRoadDrawn(roadFound.getId())) {
+          		    outputBuilder.append(".move("+points.get(roadFound.getP1()).getX()+", "+points.get(roadFound.getP1()).getY()+").line("+points.get(roadFound.getP2()).getX()+", "+points.get(roadFound.getP2()).getY()+")");
+          		    session.addRoadID(roadFound.getId());
+        		    }
+      		    }
+      		  }
           }
       		outputBuilder.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 0});\n");
     		}
@@ -101,12 +106,12 @@ public class Map {
 	 * @return zoom level as int. 1 if w = (total map width). 2 if w = (total map width)/2.
 	 *         w if w = (total map width)/(total map width).
 	 */
-	private int zoomLevelX(double w) {
+	private static int zoomLevelX(double w) {
 	  int zoomlevel = (int)((Math.ceil(Parser.getMapBound(MapBound.MAXX))-Math.floor(Parser.getMapBound(MapBound.MINX)))/w);
 	  return (zoomlevel < 1 ? 1 : zoomlevel);
 	}
 	
-  public int getZoomLevelX(double w) {
+  public static int getZoomLevelX(double w) {
     return zoomLevelX(w);
   }
 	
@@ -119,12 +124,12 @@ public class Map {
    * @return zoom level as int. 1 if h = (total map height). 2 if h = (total map height)/2.
    *         h if h = (total map height)/(total map height).
    */
-	private int zoomLevelY(double h) {
+	private static int zoomLevelY(double h) {
     int zoomlevel = (int)((Math.ceil(Parser.getMapBound(MapBound.MAXY))-Math.floor(Parser.getMapBound(MapBound.MINY)))/h);
     return (zoomlevel < 1 ? 1 : zoomlevel);
   }
 	
-  public int getZoomLevelY(double h) {
+  public static int getZoomLevelY(double h) {
     return zoomLevelY(h);
   }
 }
