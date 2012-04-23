@@ -90,7 +90,7 @@ public class Parser {
    * @return DimensionalTree containing all roads
    */
   public DimensionalTree<Double, RoadType, Road> parseRoads(HashMap<Integer, Point> points) {
-    DimensionalTree<Double, RoadType, Road> tmp = new DimensionalTree<Double, RoadType, Road>();    
+    DimensionalTree<Double, RoadType, Road> tmp = new DimensionalTree<Double, RoadType, Road>();  
       try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
         String line = null;
         /*
@@ -101,7 +101,7 @@ public class Parser {
         input.readLine();
         while ((line = input.readLine()) != null) {
           String[] split = splitRoadInput(line);
-          if (split.length == 4) {
+          if (split.length == 6) {
             Double xS = points.get(Integer.parseInt(split[0])).getX();
             Double yS = points.get(Integer.parseInt(split[0])).getY();
             Double xE = points.get(Integer.parseInt(split[1])).getX();
