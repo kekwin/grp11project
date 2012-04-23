@@ -101,7 +101,7 @@ public class Parser {
         input.readLine();
         while ((line = input.readLine()) != null) {
           String[] split = splitRoadInput(line);
-          if (split.length == 6) {
+          if (split.length == 6) { //Only if a road
             Double xS = points.get(Integer.parseInt(split[0])).getX();
             Double yS = points.get(Integer.parseInt(split[0])).getY();
             Double xE = points.get(Integer.parseInt(split[1])).getX();
