@@ -43,7 +43,7 @@ public class Map {
 	*/
 	public String getPart(double x, double y, double w, double h, int zoomlevel, FileServer fs) {
 	  StringBuffer outputBuilder = new StringBuffer();
-		outputBuilder.append("var svg = $('#map-container').svg('get');\nvar path = svg.createPath();\n");
+		outputBuilder.append("var svg = $('#map-container').svg('get');\n");
 
 		DynArray<RoadType> roadTypes = new DynArray<RoadType>(RoadType[].class);
 	  for(RoadType rt : RoadType.values()) {
@@ -67,7 +67,7 @@ public class Map {
     		int csLimit = 100000; //JavaScript CallStack limit
     		Iterator<Road> i = roadsFound.iterator();
     		while (i.hasNext()) {
-    		  outputBuilder.append("svg.path(path");
+    		  outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
       		for (int j = 0; j < csLimit/2 && i.hasNext(); j++) {
       		  Road roadFound = i.next();
       		  if (roadFound != null)
