@@ -2,6 +2,7 @@ package dk.itu.grp11.data;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
@@ -41,7 +42,8 @@ public class Map {
 	* @return String of SVG elements in the specified viewbox (with linebreaks)
 	*/
 	public String getPart(double x, double y, double w, double h, int zoomlevel, FileServer fs) {
-		String output = "var svg = $('#map-container').svg('get');\n";
+	  StringBuffer outputBuilder = new StringBuffer();
+		outputBuilder.append("var svg = $('#map-container').svg('get');\nvar path = svg.createPath();\n");
 
 		DynArray<RoadType> roadTypes = new DynArray<RoadType>(RoadType[].class);
 	  for(RoadType rt : RoadType.values()) {
@@ -57,14 +59,26 @@ public class Map {
   		Interval2D<Double, RoadType> i2D = new Interval2D<Double, RoadType>(i1, i2);
   		
   		HashSet<Road> roadsFound = roads.query2D(i2D);
-  		double yOff = fs.getYStart(); //Y-axis offset
-  		double cH = fs.getYDiff(); //Canvas height
-  		for (Road roadFound : roadsFound) {
-  		  if (roadFound != null)
-  		    output += "svg.line("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%'});\n";
-      }
+  		
+  		if (roadsFound.size() > 0) {
+    		
+    		double yOff = fs.getYStart(); //Y-axis offset
+    		double cH = fs.getYDiff(); //Canvas height
+    		int csLimit = 100000; //JavaScript CallStack limit
+    		Iterator<Road> i = roadsFound.iterator();
+    		while (i.hasNext()) {
+    		  outputBuilder.append("svg.path(path");
+      		for (int j = 0; j < csLimit/2 && i.hasNext(); j++) {
+      		  Road roadFound = i.next();
+      		  if (roadFound != null)
+      		    //outputBuilder.append("svg.line("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+", "+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+", {stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%'});\n");
+      		    outputBuilder.append(".move("+points.get(roadFound.getP1()).getX()+", "+(yOff+(cH-points.get(roadFound.getP1()).getY()))+").line("+points.get(roadFound.getP2()).getX()+", "+(yOff+(cH-points.get(roadFound.getP2()).getY()))+")");
+          }
+      		outputBuilder.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 0});\n");
+    		}
+  		}
 		}	
-		return output;
+		return outputBuilder.toString();
 	}
 	
 	/**

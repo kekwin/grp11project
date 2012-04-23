@@ -9,10 +9,12 @@ import dk.itu.grp11.enums.RoadType;
  */
 
 public class Road {
+  private String id;
   private int P1;
   private int P2;
   private String name;
   private RoadType type;
+  private static int nxtID = 0;
   
   
   /**
@@ -27,6 +29,7 @@ public class Road {
     this.P2 = p2;
     this.name = name;
     this.type = type;
+    this.id = type.getId()+";"+p1+";"+p2+";"+(nxtID++);
   }
 
   /**
@@ -54,9 +57,13 @@ public class Road {
   public RoadType getType() {
     return type;
   }
+  
+  public String getId() {
+    return id;
+  }
 
   public String toString() {
-    return "Road name: " + name + " type: " + type + " P1: " + P1 + " P2: "
+    return "["+id+"] Road name: " + name + " type: " + type + " P1: " + P1 + " P2: "
         + P2;
   }
 

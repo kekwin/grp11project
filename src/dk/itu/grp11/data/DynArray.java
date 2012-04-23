@@ -34,6 +34,20 @@ public class DynArray<T> implements Iterable<T>  {
     data = TClass.cast(Array.newInstance(TClass.getComponentType(), 1));
   }
   
+  @SuppressWarnings("unchecked")
+  public DynArray()
+  {
+    this.TClass = null;
+    //Create an array of the generic type with 1 space for an element
+    data = (T[])new Object[1];
+  }
+  
+  @SuppressWarnings("unchecked")
+  private T[] createArray(int size) {
+    if (TClass == null) return (T[])new Object[size];
+    else return TClass.cast(Array.newInstance(TClass.getComponentType(), size));
+  }
+  
   /**
    * Add an element of generic type to the array
    * 
@@ -55,7 +69,7 @@ public class DynArray<T> implements Iterable<T>  {
   private void rebuild(int newsize)
   {
     //Create an array with the new size of the generic type
-    T[] tmp = TClass.cast(Array.newInstance(TClass.getComponentType(), newsize));
+    T[] tmp = createArray(newsize);
     for (int i = 0; i < size; i++) tmp[i] = data[i];
     data = tmp;
     tmp = null;

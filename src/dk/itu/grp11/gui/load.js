@@ -11,6 +11,8 @@ jQuery(function($){
   var zoomLevel = 0;
   var fullZoomLevel = 0;
   var zoomLevelUrl = "";
+  var prePosX = 0;
+  var prePosY = 0;
   $(window).load(function() {
     refreshSVG();
   });
@@ -225,6 +227,28 @@ jQuery(function($){
     $('#map').attr("class", "map");
     $('#map').attr("width", "100%");
     $('#map').attr("height", "100%");
+    $('#map').click(function(e) {
+      prevPosX = e.pageX;
+      prevPosY = e.pageY;
+      $(this).mousedown(function() {
+        $(this).mousemove(function(e2) {
+          var svg = document.getElementById("map");
+          var viewbox = svg.getAttribute("viewBox");
+          var split = viewbox.split(" ");
+          var xStartVB = parseInt(split[0]);
+          var yStartVB = parseInt(split[1]);
+          var xDiffVB = parseInt(split[2]);
+          var yDiffVB = parseInt(split[3]);
+          var moveEachPixelX = xDiffVB/$(document).width();
+          var newX = (xStartVB+((prevPosX-e2.pageX)*moveEachPixelX));
+          var moveEachPixelY = yDiffVB/$(document).height();
+          var newY = (yStartVB+((prevPosY-e2.pageY)*moveEachPixelY));
+          svg.setAttribute("viewBox", newX+" "+newY+" "+xDiffVB+" "+yDiffVB);
+          prevPosX = e2.pageX;
+          prevPosY = e2.pageY;
+        });
+      });
+    });
   }
   function load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel) {
     for (i=0;i<slices;i++) {
