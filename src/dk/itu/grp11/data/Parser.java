@@ -20,11 +20,13 @@ import dk.itu.grp11.exceptions.DataNotInitializedException;
 public class Parser {
   
   private static Parser ps = null;
-  
   private static boolean pointsInit = false;
-  private File nodes;
-  private File connections;
+  private static boolean roadsInit = false;
+  private static File nodes;
+  private static File connections;
   private static EnumMap<MapBound, Double> mapBounds;
+  private static HashMap<Integer, Point> points = null;
+  private static DimensionalTree<Double, RoadType, Road> roads = null;
   
   /**
    * 
@@ -57,42 +59,40 @@ public class Parser {
    * @return HashMap containing all nodes
    */
   public HashMap<Integer, Point> parsePoints() {
-    HashMap<Integer, Point> tmp = new HashMap<Integer, Point>();
-    try {
-      BufferedReader input = new BufferedReader(new FileReader(nodes));
-      try {
-        String line = null;
-        /*
-         * readLine is a bit quirky : it returns the content of a line MINUS the
-         * newline. it returns null only for the END of the stream. it returns
-         * an empty String if two newlines appear in a row.
-         */
-        input.readLine();
-        // Finding maximum and minimum x and y coordinates
-        while ((line = input.readLine()) != null) {
-          Point p = createPoint(line);
-          if (p.getX() > mapBounds.get(MapBound.MAXX)){
-            mapBounds.put(MapBound.MAXX, p.getX());
+    if(points == null) {
+      points = new HashMap<Integer, Point>();
+      try(BufferedReader input = new BufferedReader(new FileReader(nodes))) {  
+          String line = null;
+          /*
+           * readLine is a bit quirky : it returns the content of a line MINUS the
+           * newline. it returns null only for the END of the stream. it returns
+           * an empty String if two newlines appear in a row.
+           */
+          input.readLine(); //Skip first line
+          while ((line = input.readLine()) != null) {
+            Point p = createPoint(line);
+            points.put(p.getID(), p);
+            
+            // Finding maximum and minimum x and y coordinates
+            if (p.getX() > mapBounds.get(MapBound.MAXX)){
+              mapBounds.put(MapBound.MAXX, p.getX());
+            }
+            if (p.getX() < mapBounds.get(MapBound.MINX)){
+              mapBounds.put(MapBound.MINX, p.getX());
+            }
+            if (p.getY() > mapBounds.get(MapBound.MAXY)){
+              mapBounds.put(MapBound.MAXY, p.getY());
+            }
+            if (p.getY() < mapBounds.get(MapBound.MINY)){
+              mapBounds.put(MapBound.MINY, p.getY());
+            }
           }
-          if (p.getX() < mapBounds.get(MapBound.MINX)){
-            mapBounds.put(MapBound.MINX, p.getX());
-          }
-          if (p.getY() > mapBounds.get(MapBound.MAXY)){
-            mapBounds.put(MapBound.MAXY, p.getY());
-          }
-          if (p.getY() < mapBounds.get(MapBound.MINY)){
-            mapBounds.put(MapBound.MINY, p.getY());
-          }
-          tmp.put(p.getID(), p);
-        }
-      } finally {
-        input.close();
+          pointsInit = true; //Points have been initialized (and getMapBound() can be called)
+      } catch (IOException ex) {
+        ex.printStackTrace();
       }
-    } catch (IOException ex) {
-      ex.printStackTrace();
     }
-    pointsInit = true; //Points have been initialized (and getMinMaxValues() can be called)
-    return tmp;
+    return points;
   }
 
   /**
@@ -102,37 +102,59 @@ public class Parser {
    * @return DimensionalTree containing all roads
    */
   public DimensionalTree<Double, RoadType, Road> parseRoads(HashMap<Integer, Point> points) {
-    DimensionalTree<Double, RoadType, Road> tmp = new DimensionalTree<Double, RoadType, Road>();  
-      try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
-        String line = null;
-        /*
-         * readLine is a bit quirky : it returns the content of a line MINUS the
-         * newline. it returns null only for the END of the stream. it returns
-         * an empty String if two newlines appear in a row.
-         */
-        input.readLine();
-        while ((line = input.readLine()) != null) {
-          String[] split = splitRoadInput(line);
-          if (split.length == 6) { //Only if a road
-            Double xS = points.get(Integer.parseInt(split[0])).getX();
-            Double yS = points.get(Integer.parseInt(split[0])).getY();
-            Double xE = points.get(Integer.parseInt(split[1])).getX();
-            Double yE = points.get(Integer.parseInt(split[1])).getY();
-            Integer type = Integer.parseInt(split[3]);
-            Road value = new Road(Integer.parseInt(split[0]), Integer.parseInt(split[1]), split[2], RoadType.getById(type), Double.parseDouble(split[4]), Double.parseDouble(split[5]));
-            tmp.insert(xS, yS, RoadType.getById(type), value);
-            tmp.insert(xE, yE, RoadType.getById(type), value);
+    if(roads == null) {
+      roads = new DimensionalTree<Double, RoadType, Road>();
+        try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
+          String line = null;
+          /*
+           * readLine is a bit quirky : it returns the content of a line MINUS the
+           * newline. it returns null only for the END of the stream. it returns
+           * an empty String if two newlines appear in a row.
+           */
+          input.readLine();
+          while ((line = input.readLine()) != null) {
+              Road r = createRoad(line);
+              Double xS = points.get(r.getP1()).getX();
+              Double yS = points.get(r.getP1()).getY();
+              Double xE = points.get(r.getP2()).getX();
+              Double yE = points.get(r.getP2()).getY();
+              roads.insert(xS, yS, r.getType(), r);
+              roads.insert(xE, yE, r.getType(), r);
           }
-        } 
-    } catch (IOException ex) {
-      ex.printStackTrace();
+          roadsInit = true;
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
     }
-    return tmp;
+    return roads;
+  }
+  
+  /**
+   * Splits a line from the kdv_unload.txt document and then
+   * creates a Road object from the information in the string.
+   * 
+   * @param input
+   *          A line from the kdv_unload.txt document.
+   * @return A Road object containing the information from the line.
+   */
+  private static Road createRoad(String input) {
+    String[] inputSplit = input.split(",");
+    /*
+     * 0 = id of P1
+     * 1 = id of P2
+     * 6 = name
+     * 5 = RoadType
+     * 2 = length
+     * 26 = time
+     */
+    return new Road(Integer.parseInt(inputSplit[0]), Integer.parseInt(inputSplit[1]),
+        inputSplit[6], RoadType.getById(Integer.parseInt(inputSplit[5])),
+        Double.parseDouble(inputSplit[2]), Double.parseDouble(inputSplit[26]));
   }
 
   // Creates a point, to be put in the array and parsed.
   /**
-   * createPoint splits a line from the kdv_node_unload.txt document and then
+   * Splits a line from the kdv_node_unload.txt document and then
    * creates a Point object from the information in the string.
    * 
    * @param input
@@ -140,38 +162,9 @@ public class Parser {
    * @return A Point object containing the information from the line.
    */
   private static Point createPoint(String input) {
-    Point tmp;
     String[] inputSplit = input.split(",");
-    tmp = new Point(Integer.parseInt(inputSplit[2]),
+    return new Point(Integer.parseInt(inputSplit[2]),
         Double.parseDouble(inputSplit[3]), Double.parseDouble(inputSplit[4]));
-
-    return tmp;
-  }
-
-  /**
-   * createPoint splits a line from the kdv_unload.txt document and then creates
-   * a Road object from the information in the string.
-   * 
-   * @param input
-   *          A line from the kdv_unload.txt document.
-   * @return A Road object containing the information from the line.
-   */
-  private static String[] splitRoadInput(String input) {
-    String[] tmp = new String[6];
-
-    String[] inputSplit = input.split(",");
-    if (Integer.parseInt(inputSplit[0]) != Integer.parseInt(inputSplit[1])) {
-
-      tmp[0] = inputSplit[0];
-      tmp[1] = inputSplit[1];
-      tmp[2] = inputSplit[6];
-      tmp[3] = inputSplit[5];
-      tmp[4] = inputSplit[2]; //Length
-      tmp[5] = inputSplit[26]; //Time
-
-      return tmp;
-    } else return new String[0];
-    
   }
   
   /**
@@ -190,6 +183,16 @@ public class Parser {
   public static double getMapBound(MapBound mb) throws DataNotInitializedException {
     if(!pointsInit) throw new DataNotInitializedException(); // Checks if data has been initialized (parsed)
     return mapBounds.get(mb);
+  }
+  
+  public static int numPoints() {
+    if(!pointsInit) throw new DataNotInitializedException();
+    return points.size();
+  }
+
+  public static int numRoads() {
+    if(!roadsInit) throw new DataNotInitializedException();
+    return roads.count();
   }
 
 }
