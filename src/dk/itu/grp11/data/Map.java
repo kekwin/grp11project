@@ -84,7 +84,7 @@ public class Map {
       		  if (roadFound != null) {
       		    synchronized(session) {
         		    if (!session.isRoadDrawn(roadFound.getId())) {
-          		    outputBuilder.append(".move("+points.get(roadFound.getP1()).getX()+", "+points.get(roadFound.getP1()).getY()+").line("+points.get(roadFound.getP2()).getX()+", "+points.get(roadFound.getP2()).getY()+")");
+          		    outputBuilder.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
           		    session.addRoadID(roadFound.getId());
         		    }
       		    }

@@ -48,8 +48,8 @@ public class MapTest {
     
     Road r = new Road(p1.getID(), p2.getID(), "Niceness street", RoadType.MOTORVEJ);
     DimensionalTree<Double, RoadType, Road> roads = new DimensionalTree<Double, RoadType, Road>();
-    roads2.insert(points.get(r.getP1()).getX(), points2.get(r.getP1()).getY(), RoadType.MOTORVEJ, r);
-    roads2.insert(points.get(r.getP2()).getX(), points2.get(r.getP2()).getY(), RoadType.MOTORVEJ, r);
+    roads2.insert(points.get(r.getFrom()).getX(), points2.get(r.getFrom()).getY(), RoadType.MOTORVEJ, r);
+    roads2.insert(points.get(r.getTo()).getX(), points2.get(r.getTo()).getY(), RoadType.MOTORVEJ, r);
     
     Map map = new Map(points, roads);
     
@@ -71,8 +71,8 @@ public class MapTest {
     
     Road r = new Road(p1.getID(), p2.getID(), "Niceness street", RoadType.MOTORVEJ);
     DimensionalTree<Double, RoadType, Road> roads = new DimensionalTree<Double, RoadType, Road>();
-    roads2.insert(points.get(r.getP1()).getX(), points2.get(r.getP1()).getY(), RoadType.MOTORVEJ, r);
-    roads2.insert(points.get(r.getP2()).getX(), points2.get(r.getP2()).getY(), RoadType.MOTORVEJ, r);
+    roads2.insert(points.get(r.getFrom()).getX(), points2.get(r.getFrom()).getY(), RoadType.MOTORVEJ, r);
+    roads2.insert(points.get(r.getTo()).getX(), points2.get(r.getTo()).getY(), RoadType.MOTORVEJ, r);
     
     Map map = new Map(points, roads);
     

@@ -114,10 +114,10 @@ public class Parser {
           input.readLine();
           while ((line = input.readLine()) != null) {
               Road r = createRoad(line);
-              Double xS = points.get(r.getP1()).getX();
-              Double yS = points.get(r.getP1()).getY();
-              Double xE = points.get(r.getP2()).getX();
-              Double yE = points.get(r.getP2()).getY();
+              Double xS = points.get(r.getFrom()).getX();
+              Double yS = points.get(r.getFrom()).getY();
+              Double xE = points.get(r.getTo()).getX();
+              Double yE = points.get(r.getTo()).getY();
               roads.insert(xS, yS, r.getType(), r);
               roads.insert(xE, yE, r.getType(), r);
           }

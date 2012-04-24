@@ -41,7 +41,7 @@ public class Road {
    * 
    * @return id of the start point
    */
-  public int getP1() {
+  public int getFrom() {
     return P1;
   }
   
@@ -50,7 +50,7 @@ public class Road {
    * 
    * @return id of the end point
    */
-  public int getP2() {
+  public int getTo() {
     return P2;
   }
 
