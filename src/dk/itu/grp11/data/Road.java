@@ -1,5 +1,6 @@
 package dk.itu.grp11.data;
 
+import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.RoadType;
 
 /**
@@ -14,6 +15,7 @@ public class Road {
   private int P2;
   private String name;
   private RoadType type;
+  private TrafficDirection oneWay;
   private double length;
   private double time;
   private static int nxtID = 0;
@@ -26,11 +28,12 @@ public class Road {
    * @param name name of the road
    * @param type type of road
    */
-  public Road(int p1, int p2, String name, RoadType type, double length, double time) {
+  public Road(int p1, int p2, String name, RoadType type, TrafficDirection oneWay, double length, double time) {
     this.P1 = p1;
     this.P2 = p2;
     this.name = name;
     this.type = type;
+    this.oneWay = oneWay;
     this.length = length;
     this.time = time;
     this.id = nxtID++;
@@ -60,6 +63,10 @@ public class Road {
 
   public RoadType getType() {
     return type;
+  }
+  
+  public TrafficDirection getDirection() {
+    return oneWay;
   }
   
   public double getLength() {

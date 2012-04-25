@@ -8,6 +8,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 
 import dk.itu.grp11.enums.MapBound;
+import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.exceptions.DataNotInitializedException;
 
@@ -139,20 +140,16 @@ public class Parser {
    */
   private static Road createRoad(String input) {
     String[] inputSplit = input.split(",");
-    /*
-     * 0 = id of P1
-     * 1 = id of P2
-     * 6 = name
-     * 5 = RoadType
-     * 2 = length
-     * 26 = time
-     */
-    return new Road(Integer.parseInt(inputSplit[0]), Integer.parseInt(inputSplit[1]),
-        inputSplit[6], RoadType.getById(Integer.parseInt(inputSplit[5])),
-        Double.parseDouble(inputSplit[2]), Double.parseDouble(inputSplit[26]));
+    return new Road(
+        Integer.parseInt(inputSplit[0]),                  // 0 = id of from point
+        Integer.parseInt(inputSplit[1]),                  // 1 = id of to point
+        inputSplit[6],                                    // 6 = name
+        RoadType.getById(Integer.parseInt(inputSplit[5])),// 5 = road type
+        TrafficDirection.getDirectionById(inputSplit[27]),// 27 = traffic direction
+        Double.parseDouble(inputSplit[2]),                // 2 = length
+        Double.parseDouble(inputSplit[26]));              // 26 = time
   }
 
-  // Creates a point, to be put in the array and parsed.
   /**
    * Splits a line from the kdv_node_unload.txt document and then
    * creates a Point object from the information in the string.
@@ -163,8 +160,10 @@ public class Parser {
    */
   private static Point createPoint(String input) {
     String[] inputSplit = input.split(",");
-    return new Point(Integer.parseInt(inputSplit[2]),
-        Double.parseDouble(inputSplit[3]), Double.parseDouble(inputSplit[4]));
+    return new Point(
+        Integer.parseInt(inputSplit[2]),    //2 = id of the point
+        Double.parseDouble(inputSplit[3]),  //3 = x coordinate
+        Double.parseDouble(inputSplit[4])); //4 = y coordinate
   }
   
   /**
@@ -184,15 +183,4 @@ public class Parser {
     if(!pointsInit) throw new DataNotInitializedException(); // Checks if data has been initialized (parsed)
     return mapBounds.get(mb);
   }
-  
-  public static int numPoints() {
-    if(!pointsInit) throw new DataNotInitializedException();
-    return points.size();
-  }
-
-  public static int numRoads() {
-    if(!roadsInit) throw new DataNotInitializedException();
-    return roads.count();
-  }
-
 }
