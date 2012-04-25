@@ -183,4 +183,14 @@ public class Parser {
     if(!pointsInit) throw new DataNotInitializedException(); // Checks if data has been initialized (parsed)
     return mapBounds.get(mb);
   }
+  
+  public static int numPoints() {
+    if(!pointsInit) throw new DataNotInitializedException();
+    return points.size();
+  }
+
+  public static int numRoads() {
+    if(!roadsInit) throw new DataNotInitializedException();
+    return roads.count();
+  }
 }
