@@ -23,7 +23,7 @@ public class MapTest {
   public void test0() {
     Parser p = new Parser(new File("src/dk/itu/grp11/test/test_points.txt"), new File("src/dk/itu/grp11/test/test_roads.txt"));
     
-    HashMap<Integer, Point> points = p.parsePoints();
+    HashMap<Integer, Point> points = p.points();
     DimensionalTree<Double, RoadType, Road> roads = p.parseRoads(points);
     Map map = new Map(points, roads);
     
@@ -37,7 +37,7 @@ public class MapTest {
   @Test
   public void test1() {
     dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
-    HashMap<Integer, Point> points = p.parsePoints();
+    HashMap<Integer, Point> points = p.points();
     DimensionalTree<Double, RoadType, Road> roads2 = p.parseRoads(points);
     
     Point p1 = new Point(1, 300, 356);
@@ -53,14 +53,14 @@ public class MapTest {
     
     Map map = new Map(points, roads);
     
-    assertEquals(1, map.getZoomLevelX(Parser.getMapBound(MapBound.MAXX)-Parser.getMapBound(MapBound.MINX)));
+    assertEquals(1, map.getZoomLevelX(Parser.mapBound(MapBound.MAXX)-Parser.mapBound(MapBound.MINX)));
   }
   
   //Testing getZoomLevelY
   @Test
   public void test2() {
     dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
-    HashMap<Integer, Point> points = p.parsePoints();
+    HashMap<Integer, Point> points = p.points();
     DimensionalTree<Double, RoadType, Road> roads2 = p.parseRoads(points);
     
     Point p1 = new Point(1, 300, 356);
@@ -76,7 +76,7 @@ public class MapTest {
     
     Map map = new Map(points, roads);
     
-    assertEquals(1, map.getZoomLevelY(Parser.getMapBound(MapBound.MAXY)-Parser.getMapBound(MapBound.MINY)));
+    assertEquals(1, map.getZoomLevelY(Parser.mapBound(MapBound.MAXY)-Parser.mapBound(MapBound.MINY)));
   }
   
   //Testing zoomLevelX

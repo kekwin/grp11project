@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.TrafficDirection;
@@ -19,15 +20,13 @@ import dk.itu.grp11.exceptions.DataNotInitializedException;
  * 
  */
 public class Parser {
-  
   private static Parser ps = null;
-  private static boolean pointsInit = false;
-  private static boolean roadsInit = false;
   private static File nodes;
   private static File connections;
   private static EnumMap<MapBound, Double> mapBounds;
   private static HashMap<Integer, Point> points = null;
   private static DimensionalTree<Double, RoadType, Road> roads = null;
+  private static Network graph = null;
   
   /**
    * 
@@ -49,6 +48,8 @@ public class Parser {
       File node = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       File road = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       ps = new Parser(node, road);
+      ps.parsePoints();
+      ps.parseRoads(ps.points());
     }
     return ps;
   }
@@ -56,10 +57,9 @@ public class Parser {
   /**
    * Parses all points in the network and puts it in a HashMap with point-ID as key,
    * and the point as value.
-   * 
-   * @return HashMap containing all nodes
    */
-  public HashMap<Integer, Point> parsePoints() {
+  private void parsePoints() {
+    System.out.println("- Parsing points");
     if(points == null) {
       points = new HashMap<Integer, Point>();
       try(BufferedReader input = new BufferedReader(new FileReader(nodes))) {  
@@ -88,22 +88,27 @@ public class Parser {
               mapBounds.put(MapBound.MINY, p.getY());
             }
           }
-          pointsInit = true; //Points have been initialized (and getMapBound() can be called)
       } catch (IOException ex) {
         ex.printStackTrace();
       }
     }
+  }
+  
+  /**
+   * @return HashMap containing all nodes
+   */
+  public HashMap<Integer, Point> points() {
     return points;
   }
 
   /**
    * Parses all roads in the network and puts it in a DimensionalTree sorted by
    * the x and y coordinate of the road and road type.
-   * 
-   * @return DimensionalTree containing all roads
    */
-  public DimensionalTree<Double, RoadType, Road> parseRoads(HashMap<Integer, Point> points) {
+  private void parseRoads(HashMap<Integer, Point> points) {
+    System.out.println("- Parsing roads");
     if(roads == null) {
+      HashSet<Road> roadsForGraph = new HashSet<>(); //Temporary set for building the Graph
       roads = new DimensionalTree<Double, RoadType, Road>();
         try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
           String line = null;
@@ -121,12 +126,22 @@ public class Parser {
               Double yE = points.get(r.getTo()).getY();
               roads.insert(xS, yS, r.getType(), r);
               roads.insert(xE, yE, r.getType(), r);
+              roadsForGraph.add(r);
           }
-          roadsInit = true;
+          System.out.println("- Creating network graph");
+          graph = new Network(points.size(), roadsForGraph);
       } catch (IOException ex) {
         ex.printStackTrace();
       }
+      roadsForGraph = null; //Does not need the HashSet anymore
     }
+  }
+  
+  /**
+   * 
+   * @return DimensionalTree containing all roads
+   */
+  public DimensionalTree<Double, RoadType, Road> roads() {
     return roads;
   }
   
@@ -166,31 +181,19 @@ public class Parser {
         Double.parseDouble(inputSplit[4])); //4 = y coordinate
   }
   
-  /**
-   * Returns an array containing 4 values, representing the smallest and largest x and y coordinates of all Points.
-   * [0]=minX.
-   * [1]=maxX.
-   * [2]=minY.
-   * [3]=maxY.
-   * 
-   * Values can be referenced using the MinMax enum.
-   * 
-   * CAN ONLY BE CALLED IF THE PARSEPOINTS() FUNCTION HAS ALREADY BEEN CALLED!
-   * @return Maximum/minimum x- and y-coordinates.
-   * @throws DataNotInitializedException if points has not been initialized.
-   */
-  public static double getMapBound(MapBound mb) throws DataNotInitializedException {
-    if(!pointsInit) throw new DataNotInitializedException(); // Checks if data has been initialized (parsed)
+  public double mapBound(MapBound mb) {
     return mapBounds.get(mb);
   }
   
-  public static int numPoints() {
-    if(!pointsInit) throw new DataNotInitializedException();
+  public Network network() {
+    return graph;
+  }
+  
+  public int numPoints() {
     return points.size();
   }
 
-  public static int numRoads() {
-    if(!roadsInit) throw new DataNotInitializedException();
+  public int numRoads() {
     return roads.count();
   }
 }
