@@ -1,11 +1,8 @@
 package dk.itu.grp11.data;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TransportationType;

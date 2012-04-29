@@ -1,6 +1,5 @@
 package dk.itu.grp11.data;
 
-import java.util.PriorityQueue;
 import java.util.Stack;
 
 import dk.itu.grp11.enums.TrafficDirection;
@@ -34,9 +33,9 @@ public class PathFinder {
   
   private void relax(Network G, int p) {
     for(Road r : G.adj(p)) {
-      // Only relax if the road is allowed to be driven on
-      //TODO make it possible for pedestrians to walk on all roads
-      if(((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) ||
+      // Only relax if the road is allowed to be driven/walked on by the transportation type
+      if(((r.getDirection() == TrafficDirection.BOTH_WAYS ||
+          r.getDirection() == TrafficDirection.FROM_TO) ||
           transType == TransportationType.WALK) &&
           r.getType().isAllowed(transType)) {
         int w = r.getTo();
@@ -54,6 +53,8 @@ public class PathFinder {
     }
   }
   
+
+  //shortest path based on distance (if time = false) or time (if time = true)
   public double distTo(int p) {
     return distTo[p];
   }
