@@ -73,9 +73,7 @@ public class Map {
   		
   		if (roadsFound.size() > 0) {
     		
-    		double yOff = session.getYStart(); //Y-axis offset
-    		double cH = session.getYDiff(); //Canvas height
-    		int csLimit = 100000; //JavaScript CallStack limit
+    		int csLimit = 1000; //JavaScript CallStack limit
     		Iterator<Road> i = roadsFound.iterator();
     		while (i.hasNext()) {
     		  outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
