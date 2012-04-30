@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.enums.MapBound;
-//TODO javadoc
+
 public class Session {
   private String sessionID;
   private int xStart;
@@ -24,6 +24,18 @@ public class Session {
     yStart = (int)Math.floor(ps.mapBound(MapBound.MINY));
     xDiff = (int)Math.ceil(ps.mapBound(MapBound.MAXX)-ps.mapBound(MapBound.MINX));
     yDiff = (int)Math.ceil(ps.mapBound(MapBound.MAXY)-ps.mapBound(MapBound.MINY));
+  }
+  
+  public String removeRoads(String ids) {
+    synchronized(this) {
+      String[] split = ids.split(",");
+      for (String id : split) {
+        try {
+          roadsDrawn.remove(Integer.parseInt(id));
+        } catch (NumberFormatException e) {}
+      }
+    }
+    return "Success";
   }
   
   public int  getXStart() { return xStart; }

@@ -1,7 +1,7 @@
 jQuery(function($){
   
   //Needed variables
-  var slices = 10;
+  var slices = 5;
   var xStart = 0;
   var fullXStart = 0;
   var yStart = 0;
@@ -19,6 +19,10 @@ jQuery(function($){
   var sessionID = null;
   var movePercentage = 0.3;
   var zoomPercentage = 0.2;
+  var highestZoomLevel = 16;
+  var requests = 0;
+  var requestsDone = 0;
+  var maxNumToRemove = 1000;
   
   /************************************************************************************************
    * Functions
@@ -120,6 +124,7 @@ jQuery(function($){
     });
   }
   function refreshSVG() {
+    $('.loader').css('display', '');
     var svg = document.getElementById("map");
     var viewbox = svg.getAttribute("viewBox");
     var split = viewbox.split(" ");
@@ -149,30 +154,20 @@ jQuery(function($){
   function load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel) {
     for (i=0;i<slices;i++) {
       for (j=0;j<slices;j++) {
-        var aUrl = "getMap";
-        var aCache = false;
-        var aType = "GET";
-        var aData = "x="+((j*xIncr)+xStart)+"&y="+((i*yIncr)+Math.abs(yStart))+"&width="+xIncr+"&height="+yIncr+"&zoomlevel="+zoomLevel;
-        if (i == slices-1 && j == slices-1) {
-          $.ajax({
-            url: aUrl,
-            cache: aCache,
-            type: aType,
-            data: "sessionID="+sessionID+"&"+aData
-          }).done(function( svg ) {
-            eval(svg);
-            $('.loader').css('display', 'none');
-          });
-        } else {
-          $.ajax({
-            url: aUrl,
-            cache: aCache,
-            type: aType,
-            data: "sessionID="+sessionID+"&"+aData
-          }).done(function( svg ) {
-            eval(svg);
-          });
-        }
+        requests++;
+        $.ajax({
+          url: "getMap",
+          cache: false,
+          type: "GET",
+          data: "sessionID="+sessionID+"&x="+((j*xIncr)+xStart)+"&y="+((i*yIncr)+Math.abs(yStart))+"&width="+xIncr+"&height="+yIncr+"&zoomlevel="+zoomLevel
+        }).done(function( svg ) {
+          eval(svg);
+          requestsDone++;
+          if (requests == requestsDone) {
+            checkLoader();
+            removeRoads(zoomLevel);
+          }
+        });
       }
     }
   }
@@ -231,13 +226,13 @@ jQuery(function($){
     var xDiff = parseInt(split[2]);
     var yDiff = parseInt(split[3]);
     if (direction == "in") {
-      xStart += Math.floor(((xDiff*zoomPercentage)/2)+(xCoord-(xDiff/2)));
-      yStart += Math.floor(((yDiff*zoomPercentage)/2)+(yCoord-(yDiff/2)));
+      xStart += Math.floor(((xDiff*zoomPercentage)/2)+(xCoord));
+      yStart += Math.floor(((yDiff*zoomPercentage)/2)+(yCoord));
       xDiff = Math.ceil(xDiff*(1-zoomPercentage));
       yDiff = Math.ceil(yDiff*(1-zoomPercentage));
     } else if (direction == "out") {
-      xStart -= Math.floor(((xDiff/(1-zoomPercentage)-xDiff)/2)+(xCoord-(xDiff/2)));
-      yStart -= Math.floor(((yDiff/(1-zoomPercentage)-yDiff)/2)+(yCoord-(yDiff/2)));
+      xStart -= Math.floor(((xDiff/(1-zoomPercentage)-xDiff)/2)+(xCoord));
+      yStart -= Math.floor(((yDiff/(1-zoomPercentage)-yDiff)/2)+(yCoord));
       xDiff = Math.ceil(xDiff/(1-zoomPercentage));
       yDiff = Math.ceil(yDiff/(1-zoomPercentage));
     }
@@ -258,15 +253,49 @@ jQuery(function($){
     var split = viewbox.split(" ");
     var xDiff = parseInt(split[2]);
     var calcX = xDiff/$(document).width();
-    return coord*calcX;
+    return (coord-($(document).width()/2))*calcX;
   }
   function calculateCoordY(coord) {
     var svg = document.getElementById("map");
     var viewbox = svg.getAttribute("viewBox");
     var split = viewbox.split(" ");
     var yDiff = parseInt(split[3]);
-    var calcY = yDiff/$(document).width();
-    return coord*calcY;
+    var calcY = yDiff/$(document).height();
+    return -((coord-($(document).height()/2))*calcY);
+  }
+  function removeRoads(zoom) {
+    var ids = "";
+    for (var i = parseInt(zoom); i < highestZoomLevel; i++) {
+      $('.zoom'+(i+1)).each(function() {
+        $('.loader').css('display', '');
+        $(this).remove();
+        ids += this.id;
+      });
+    }
+    var split = ids.split(",");
+    for (var j = 0; j < Math.ceil(split.length/maxNumToRemove); j++) {
+      var idsSend = "";
+      for (var i = 0; i < maxNumToRemove; i++) {
+        if ((j*200)+i < split.length-1) {
+          idsSend += split[(j*maxNumToRemove)+i]+",";
+        }
+      }
+      if (idsSend.length > 0) {
+        requests++;
+        $.ajax({
+          url: "removeRoads",
+          cache: false,
+          type: "GET",
+          data: "sessionID="+sessionID+"&IDs="+idsSend
+        }).done(function() {
+          requestsDone++;
+          checkLoader();
+        });
+      }
+    }
+  }
+  function checkLoader() {
+    if (requests == requestsDone) $('.loader').css('display', 'none');
   }
   
   
@@ -290,22 +319,13 @@ jQuery(function($){
     moveSVG("east");
   });
   $('#plus').click(function() {
-    var svg = document.getElementById("map");
-    var viewbox = svg.getAttribute("viewBox");
-    var split = viewbox.split(" ");
-    zoomSVG("in", parseInt(split[2])/2, parseInt(split[3])/2);
+    zoomSVG("in", 0, 0);
   });
   $('#minus').click(function() {
-    var svg = document.getElementById("map");
-    var viewbox = svg.getAttribute("viewBox");
-    var split = viewbox.split(" ");
-    zoomSVG("out", parseInt(split[2])/2, parseInt(split[3])/2);
+    zoomSVG("out", 0, 0);
   });
   
   $(document).bind('keydown',function(k) {
-    var svg = document.getElementById("map");
-    var viewbox = svg.getAttribute("viewBox");
-    var split = viewbox.split(" ");
     switch(k.keyCode) {
     case 37:
       moveSVG("west");
@@ -319,12 +339,20 @@ jQuery(function($){
     case 40: 
       moveSVG("south");
       break;
-    case 107: 
-      zoomSVG("in", parseInt(split[2])/2, parseInt(split[3])/2);
+    case 107:
+      zoomSVG("in", 0, 0);
       break;
     case 109: 
-      zoomSVG("out", parseInt(split[2])/2, parseInt(split[3])/2);
+      zoomSVG("out", 0, 0);
       break;
     }
   });
+  
+  $(document).dblclick(function(e) {
+    e.preventDefault();
+    var x = calculateCoordX(e.pageX);
+    var y = calculateCoordY(e.pageY);
+    zoomSVG("in", x, y);
+  });
+  $(document).mousedown(function(e){ e.preventDefault(); }) //Prevents selecting with doubleclick
 });
