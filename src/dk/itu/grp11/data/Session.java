@@ -25,6 +25,18 @@ public class Session {
     yDiff = (int)Math.ceil(ps.mapBound(MapBound.MAXY)-ps.mapBound(MapBound.MINY));
   }
   
+  public String removeRoads(String ids) {
+    synchronized(this) {
+      String[] split = ids.split(",");
+      for (String id : split) {
+        try {
+          roadsDrawn.remove(Integer.parseInt(id));
+        } catch (NumberFormatException e) {}
+      }
+    }
+    return "Success";
+  }
+  
   public int  getXStart() { return xStart; }
   public int  getYStart() { return yStart; }
   public int  getXDiff() { return xDiff; }

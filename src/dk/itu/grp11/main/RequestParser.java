@@ -77,7 +77,9 @@ public class RequestParser extends Thread {
       String[] paramSplit = split3[0].split("&");
       for (String param : paramSplit) {
         String[] split4 = param.split("=");
-        params.put(split4[0], split4[1]);
+        String parameter = "";
+        if (split4.length == 2) parameter = split4[1];
+        params.put(split4[0], parameter);
       }
     };
     if (file.length() == 0) processRequest("head.html", null);
@@ -107,6 +109,8 @@ public class RequestParser extends Thread {
       outStream = new ByteArrayInputStream((""+Map.getZoomLevelY(FileServer.sessions.get(params.get("sessionID")).getYDiff())).getBytes("UTF-8"));
     } else if (file.indexOf("getMap") != -1) {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
+    } else if (file.indexOf("removeRoads") != -1) {
+      outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));
     } else if (file.indexOf("setCanvas") != -1) {
       if (params.size() < 4) FileServer.sessions.get(params.get("sessionID")).resetMinMax();
       else {

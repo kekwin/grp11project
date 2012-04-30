@@ -74,6 +74,7 @@ public class Map {
   		if (roadsFound.size() > 0) {
     		
     		int csLimit = 1000; //JavaScript CallStack limit
+    		String id = "";
     		Iterator<Road> i = roadsFound.iterator();
     		while (i.hasNext()) {
     		  outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
@@ -83,12 +84,13 @@ public class Map {
       		    synchronized(session) {
         		    if (!session.isRoadDrawn(roadFound.getId())) {
           		    outputBuilder.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
+          		    id += roadFound.getId()+",";
           		    session.addRoadID(roadFound.getId());
         		    }
       		    }
       		  }
           }
-      		outputBuilder.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 0});\n");
+      		outputBuilder.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 0, class: 'zoom"+roadType.getZoomLevel()+"', id: '"+id+"'});\n");
     		}
   		}
 		}	
