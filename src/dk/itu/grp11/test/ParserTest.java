@@ -25,7 +25,7 @@ public class ParserTest {
   @Test
   public void test0() throws IOException {
     dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
-    HashMap<Integer, Point> points = p.parsePoints();
+    HashMap<Integer, Point> points = p.points();
     
     //The first point
     assertEquals(1, points.get(1).getID());
@@ -42,7 +42,7 @@ public class ParserTest {
   @Test
   public void test1() throws IOException {
     dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
-    HashMap<Integer, Point> points = p.parsePoints();
+    HashMap<Integer, Point> points = p.points();
     DimensionalTree<Double, RoadType, Road> roads = p.parseRoads(points);
     
     // Road types to count
@@ -59,8 +59,8 @@ public class ParserTest {
     
     // Count number of roads for every road type
     for(RoadType rt : roadTypes) {
-      Interval<Double, RoadType> intervalX = new Interval<Double, RoadType>(Parser.getMapBound(MapBound.MINX), Parser.getMapBound(MapBound.MAXX), rt);
-      Interval<Double, RoadType> intervalY = new Interval<Double, RoadType>(Parser.getMapBound(MapBound.MINY), Parser.getMapBound(MapBound.MAXY), rt);
+      Interval<Double, RoadType> intervalX = new Interval<Double, RoadType>(Parser.mapBound(MapBound.MINX), Parser.mapBound(MapBound.MAXX), rt);
+      Interval<Double, RoadType> intervalY = new Interval<Double, RoadType>(Parser.mapBound(MapBound.MINY), Parser.mapBound(MapBound.MAXY), rt);
       Interval2D<Double, RoadType> rect = new Interval2D<Double, RoadType>(intervalX, intervalY);
       HashSet<Road> roadsInViewbox = roads.query2D(rect);
       roadCount += roadsInViewbox.size();
@@ -87,7 +87,7 @@ public class ParserTest {
     
     // Reading all points
     dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
-    HashMap<Integer, Point> points = p.parsePoints();
+    HashMap<Integer, Point> points = p.points();
     
     // Counting roads
     File f = new File("kdv_unload.txt");

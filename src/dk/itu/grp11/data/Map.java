@@ -33,8 +33,8 @@ public class Map {
 	
 	public static Map getMap() {
 	  if (map == null) {
-	    HashMap<Integer, Point> points = Parser.getParser().parsePoints();
-	    DimensionalTree<Double, RoadType, Road> roads = Parser.getParser().parseRoads(points);
+	    HashMap<Integer, Point> points = Parser.getParser().points();
+	    DimensionalTree<Double, RoadType, Road> roads = Parser.getParser().roads();
 	    map = new Map(points, roads);
 	  }
 	  return map;
@@ -82,7 +82,7 @@ public class Map {
       		  if (roadFound != null) {
       		    synchronized(session) {
         		    if (!session.isRoadDrawn(roadFound.getId())) {
-          		    outputBuilder.append(".move("+points.get(roadFound.getP1()).getX()+", "+points.get(roadFound.getP1()).getY()+").line("+points.get(roadFound.getP2()).getX()+", "+points.get(roadFound.getP2()).getY()+")");
+          		    outputBuilder.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
           		    session.addRoadID(roadFound.getId());
         		    }
       		    }
@@ -105,7 +105,7 @@ public class Map {
 	 *         w if w = (total map width)/(total map width).
 	 */
 	private static int zoomLevelX(double w) {
-	  int zoomlevel = (int)((Math.ceil(Parser.getMapBound(MapBound.MAXX))-Math.floor(Parser.getMapBound(MapBound.MINX)))/w);
+	  int zoomlevel = (int)((Math.ceil(Parser.getParser().mapBound(MapBound.MAXX))-Math.floor(Parser.getParser().mapBound(MapBound.MINX)))/w);
 	  return (zoomlevel < 1 ? 1 : zoomlevel);
 	}
 	
@@ -123,7 +123,7 @@ public class Map {
    *         h if h = (total map height)/(total map height).
    */
 	private static int zoomLevelY(double h) {
-    int zoomlevel = (int)((Math.ceil(Parser.getMapBound(MapBound.MAXY))-Math.floor(Parser.getMapBound(MapBound.MINY)))/h);
+    int zoomlevel = (int)((Math.ceil(Parser.getParser().mapBound(MapBound.MAXY))-Math.floor(Parser.getParser().mapBound(MapBound.MINY)))/h);
     return (zoomlevel < 1 ? 1 : zoomlevel);
   }
 	

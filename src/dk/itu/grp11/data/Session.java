@@ -18,10 +18,11 @@ public class Session {
   }
   
   public void resetMinMax() {
-    xStart = (int)Math.floor(Parser.getMapBound(MapBound.MINX));
-    yStart = (int)Math.floor(Parser.getMapBound(MapBound.MINY));
-    xDiff = (int)Math.ceil(Parser.getMapBound(MapBound.MAXX)-Parser.getMapBound(MapBound.MINX));
-    yDiff = (int)Math.ceil(Parser.getMapBound(MapBound.MAXY)-Parser.getMapBound(MapBound.MINY));
+    Parser ps = Parser.getParser();
+    xStart = (int)Math.floor(ps.mapBound(MapBound.MINX));
+    yStart = (int)Math.floor(ps.mapBound(MapBound.MINY));
+    xDiff = (int)Math.ceil(ps.mapBound(MapBound.MAXX)-ps.mapBound(MapBound.MINX));
+    yDiff = (int)Math.ceil(ps.mapBound(MapBound.MAXY)-ps.mapBound(MapBound.MINY));
   }
   
   public int  getXStart() { return xStart; }

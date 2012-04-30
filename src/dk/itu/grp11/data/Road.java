@@ -1,5 +1,6 @@
 package dk.itu.grp11.data;
 
+import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.RoadType;
 
 /**
@@ -10,10 +11,11 @@ import dk.itu.grp11.enums.RoadType;
 
 public class Road {
   private int id;
-  private int P1;
-  private int P2;
+  private int from;
+  private int to;
   private String name;
   private RoadType type;
+  private TrafficDirection direction;
   private double length;
   private double time;
   private static int nxtID = 0;
@@ -21,16 +23,17 @@ public class Road {
   
   /**
    * 
-   * @param p1 ID of the first Point
-   * @param p2 ID of the second Point
+   * @param from ID of the first Point
+   * @param to ID of the second Point
    * @param name name of the road
    * @param type type of road
    */
-  public Road(int p1, int p2, String name, RoadType type, double length, double time) {
-    this.P1 = p1;
-    this.P2 = p2;
+  public Road(int from, int to, String name, RoadType type, TrafficDirection direction, double length, double time) {
+    this.from = from;
+    this.to = to;
     this.name = name;
     this.type = type;
+    this.direction = direction;
     this.length = length;
     this.time = time;
     this.id = nxtID++;
@@ -41,8 +44,8 @@ public class Road {
    * 
    * @return id of the start point
    */
-  public int getP1() {
-    return P1;
+  public int getFrom() {
+    return from;
   }
   
   /**
@@ -50,8 +53,8 @@ public class Road {
    * 
    * @return id of the end point
    */
-  public int getP2() {
-    return P2;
+  public int getTo() {
+    return to;
   }
 
   public String getName() {
@@ -60,6 +63,10 @@ public class Road {
 
   public RoadType getType() {
     return type;
+  }
+  
+  public TrafficDirection getDirection() {
+    return direction;
   }
   
   public double getLength() {
@@ -75,7 +82,7 @@ public class Road {
   }
 
   public String toString() {
-    return "["+id+"] name='" + name + "' type=" + type + " P1=" + P1 + " P2=" + P2;
+    return "["+id+"] name='" + name + "' type=" + type + " from=" + from + " to=" + to + " length=" + length + " time=" + time;
   }
 
 }
