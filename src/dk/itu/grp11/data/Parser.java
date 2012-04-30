@@ -25,8 +25,9 @@ public class Parser {
   private static EnumMap<MapBound, Double> mapBounds;
   private static HashMap<Integer, Point> points = null;
   private static DimensionalTree<Double, RoadType, Road> roads = null;
+  private static HashMap<Integer, String> postalNrs = null;
   private static Network graph = null;
-  
+
   /**
    * 
    * @param nodeFile A java.File object referencing the file containing nodes.
@@ -41,18 +42,20 @@ public class Parser {
     mapBounds.put(MapBound.MINY, 100000000.0);
     mapBounds.put(MapBound.MAXY, 0.0);
   }
-  
+
   public static Parser getParser() {
     if (ps == null) {
       File node = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       File road = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
+      File postNr = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
       ps = new Parser(node, road);
       ps.parsePoints();
       ps.parseRoads(ps.points());
+      ps.parsePostNr(postNr);
     }
     return ps;
   }
-  
+
   /**
    * For test purposes only
    * 
@@ -80,37 +83,37 @@ public class Parser {
     if(points == null) {
       points = new HashMap<Integer, Point>();
       try(BufferedReader input = new BufferedReader(new FileReader(nodes))) {  
-          String line = null;
-          /*
-           * readLine is a bit quirky : it returns the content of a line MINUS the
-           * newline. it returns null only for the END of the stream. it returns
-           * an empty String if two newlines appear in a row.
-           */
-          input.readLine(); //Skip first line
-          while ((line = input.readLine()) != null) {
-            Point p = createPoint(line);
-            points.put(p.getID(), p);
-            
-            // Finding maximum and minimum x and y coordinates
-            if (p.getX() > mapBounds.get(MapBound.MAXX)){
-              mapBounds.put(MapBound.MAXX, p.getX());
-            }
-            if (p.getX() < mapBounds.get(MapBound.MINX)){
-              mapBounds.put(MapBound.MINX, p.getX());
-            }
-            if (p.getY() > mapBounds.get(MapBound.MAXY)){
-              mapBounds.put(MapBound.MAXY, p.getY());
-            }
-            if (p.getY() < mapBounds.get(MapBound.MINY)){
-              mapBounds.put(MapBound.MINY, p.getY());
-            }
+        String line = null;
+        /*
+         * readLine is a bit quirky : it returns the content of a line MINUS the
+         * newline. it returns null only for the END of the stream. it returns
+         * an empty String if two newlines appear in a row.
+         */
+        input.readLine(); //Skip first line
+        while ((line = input.readLine()) != null) {
+          Point p = createPoint(line);
+          points.put(p.getID(), p);
+
+          // Finding maximum and minimum x and y coordinates
+          if (p.getX() > mapBounds.get(MapBound.MAXX)){
+            mapBounds.put(MapBound.MAXX, p.getX());
           }
+          if (p.getX() < mapBounds.get(MapBound.MINX)){
+            mapBounds.put(MapBound.MINX, p.getX());
+          }
+          if (p.getY() > mapBounds.get(MapBound.MAXY)){
+            mapBounds.put(MapBound.MAXY, p.getY());
+          }
+          if (p.getY() < mapBounds.get(MapBound.MINY)){
+            mapBounds.put(MapBound.MINY, p.getY());
+          }
+        }
       } catch (IOException ex) {
         ex.printStackTrace();
       }
     }
   }
-  
+
   /**
    * @return HashMap containing all nodes
    */
@@ -127,33 +130,33 @@ public class Parser {
     if(roads == null) {
       HashSet<Road> roadsForGraph = new HashSet<>(); //Temporary set for building the Graph
       roads = new DimensionalTree<Double, RoadType, Road>();
-        try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
-          String line = null;
-          /*
-           * readLine is a bit quirky : it returns the content of a line MINUS the
-           * newline. it returns null only for the END of the stream. it returns
-           * an empty String if two newlines appear in a row.
-           */
-          input.readLine();
-          while ((line = input.readLine()) != null) {
-              Road r = createRoad(line);
-              Double xS = points.get(r.getFrom()).getX();
-              Double yS = points.get(r.getFrom()).getY();
-              Double xE = points.get(r.getTo()).getX();
-              Double yE = points.get(r.getTo()).getY();
-              roads.insert(xS, yS, r.getType(), r);
-              roads.insert(xE, yE, r.getType(), r);
-              roadsForGraph.add(r);
-          }
-          System.out.println("- Creating network graph");
-          graph = new Network(points.size(), roadsForGraph);
+      try(BufferedReader input = new BufferedReader(new FileReader(connections))) {
+        String line = null;
+        /*
+         * readLine is a bit quirky : it returns the content of a line MINUS the
+         * newline. it returns null only for the END of the stream. it returns
+         * an empty String if two newlines appear in a row.
+         */
+        input.readLine();
+        while ((line = input.readLine()) != null) {
+          Road r = createRoad(line);
+          Double xS = points.get(r.getFrom()).getX();
+          Double yS = points.get(r.getFrom()).getY();
+          Double xE = points.get(r.getTo()).getX();
+          Double yE = points.get(r.getTo()).getY();
+          roads.insert(xS, yS, r.getType(), r);
+          roads.insert(xE, yE, r.getType(), r);
+          roadsForGraph.add(r);
+        }
+        System.out.println("- Creating network graph");
+        graph = new Network(points.size(), roadsForGraph);
       } catch (IOException ex) {
         ex.printStackTrace();
       }
       roadsForGraph = null; //Does not need the HashSet anymore
     }
   }
-  
+
   /**
    * 
    * @return DimensionalTree containing all roads
@@ -161,7 +164,7 @@ public class Parser {
   public DimensionalTree<Double, RoadType, Road> roads() {
     return roads;
   }
-  
+
   /**
    * Splits a line from the kdv_unload.txt document and then
    * creates a Road object from the information in the string.
@@ -197,15 +200,40 @@ public class Parser {
         Double.parseDouble(inputSplit[3]),  //3 = x coordinate
         Double.parseDouble(inputSplit[4])); //4 = y coordinate
   }
-  
+
+  private void parsePostNr(File file){
+    System.out.println("- Parsing postal Numbers");
+    if(postalNrs == null) {
+      postalNrs = new HashMap<Integer, String>();
+      try(BufferedReader input = new BufferedReader(new FileReader(file))) {  
+        String line = null;
+        /*
+         * readLine is a bit quirky : it returns the content of a line MINUS the
+         * newline. it returns null only for the END of the stream. it returns
+         * an empty String if two newlines appear in a row.
+         */
+        input.readLine();
+        input.readLine(); //Skip first 2 lines
+        while ((line = input.readLine()) != null) {
+          String[] inputSplit = line.split(";");
+          if(Integer.parseInt(inputSplit[5]) == 1) {
+            postalNrs.put(Integer.parseInt(inputSplit[0]), inputSplit[1]);
+          }
+        }
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
   public double mapBound(MapBound mb) {
     return mapBounds.get(mb);
   }
-  
+
   public Network network() {
     return graph;
   }
-  
+
   public int numPoints() {
     return points.size();
   }
