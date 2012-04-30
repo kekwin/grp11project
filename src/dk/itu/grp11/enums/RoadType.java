@@ -43,7 +43,7 @@ public enum RoadType {
   
   STI(8, 0.05, new Color(220,100,60), 16, TransportationType.BICYCLE, TransportationType.WALK),
   MARKVEJ(10, 0.1, new Color(126,49,23), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  GÅGADE(11, 0.1, new Color(185,185,0), 16, TransportationType.WALK),
+  GÃ…GADE(11, 0.1, new Color(185,185,0), 16, TransportationType.WALK),
   PROJ_STI(28, 0.05, new Color(220,100,60), 16, TransportationType.BICYCLE, TransportationType.WALK),
   STITUNNEL(48, 0.05, new Color(220,100,60), 16, TransportationType.BICYCLE, TransportationType.WALK),
   UKENDT1(95, 0.1, new Color(0,0,0), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
