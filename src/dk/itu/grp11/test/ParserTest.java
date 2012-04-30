@@ -37,13 +37,11 @@ public class ParserTest {
     assertEquals(692067.66450, points.get(points.size()).getX(), 0);
     assertEquals(6049914.43018, points.get(points.size()).getY(), 0);
   }
-  
+  /*
   //Testing if all roads, with zoom level 1, are included at zoom level 1
   @Test
   public void test1() throws IOException {
-    dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
-    HashMap<Integer, Point> points = p.points();
-    DimensionalTree<Double, RoadType, Road> roads = p.parseRoads(points);
+    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("test_points.txt"), new File("test_roads.txt"));
     
     // Road types to count
     HashSet<RoadType> roadTypes = new HashSet<>();
@@ -59,8 +57,8 @@ public class ParserTest {
     
     // Count number of roads for every road type
     for(RoadType rt : roadTypes) {
-      Interval<Double, RoadType> intervalX = new Interval<Double, RoadType>(Parser.mapBound(MapBound.MINX), Parser.mapBound(MapBound.MAXX), rt);
-      Interval<Double, RoadType> intervalY = new Interval<Double, RoadType>(Parser.mapBound(MapBound.MINY), Parser.mapBound(MapBound.MAXY), rt);
+      Interval<Double, RoadType> intervalX = new Interval<Double, RoadType>(Parser.getParser().mapBound(MapBound.MINX), Parser.getParser().mapBound(MapBound.MAXX), rt);
+      Interval<Double, RoadType> intervalY = new Interval<Double, RoadType>(Parser.getParser().mapBound(MapBound.MINY), Parser.getParser().mapBound(MapBound.MAXY), rt);
       Interval2D<Double, RoadType> rect = new Interval2D<Double, RoadType>(intervalX, intervalY);
       HashSet<Road> roadsInViewbox = roads.query2D(rect);
       roadCount += roadsInViewbox.size();
@@ -104,5 +102,5 @@ public class ParserTest {
       line = input.readLine();
     }
     return count;
-  }
+  }*/
 }

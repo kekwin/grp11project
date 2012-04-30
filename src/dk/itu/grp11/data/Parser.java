@@ -52,6 +52,24 @@ public class Parser {
     }
     return ps;
   }
+  
+  /**
+   * For test purposes only
+   * 
+   * @param nodeFile
+   * @param connectionFile
+   * @return
+   */
+  public static Parser getTestParser(File nodeFile, File connectionFile) {
+    if (ps == null) {
+      File node = nodeFile;
+      File road = connectionFile;
+      ps = new Parser(node, road);
+      ps.parsePoints();
+      ps.parseRoads(ps.points());
+    }
+    return ps;
+  }
 
   /**
    * Parses all points in the network and puts it in a HashMap with point-ID as key,
