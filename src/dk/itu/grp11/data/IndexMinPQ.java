@@ -10,7 +10,13 @@ package dk.itu.grp11.data;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
+//TODO javadoc complete?
+/**
+ *  A PriorityQueue that takes the s
+ * @author Grp11
+ *
+ * @param <Key> The key the PQ should hold.
+ */
 public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer> {
     private int N;           // number of elements on PQ
     private int[] pq;        // binary heap using 1-based indexing

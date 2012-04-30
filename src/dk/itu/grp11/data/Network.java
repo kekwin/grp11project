@@ -6,7 +6,7 @@ import java.util.Set;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TransportationType;
-
+//TODO javadoc
 public class Network {
   private final int P; //number of vertices/Points
   private int R; //number of edges/Roads

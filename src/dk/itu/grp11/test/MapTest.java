@@ -12,11 +12,11 @@ import dk.itu.grp11.data.Map;
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
-import dk.itu.grp11.data.Session;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.main.FileServer;
+import dk.itu.grp11.main.Session;
 
 public class MapTest {
   /*

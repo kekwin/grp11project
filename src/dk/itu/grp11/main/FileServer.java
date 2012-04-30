@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
-import dk.itu.grp11.data.Session;
 
 /**
  * This starts a http server at the specified port. It then

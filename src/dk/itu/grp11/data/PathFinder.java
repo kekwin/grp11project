@@ -4,7 +4,7 @@ import java.util.Stack;
 
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
-
+//TODO javadoc
 public class PathFinder {
   private Road[] roadTo;
   private double[] distTo;
