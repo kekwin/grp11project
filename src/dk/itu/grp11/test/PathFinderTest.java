@@ -15,7 +15,9 @@ import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
 
-public class NetworkTest {
+public class PathFinderTest {
+  Parser p = Parser.getParser();
+  Network g = p.network();
 
   @Test
   public void test0() {
@@ -80,8 +82,7 @@ public class NetworkTest {
   
   @Test
   public void test1() {
-    Parser p = Parser.getParser();
-    Network g = p.network();
+    
     PathFinder pf = new PathFinder(g, 599909, false, TransportationType.CAR);
     System.out.println(pf.distTo(599840));
     /*
@@ -90,5 +91,13 @@ public class NetworkTest {
      * 
      */
     //TODO Not finished
+  }
+  
+  @Test
+  public void test2() {
+    System.out.println("TEST 2");
+    PathFinder pf = new PathFinder(g, 406585, false, TransportationType.CAR);
+    System.out.println(pf.distTo(406550));
+    System.out.println(pf.secondaryWeight(406550));
   }
 }
