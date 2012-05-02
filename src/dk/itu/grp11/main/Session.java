@@ -1,7 +1,8 @@
-package dk.itu.grp11.data;
+package dk.itu.grp11.main;
 
 import java.util.HashSet;
 
+import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.enums.MapBound;
 
 public class Session {

@@ -24,8 +24,7 @@ public class ParserTest {
   //Testing to see whether (some) points get the right id and values assigned or not
   @Test
   public void test0() throws IOException {
-    dk.itu.grp11.data.Parser p = new Parser(new File("kdv_node_unload.txt"), new File("kdv_unload.txt"));
-    HashMap<Integer, Point> points = p.points();
+    HashMap<Integer, Point> points = Parser.getParser().points();
     
     //The first point
     assertEquals(1, points.get(1).getID());

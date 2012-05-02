@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
-import dk.itu.grp11.data.Session;
 /**
  * 
  * @author Group 11

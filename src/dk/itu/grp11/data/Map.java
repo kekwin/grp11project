@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.main.Session;
 
 /**
  * Represents a map with roads

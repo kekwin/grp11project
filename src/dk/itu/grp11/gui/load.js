@@ -1,7 +1,7 @@
 jQuery(function($){
   
   //Needed variables
-  var slices = 5;
+  var slices = 10;
   var xStart = 0;
   var fullXStart = 0;
   var yStart = 0;
