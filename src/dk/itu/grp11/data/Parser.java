@@ -48,6 +48,9 @@ public class Parser {
       File node = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       File road = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       File postNr = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
+      // To be used...
+      File coastLine = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
+      
       ps = new Parser(node, road);
       ps.parsePoints();
       ps.parseRoads(ps.points());
@@ -224,6 +227,17 @@ public class Parser {
         ex.printStackTrace();
       }
     }
+  }
+  // TODO... 
+  private void parseCoastLine(File file){
+	  System.out.println("Parsing coast lines");
+	  
+	  // Split by " " (whitespaces) the ones we need are Node, lat and lon. return as string arrays or so.
+	  
+	  
+	  
+	  // Get each nodes lat/long convert to utm with "LatLonToUML"'s convert()
+	  // and return a datastructure/send to browser, in same manner as with previous nodes/roads
   }
 
   public double mapBound(MapBound mb) {
