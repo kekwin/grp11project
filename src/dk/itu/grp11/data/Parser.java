@@ -183,7 +183,7 @@ public class Parser {
         Integer.parseInt(inputSplit[1]),                  // 1 = id of to point
         inputSplit[6],                                    // 6 = name
         RoadType.getById(Integer.parseInt(inputSplit[5])),// 5 = road type
-        TrafficDirection.getDirectionById(inputSplit[27]),// 27 = traffic direction
+        TrafficDirection.getDirectionById(inputSplit[27].replace("'", "").trim()),// 27 = traffic direction
         Double.parseDouble(inputSplit[2]),                // 2 = length
         Double.parseDouble(inputSplit[26]));              // 26 = time
   }

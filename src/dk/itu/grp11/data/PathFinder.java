@@ -16,7 +16,7 @@ public class PathFinder {
 
   public PathFinder(Network G, int s, boolean time, TransportationType transType) {
     roadTo = new Road[G.numPoints()];
-    distTo = new double[G.numPoints()];
+    distTo = new double[G.numPoints()+1];
     secondaryWeight = new double[G.numPoints()];
     pq = new IndexMinPQ<Double>(G.numPoints());
     this.time = time;
