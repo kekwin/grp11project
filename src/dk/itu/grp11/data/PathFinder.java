@@ -14,7 +14,7 @@ public class PathFinder {
   
   public PathFinder(Network G, int s, boolean time, TransportationType transType) {
     roadTo = new Road[G.numPoints()];
-    distTo = new double[G.numPoints()];
+    distTo = new double[G.numPoints()+1];
     pq = new IndexMinPQ<Double>(G.numPoints());
     this.time = time;
     this.transType = transType;
@@ -34,20 +34,20 @@ public class PathFinder {
   private void relax(Network G, int p) {
     for(Road r : G.adj(p)) {
       // Only relax if the road is allowed to be driven/walked on by the transportation type
-      if(((r.getDirection() == TrafficDirection.BOTH_WAYS ||
-          r.getDirection() == TrafficDirection.FROM_TO) ||
-          transType == TransportationType.WALK) &&
-          r.getType().isAllowed(transType)) {
-        int w = r.getTo();
-        double weight;
-        if(time) weight =  r.getTime(); else weight = r.getLength();
-        if(distTo[w] > distTo[p] + weight) {
-          distTo[w] = distTo[p] + weight;
-          roadTo[w] = r;
-          if(pq.contains(w))
-            pq.change(w, distTo[w]);
-          else
-            pq.insert(w, distTo[w]);
+      if(r.getType().isAllowed(transType)) {
+        if((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) || transType == TransportationType.WALK) {
+          //System.out.println(r.getType());
+          int w = r.getTo();
+          double weight;
+          if(time) weight =  r.getTime(); else weight = r.getLength();
+          if(distTo[w] > distTo[p] + weight) {
+            distTo[w] = distTo[p] + weight;
+            roadTo[w] = r;
+            if(pq.contains(w))
+              pq.change(w, distTo[w]);
+            else
+              pq.insert(w, distTo[w]);
+          }
         }
       }
     }
