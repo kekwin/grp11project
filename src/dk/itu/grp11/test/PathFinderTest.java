@@ -21,6 +21,7 @@ public class PathFinderTest {
 
   @Test
   public void test0() {
+    System.out.println("\nTEST 0");
     Set<Road> roads = new HashSet<>();
     
     roads.add(new Road(1, 2, "Vej 1", RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 10, 0.5));
@@ -82,7 +83,7 @@ public class PathFinderTest {
   
   @Test
   public void test1() {
-    
+    System.out.println("\nTEST 1");
     PathFinder pf = new PathFinder(g, 599909, false, TransportationType.CAR);
     System.out.println(pf.distTo(599840));
     /*
@@ -95,9 +96,9 @@ public class PathFinderTest {
   
   @Test
   public void test2() {
-    System.out.println("TEST 2");
-    PathFinder pf = new PathFinder(g, 406585, false, TransportationType.CAR);
+    System.out.println("\nTEST 2");
+    PathFinder pf = new PathFinder(g, 406585, true, TransportationType.CAR);
     System.out.println(pf.distTo(406550));
-    System.out.println(pf.secondaryWeight(406550));
+    System.out.println(pf.timeTo(406550));
   }
 }
