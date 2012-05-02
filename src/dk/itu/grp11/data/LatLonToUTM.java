@@ -11,9 +11,13 @@ public class LatLonToUTM {
 	  private static final double e = Math.sqrt(1-(b/a)*(b/a));
 	  private static final double ee = (e*e)/(1-e*e);
 	  //TODO javadoc
+	  // Math for the Formula is found here: http://www.uwgb.edu/dutchs/usefuldata/UTMFormulas.HTM
+	  // It is very complicated.
+	  // Here its made into java code, and seems to work, but i have trouble with my eclipse and will have to test it later
 	  public static double[] convert(double lat, double lon) {
 	    double pos[] = new double[2];
 	    double latr = (lat*Math.PI)/180;
+	    // Not sure why longtitude is never used, seems weird. But its the same in the given formula..
 	    double lonr = (lon*Math.PI)/180;
 	    int zone = 32;
 	    int zoneCM = 6*zone-183;
@@ -36,6 +40,7 @@ public class LatLonToUTM {
 	    return pos;
 	  }
 	 public static void main(String[] args) {
-	    convert(5030303,500204);
+	    // random test numbers
+		 convert(5030303,500204);
 	  }
 	}
