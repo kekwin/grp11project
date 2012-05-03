@@ -379,4 +379,15 @@ jQuery(function($){
     zoomSVG("in", x, y);
     clearSelection();
   });
+  
+  $("#from").autocomplete({
+	source: "autoCompletion",
+	minLength: 2,
+  });
+  
+  $(".overlay form input[type=submit]").click(function(e) {
+	e.preventDefault();
+	alert("Do stuff");
+  });
+  
 });
