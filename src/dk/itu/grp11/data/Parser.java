@@ -209,7 +209,8 @@ public class Parser {
   private void parsePostalCodes(){
     System.out.println("- Parsing postal codes");
     postalCodes = new HashMap<Integer, String>();
-    try(BufferedReader input = new BufferedReader(new FileReader(postalCodesFile))) {  
+    
+    try(BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(postalCodesFile), "ISO8859_1"))) {  
       String line = null;
       /*
        * readLine is a bit quirky : it returns the content of a line MINUS the
@@ -221,7 +222,8 @@ public class Parser {
       while ((line = input.readLine()) != null) {
         String[] inputSplit = line.split(";");
         if(Integer.parseInt(inputSplit[5]) == 1) {
-          postalCodes.put(Integer.parseInt(inputSplit[0]), inputSplit[1]);
+          postalCodes.put(Integer.parseInt(inputSplit[0]),  // Postal code
+                          inputSplit[1]);                   // City name
         }
       }
     } catch (IOException ex) {
@@ -257,7 +259,11 @@ public class Parser {
     return postalCodes;
   }
   
-  public SortedMap<String, Road> filterPrefix(String prefix) {
+  public String zipToCity(int zip) {
+    return postalCodes.get(zip);
+  }
+  
+  public SortedMap<String, Road> roadsWithPrefix(String prefix) {
     if(prefix.length() > 0) {
         prefix = prefix.toLowerCase();
         char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);

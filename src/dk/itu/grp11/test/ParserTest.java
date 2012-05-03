@@ -110,9 +110,9 @@ public class ParserTest {
   }*/
   
   @Test
-  public void testRandom() {
+  public void prefix() {
     System.out.println("TEST");
-    for(Entry<String, Road> entry : Parser.getParser().filterPrefix("HÅnd").entrySet()) {
+    for(Entry<String, Road> entry : Parser.getParser().roadsWithPrefix("HÅnd").entrySet()) {
       System.out.println(entry.getValue().getName());
     }
   }
