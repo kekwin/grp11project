@@ -8,9 +8,17 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import dk.itu.grp11.enums.MapBound;
-import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.enums.TrafficDirection;
 
 /**
  * Parses information about a road network.
@@ -25,6 +33,7 @@ public class Parser {
   private static File roadFile;
   private static File postalCodesFile;
   private static File coastFile;
+  private static File coastTest;
   
   private static EnumMap<MapBound, Double> mapBounds;
   private static HashMap<Integer, Point> points;
@@ -37,11 +46,12 @@ public class Parser {
    * @param pointFile A java.File object referencing the file containing nodes.
    * @param roadFile A java.File object referencing the file containing connections.
    */
-  public Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile) {
+  public Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest) {
     Parser.pointFile = pointFile;
     Parser.roadFile = roadFile;
     Parser.postalCodesFile = postalCodesFile;
     Parser.coastFile = coastFile;
+    Parser.coastTest = coastTest;
     
     mapBounds = new EnumMap<MapBound, Double>(MapBound.class);
     mapBounds.put(MapBound.MINX, 1000000.0);
@@ -56,8 +66,8 @@ public class Parser {
       File roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       File zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
       File coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm"); // To be used...
-      
-      ps = new Parser(points, roads, zip, coast);
+      File coastTest = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); 
+      ps = new Parser(points, roads, zip, coast, coastTest);
       ps.parsePoints();
       ps.parseRoads(ps.points());
       ps.parsePostalCodes();
@@ -79,7 +89,7 @@ public class Parser {
       if(zip == null) zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
       if(coast == null) coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
       
-      ps = new Parser(points, roads, zip, coast);
+      ps = new Parser(points, roads, zip, coast, coastTest);
       ps.parsePoints();
       ps.parseRoads(ps.points());
       ps.parsePostalCodes();
@@ -120,10 +130,36 @@ public class Parser {
           mapBounds.put(MapBound.MINY, p.getY());
         }
       }
-    } catch (IOException ex) {
+     
+    	  
+      }catch (IOException ex) {
       ex.printStackTrace();
     }
-  }
+  
+  
+    try {
+	    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse (coastFile);
+	    doc.getDocumentElement().normalize();
+	    NodeList nodes = doc.getElementsByTagName("node");
+	  for(int s=0; s<nodes.getLength() ; s++){
+	    Node node = nodes.item(s);
+	    Node id = node.getAttributes().getNamedItem("id");
+	    Node lat = node.getAttributes().getNamedItem("lat");
+	    Node lon = node.getAttributes().getNamedItem("lon");
+	    Point p = createCoastPoint(id, lat, lon);
+	    points.put(p.getID(),p);
+	    
+	    if(node.getNodeType() == Node.ELEMENT_NODE){
+			
+		  }
+	  }
+		 
+	  }catch(Exception e){
+		  e.printStackTrace();
+	  }
+    }
 
   /**
    * Parses all roads in the network and puts it in a DimensionalTree sorted by
@@ -156,6 +192,28 @@ public class Parser {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
+    // Needs work, new datastructure to hold new roads for the coastline.
+    try {
+	    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse (coastFile);
+	    doc.getDocumentElement().normalize();
+	    NodeList ways = doc.getElementsByTagName("way");
+	  for(int s=0; s<ways.getLength() ; s++){
+	    Node node = ways.item(s);
+	    Node id = node.getAttributes().getNamedItem("id");
+	    NodeList way = node.getChildNodes();
+	  for(int s1=0; s1<way.getLength();s1++){
+		  
+	  }
+	    int[] coastLine = null;
+	    Road r = createRoadCoast(id, coastLine);
+	    }
+		 
+	  }catch(Exception e){
+		  e.printStackTrace();
+	  }
+    
     roadsForGraph = null; //Does not need the HashSet anymore
   }
 
@@ -178,6 +236,11 @@ public class Parser {
         Double.parseDouble(inputSplit[2]),                // 2 = length
         Double.parseDouble(inputSplit[26]));              // 26 = time
   }
+  
+  //TODO
+  private static Road createRoadCoast(Node id, int[] ways){
+	  return null;
+  }
 
   /**
    * Splits a line from the kdv_node_unload.txt document and then
@@ -194,8 +257,16 @@ public class Parser {
         Double.parseDouble(inputSplit[3]),  //3 = x coordinate
         Double.parseDouble(inputSplit[4])); //4 = y coordinate
   }
+  private static Point createCoastPoint(Node id, Node lat, Node lon){
+	
+	double[] coords = LatLonToUTM.convert(Double.parseDouble(lat.getNodeValue()),Double.parseDouble(lon.getNodeValue()));
+	return new Point(
+		Integer.parseInt(id.getNodeValue()),	 //0 = id
+		coords[0],  			 //7 = Latitude
+        coords[1]); 		 	 //8 = Longitude
+  }
 
-  private void parsePostalCodes(){
+  private static void parsePostalCodes(){
     System.out.println("- Parsing postal codes");
     postalCodes = new HashMap<Integer, String>();
     try(BufferedReader input = new BufferedReader(new FileReader(postalCodesFile))) {  
@@ -217,10 +288,40 @@ public class Parser {
       ex.printStackTrace();
     }
   }
+  public static void main(String[] args) {
+	  Parser p = Parser.getParser();
+	  p.parseCoastLine();
+}
   
   // TODO ... 
   private void parseCoastLine(){
 	  System.out.println("Parsing coast lines");
+	  try {
+	    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse (coastTest);
+	    doc.getDocumentElement().normalize();
+	    NodeList nodes = doc.getElementsByTagName("node");
+	  for(int s=0; s<nodes.getLength() ; s++){
+	    Node node = nodes.item(s);
+	    Node id = node.getAttributes().getNamedItem("id");
+	    Node lat = node.getAttributes().getNamedItem("lat");
+	    Node lon = node.getAttributes().getNamedItem("lon");
+	    System.out.println(" id: " + id.getNodeValue());
+	    System.out.print(" lat: " + lat.getNodeValue());
+	    System.out.println(" lon: " + lon.getNodeValue());
+	    //id.
+	    //new Point(id, lat, lon);
+	    
+	    if(node.getNodeType() == Node.ELEMENT_NODE){
+			
+		  }
+	  }
+		 
+	  }catch(Exception e){
+		  e.printStackTrace();
+	  }
+	  
 	  
 	  // Split by " " (whitespaces) the ones we need are Node, lat and lon. return as string arrays or so.
 	  

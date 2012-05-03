@@ -13,6 +13,7 @@ import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
  *
  */
 public enum RoadType {
+  COASTLINE(101, 0.3, new Color(255,0,0), 1),
   MOTORVEJ(1, 0.3, new Color(255,0,0), 1, TransportationType.CAR),
   MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 1, TransportationType.CAR),
   PROJ_MOTORVEJ(21, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
@@ -52,6 +53,8 @@ public enum RoadType {
   STEDNAVN(99, 0.3, new Color(255,255,0), 10000),
   
   ROUTE(100, 0.3, new Color(0,0,255), 100000);
+  
+  
   
   private int id;
   private double stroke;
