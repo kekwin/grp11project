@@ -11,14 +11,14 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import dk.itu.grp11.data.DimensionalTree;
-import dk.itu.grp11.data.Interval;
-import dk.itu.grp11.data.Interval2D;
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.util.DimensionalTree;
+import dk.itu.grp11.util.Interval;
+import dk.itu.grp11.util.Interval2D;
 
 public class ParserTest {
   //Testing to see whether (some) points get the right id and values assigned or not

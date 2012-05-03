@@ -11,6 +11,8 @@ import java.util.HashSet;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.route.Network;
+import dk.itu.grp11.util.DimensionalTree;
 
 /**
  * Parses information about a road network.
