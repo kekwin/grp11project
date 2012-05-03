@@ -19,7 +19,7 @@ jQuery(function($){
   var sessionID = null;
   var movePercentage = 0.3;
   var zoomPercentage = 0.2;
-  var highestZoomLevel = 16;
+  var highestZoomLevel = 32;
   var requests = 0;
   var requestsDone = 0;
   var maxNumToRemove = 800;
@@ -49,8 +49,16 @@ jQuery(function($){
           type: "GET",
           data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
         }).done(function() {
-          setFullVariables();
-          refreshSVG();
+          $.ajax({
+            url: "getCoastLine",
+            cache: false,
+            type: "GET",
+            data: "sessionID="+sessionID
+          }).done(function(resp) {
+            refreshSVG();
+            eval(resp);
+            setFullVariables();
+          });
         });
       });
     });
@@ -298,8 +306,12 @@ jQuery(function($){
   $.xhrPool.abortAll = function() {
       $(this).each(function(idx, jqXHR) {
           jqXHR.abort();
+          var index = $.xhrPool.indexOf(jqXHR);
+          if (index > -1) {
+            $.xhrPool.splice(index, 1);
+            if ($.xhrPool.length == 0) $('.loader').css('display', 'none');
+          }
       });
-      $.xhrPool.length = 0
   };
 
   $.ajaxSetup({

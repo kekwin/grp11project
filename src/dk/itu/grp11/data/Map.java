@@ -3,9 +3,11 @@ package dk.itu.grp11.data;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.enums.TransportationType;
 import dk.itu.grp11.main.Session;
 import dk.itu.grp11.route.Network;
 import dk.itu.grp11.route.PathFinder;
@@ -13,7 +15,6 @@ import dk.itu.grp11.util.DimensionalTree;
 import dk.itu.grp11.util.DynArray;
 import dk.itu.grp11.util.Interval;
 import dk.itu.grp11.util.Interval2D;
-import dk.itu.grp11.enums.TransportationType;
 
 /**
  * Represents a map with roads
@@ -27,6 +28,7 @@ public class Map {
   
   private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
+  private HashSet<LinkedList<Integer>> coastline;
 	
 	/**
 	* Loads a map by points and roads
@@ -34,16 +36,19 @@ public class Map {
 	* @param points All points in the network
 	* @param roads All roads in the network
 	*/
-	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads) {
+	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, HashSet<LinkedList<Integer>> coastline) {
 	  this.points = points;
 		this.roads = roads;
+		this.coastline = coastline;
 	}
 	
 	public static Map getMap() {
 	  if (map == null) {
-	    HashMap<Integer, Point> points = Parser.getParser().points();
-	    DimensionalTree<Double, RoadType, Road> roads = Parser.getParser().roads();
-	    map = new Map(points, roads);
+      Parser p = Parser.getParser();
+	    HashMap<Integer, Point> points = p.points();
+	    DimensionalTree<Double, RoadType, Road> roads = p.roads();
+	    HashSet<LinkedList<Integer>> coastline = p.coastline();
+	    map = new Map(points, roads, coastline);
 	  }
 	  return map;
 	}
@@ -80,29 +85,60 @@ public class Map {
   		HashSet<Road> roadsFound = roads.query2D(i2D);
   		
   		if (roadsFound.size() > 0) {
-    		
-    		int csLimit = 1000; //JavaScript CallStack limit
-    		String id = "";
-    		Iterator<Road> i = roadsFound.iterator();
-    		while (i.hasNext()) {
-    		  outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
-      		for (int j = 0; j < csLimit/2 && i.hasNext(); j++) {
-      		  Road roadFound = i.next();
-      		  if (roadFound != null) {
-      		    synchronized(session) {
-        		    if (!session.isRoadDrawn(roadFound.getId())) {
-          		    outputBuilder.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
-          		    id += roadFound.getId()+",";
-          		    session.addRoadID(roadFound.getId());
-        		    }
-      		    }
-      		  }
-          }
-      		outputBuilder.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 0, class: 'zoom"+roadType.getZoomLevel()+"', id: '"+id+"'});\n");
-    		}
+  		  drawRoadSet(outputBuilder, roadsFound, session, roadType);
   		}
-		}	
+		}
+		
 		return outputBuilder.toString();
+	}
+	
+	public String getCoastLine() {
+	  StringBuffer outputBuilder = new StringBuffer();
+	  outputBuilder.append("var svg = document.getElementById('map');\n");
+	  outputBuilder.append("var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');\n");
+	  outputBuilder.append("group.setAttributeNS(null, 'fill-opacity', '0');\n");
+	  outputBuilder.append("group.setAttributeNS(null, 'stroke', 'rgb("+RoadType.COASTLINE.getColorAsString()+")');\n");
+    outputBuilder.append("group.setAttributeNS(null, 'stroke-width', '"+RoadType.COASTLINE.getStroke()+"%');\n");
+	  outputBuilder.append("svg.appendChild(group);\n");
+	  for (LinkedList<Integer> outline : coastline) {
+	    String command = "M";
+	    outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
+	    outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
+	    StringBuffer data = new StringBuffer();
+  	  for (Integer point : outline) {
+  	    data.append(command+""+points.get(point+Parser.getPointOffset()).getX()+","+points.get(point+Parser.getPointOffset()).getY()+"");
+  	    command = "L";
+  	  }
+  	  //data.append("Z");
+  	  outputBuilder.append("path.setAttributeNS(null, 'd', '"+data.toString()+"');\n");
+  	  outputBuilder.append("group.appendChild(path);\n");
+	  }
+	  return outputBuilder.toString();
+  }
+	
+	private StringBuffer drawRoadSet(StringBuffer outputBuilder, HashSet<Road> roadsFound, Session session, RoadType roadType) {
+	  int csLimit = 1000; //JavaScript CallStack limit
+    String id = "";
+    Iterator<Road> i = roadsFound.iterator();
+    while (i.hasNext()) {
+      outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
+      for (int j = 0; j < csLimit/2 && i.hasNext(); j++) {
+        Road roadFound = i.next();
+        if (roadFound != null) {
+          outputBuilder.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
+          if (session != null) {
+            synchronized(session) {
+              if (!session.isRoadDrawn(roadFound.getId())) {
+                id += roadFound.getId()+",";
+                session.addRoadID(roadFound.getId());
+              }
+            }
+          }
+        }
+      }
+      outputBuilder.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 1, fill:'rgb(255,0,0)', class: 'zoom"+roadType.getZoomLevel()+"', id: '"+id+"'});\n");
+    }
+    return outputBuilder;
 	}
 	
 	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute) {
