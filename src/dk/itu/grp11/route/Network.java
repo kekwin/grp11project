@@ -37,7 +37,8 @@ public class Network {
    * Creates a Network-graph, based upon the given roads.
    * 
    * @param numberOfPoints
-   *          number of vertices in the network (really the maximum ID of the points)
+   *          number of vertices in the network (really the maximum ID of the
+   *          points)
    * @param roads
    *          roads being added to the network
    */
@@ -71,8 +72,9 @@ public class Network {
     // Roads are only represented once in the HashSet. Needs to be represented
     // twice as the graph is directed. The to and from node are switched and the
     // TrafficDirection is inverted, if it is one way.
-    Road opposite = new Road(r.getTo(), r.getFrom(), r.getName(), r.getType(),
-        d, r.getLength(), r.getTime());
+    Road opposite = new Road(r.getTo(), r.getFrom(), r.getName(),
+        r.getFromZip(), r.getToZip(), r.getType(), d, r.getLength(),
+        r.getTime());
     adj[opposite.getFrom()].add(opposite);
     R += 2; // +2 as the opposite road is also added
   }
