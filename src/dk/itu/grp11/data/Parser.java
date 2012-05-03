@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -266,6 +267,8 @@ public class Parser {
         Integer.parseInt(inputSplit[0]),                                    // 0 = id of from point
         Integer.parseInt(inputSplit[1]),                                    // 1 = id of to point
         inputSplit[6].substring(1, inputSplit[6].length()-1),               // 6 = name
+        Integer.parseInt(inputSplit[17]),                                   // 17 = from zip code
+        Integer.parseInt(inputSplit[18]),                                   // 18 = to zip code
         RoadType.getById(Integer.parseInt(inputSplit[5])),                  // 5 = road type
         TrafficDirection.getDirectionById(inputSplit[27].replace("'", "")), // 27 = traffic direction
         Double.parseDouble(inputSplit[2]),                                  // 2 = length
@@ -347,6 +350,15 @@ public class Parser {
         return nameToRoad.subMap(prefix, end);
     }
     return nameToRoad;
+  }
+  
+  // TODO work in progress...
+  public static String mapToJquery(SortedMap<String, Road> map) {
+    String jq = "[ ";
+    for(Entry<String, Road> e : map.entrySet()) {
+      jq += ", \"" + e.getValue().getName() + "\"";
+    }
+    return jq.replaceFirst(",", "") + " ]";
   }
   
   public double mapBound(MapBound mb) {
