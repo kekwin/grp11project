@@ -1,7 +1,7 @@
 jQuery(function($){
   
   //Needed variables
-  var slices = 5;
+  var slices = 10;
   var xStart = 0;
   var fullXStart = 0;
   var yStart = 0;
@@ -22,7 +22,7 @@ jQuery(function($){
   var highestZoomLevel = 16;
   var requests = 0;
   var requestsDone = 0;
-  var maxNumToRemove = 1000;
+  var maxNumToRemove = 800;
   
   /************************************************************************************************
    * Functions
@@ -124,7 +124,6 @@ jQuery(function($){
     });
   }
   function refreshSVG() {
-    $('.loader').css('display', '');
     var svg = document.getElementById("map");
     var viewbox = svg.getAttribute("viewBox");
     var split = viewbox.split(" ");
@@ -152,6 +151,7 @@ jQuery(function($){
     });
   }
   function load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel) {
+    $.xhrPool.abortAll;
     for (i=0;i<slices;i++) {
       for (j=0;j<slices;j++) {
         requests++;
@@ -164,7 +164,6 @@ jQuery(function($){
           eval(svg);
           requestsDone++;
           if (requests == requestsDone) {
-            checkLoader();
             removeRoads(zoomLevel);
           }
         });
@@ -208,8 +207,6 @@ jQuery(function($){
     }
     xStart = validateXStart(xStart, xDiff);
     yStart = validateYStart(yStart, yDiff);
-    if (yStart < fullYStart) yStart = fullYStart;
-    if (yStart+yDiff > fullYStart+fullYDiff) yStart = (fullYStart+fullYDiff)-yDiff;
     $('#map').stop();
     $('#map').animate({
       svgViewBox: xStart+' '+yStart+' '+xDiff+' '+yDiff
@@ -267,7 +264,6 @@ jQuery(function($){
     var ids = "";
     for (var i = parseInt(zoom); i < highestZoomLevel; i++) {
       $('.zoom'+(i+1)).each(function() {
-        $('.loader').css('display', '');
         $(this).remove();
         ids += this.id;
       });
@@ -276,11 +272,11 @@ jQuery(function($){
     for (var j = 0; j < Math.ceil(split.length/maxNumToRemove); j++) {
       var idsSend = "";
       for (var i = 0; i < maxNumToRemove; i++) {
-        if ((j*200)+i < split.length-1) {
+        if ((j*maxNumToRemove)+i in split) {
           idsSend += split[(j*maxNumToRemove)+i]+",";
         }
       }
-      if (idsSend.length > 0) {
+      if (idsSend.length > 1) {
         requests++;
         $.ajax({
           url: "removeRoads",
@@ -289,14 +285,37 @@ jQuery(function($){
           data: "sessionID="+sessionID+"&IDs="+idsSend
         }).done(function() {
           requestsDone++;
-          checkLoader();
         });
       }
     }
   }
-  function checkLoader() {
-    if (requests == requestsDone) $('.loader').css('display', 'none');
+  function clearSelection() {
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    else if (document.selection) document.selection.empty();
   }
+  
+  $.xhrPool = [];
+  $.xhrPool.abortAll = function() {
+      $(this).each(function(idx, jqXHR) {
+          jqXHR.abort();
+      });
+      $.xhrPool.length = 0
+  };
+
+  $.ajaxSetup({
+      beforeSend: function(jqXHR) {
+          console.log("added");
+          $.xhrPool.push(jqXHR);
+          $('.loader').css('display', '');
+      },
+      complete: function(jqXHR) {
+          var index = $.xhrPool.indexOf(jqXHR);
+          if (index > -1) {
+              $.xhrPool.splice(index, 1);
+              if ($.xhrPool.length == 0) $('.loader').css('display', 'none');
+          }
+      }
+  });
   
   
   /************************************************************************************************
@@ -348,11 +367,17 @@ jQuery(function($){
     }
   });
   
+  $(document).mousewheel(function(e, delta, deltaX, deltaY) {
+    var x = calculateCoordX(e.pageX);
+    var y = calculateCoordY(e.pageY);
+    if (delta > 0 && deltaY > 0) zoomSVG("in", x, y);
+    if (delta < 0 && deltaY < 0) zoomSVG("out", x, y);
+  });
+  
   $(document).dblclick(function(e) {
-    e.preventDefault();
     var x = calculateCoordX(e.pageX);
     var y = calculateCoordY(e.pageY);
     zoomSVG("in", x, y);
+    clearSelection();
   });
-  $(document).mousedown(function(e){ e.preventDefault(); }) //Prevents selecting with doubleclick
 });

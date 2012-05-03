@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.enums.TransportationType;
 
 /**
  * Represents a map with roads
@@ -95,6 +96,21 @@ public class Map {
   		}
 		}	
 		return outputBuilder.toString();
+	}
+	
+	public String getRoute(double x1, double y1, double x2, double y2) {
+	  StringBuffer outputBuilder = new StringBuffer();
+    outputBuilder.append("var svg = $('#map-container').svg('get');\n");
+	  Parser p = Parser.getParser();
+    Network g = p.network();
+    PathFinder pf = new PathFinder(g, 599909, false, TransportationType.CAR);
+    Iterable<Road> roads = pf.pathTo(599840);
+    outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
+    for (Road road : roads) {
+      outputBuilder.append(".move("+points.get(road.getFrom()).getX()+", "+points.get(road.getFrom()).getY()+").line("+points.get(road.getTo()).getX()+", "+points.get(road.getTo()).getY()+")");
+    }
+    outputBuilder.append(",{stroke: 'rgb("+RoadType.ROUTE.getColorAsString()+")', strokeWidth: '"+RoadType.ROUTE.getStroke()+"%', fillOpacity: 0, class: 'ROUTE', id: 'ROUTE'});\n");
+    return outputBuilder.toString();
 	}
 	
 	/**
