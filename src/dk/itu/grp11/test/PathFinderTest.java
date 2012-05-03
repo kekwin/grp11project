@@ -15,16 +15,13 @@ import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
 
-public class NetworkTest {
-  private Network g;
-  
-  public NetworkTest() {
-    Parser p = Parser.getParser();
-    g = p.network();
-  }
-  /*
+public class PathFinderTest {
+  Parser p = Parser.getParser();
+  Network g = p.network();
+
   @Test
   public void test0() {
+    System.out.println("\nTEST 0");
     Set<Road> roads = new HashSet<>();
     
     roads.add(new Road(1, 2, "Vej 1", RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 10, 0.5));
@@ -82,12 +79,13 @@ public class NetworkTest {
       }
       assertEquals(expected, pf.distTo(to), 0);
     }
-  }*/
+  }
   
   @Test
   public void test1() {
-    PathFinder pf = new PathFinder(g, 598955, false, TransportationType.WALK);
-    System.out.println("Nr. Lyndelse -> Gundsømagle " + pf.distTo(406550));
+    System.out.println("\nTEST 1");
+    PathFinder pf = new PathFinder(g, 599909, false, TransportationType.CAR);
+    System.out.println(pf.distTo(599840));
     /*
      * 599909 -> 599836 = 70.70321
      * 599909 -> 599840 = 74.15599
@@ -95,25 +93,12 @@ public class NetworkTest {
      */
     //TODO Not finished
   }
-
+  
   @Test
   public void test2() {
-    PathFinder pf = new PathFinder(g, 598955, false, TransportationType.CAR);
-    System.out.println(pf.distTo(598444));
-    //TODO Not finished
-  }
-  
-  @Test
-  public void test3() {
-    PathFinder pf = new PathFinder(g, 406585, false, TransportationType.CAR);
-    System.out.println("Gundsømagle: " + pf.distTo(406550));
-    //TODO Not finished
-  }
-  
-  @Test
-  public void test4() {
-    PathFinder pf = new PathFinder(g, 407262, false, TransportationType.CAR);
-    System.out.println("Gundsømagle: " + pf.distTo(406550));
-    //TODO Not finished
+    System.out.println("\nTEST 2");
+    PathFinder pf = new PathFinder(g, 406585, true, TransportationType.CAR);
+    System.out.println(pf.distTo(406550));
+    System.out.println(pf.timeTo(406550));
   }
 }

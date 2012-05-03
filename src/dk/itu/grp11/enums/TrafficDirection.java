@@ -5,6 +5,13 @@ import java.util.HashMap;
 public enum TrafficDirection {
   TO_FROM("tf"), FROM_TO("ft"), BOTH_WAYS(""), DRIVING_NOT_ALLOWED("n");
   
+  public static void main(String[] args) {
+    System.out.println(TrafficDirection.getDirectionById("tf"));
+    System.out.println(TrafficDirection.getDirectionById("ft"));
+    System.out.println(TrafficDirection.getDirectionById(""));
+    System.out.println(TrafficDirection.getDirectionById("n"));
+  }
+  
   private String id;
   private static java.util.Map<String, TrafficDirection> options = new HashMap<>();
   
