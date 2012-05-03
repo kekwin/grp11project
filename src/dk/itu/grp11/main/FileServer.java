@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
+import dk.itu.grp11.enums.TransportationType;
 
 /**
  * This starts a http server at the specified port. It then
@@ -34,7 +35,7 @@ public class FileServer {
    */
   public FileServer(Map map) {
     this.map = map;
-    System.out.println(map.getRoute(0, 0, 0, 0));
+    //System.out.println(map.getRoute(598955, 406550, TransportationType.CAR, true));
   }
   
   public static FileServer getFileServer() {
