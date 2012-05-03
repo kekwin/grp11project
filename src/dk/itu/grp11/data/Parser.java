@@ -259,7 +259,7 @@ public class Parser {
   
   public SortedMap<String, Road> filterPrefix(String prefix) {
     if(prefix.length() > 0) {
-        prefix.toLowerCase(Locale.getDefault());
+        prefix = prefix.toLowerCase();
         char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
         String end = prefix.substring(0, prefix.length()-1) + nextLetter;
         return nameToRoad.subMap(prefix, end);
