@@ -43,7 +43,7 @@ public class MapTest {
     //(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"))
     //(new File("test_points.txt"), new File("test_roads.txt"))
     
-    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), new File("src\\dk\\itu\\grp11\\files\\postNR.csv"), new File("src\\dk\\itu\\grp11\\files\\coastLine.osm"));
+    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null);
     
     assertEquals(1, Map.getZoomLevelX(Parser.getParser().mapBound(MapBound.MAXX)-Parser.getParser().mapBound(MapBound.MINX)));
   }
@@ -51,7 +51,7 @@ public class MapTest {
   //Testing getZoomLevelY
   @Test
   public void test2() {
-    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), new File("src\\dk\\itu\\grp11\\files\\postNR.csv"), new File("src\\dk\\itu\\grp11\\files\\coastLine.osm"));
+    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null);
     
     assertEquals(1, Map.getZoomLevelY(Parser.getParser().mapBound(MapBound.MAXY)-Parser.getParser().mapBound(MapBound.MINY)));
   }
