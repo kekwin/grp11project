@@ -1,4 +1,4 @@
-package dk.itu.grp11.data;
+package dk.itu.grp11.util;
 
 /**
 * Describes a interval

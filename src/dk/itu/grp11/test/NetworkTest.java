@@ -7,13 +7,13 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import dk.itu.grp11.data.Network;
 import dk.itu.grp11.data.Parser;
-import dk.itu.grp11.data.PathFinder;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
+import dk.itu.grp11.route.Network;
+import dk.itu.grp11.route.PathFinder;
 
 public class NetworkTest {
   private Network g;

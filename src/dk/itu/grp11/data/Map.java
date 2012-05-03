@@ -7,6 +7,13 @@ import java.util.Iterator;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.main.Session;
+import dk.itu.grp11.route.Network;
+import dk.itu.grp11.route.PathFinder;
+import dk.itu.grp11.util.DimensionalTree;
+import dk.itu.grp11.util.DynArray;
+import dk.itu.grp11.util.Interval;
+import dk.itu.grp11.util.Interval2D;
+import dk.itu.grp11.enums.TransportationType;
 
 /**
  * Represents a map with roads
@@ -96,6 +103,41 @@ public class Map {
   		}
 		}	
 		return outputBuilder.toString();
+	}
+	
+	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute) {
+	  StringBuffer outputBuilder = new StringBuffer();
+    outputBuilder.append("var svg = $('#map-container').svg('get');\n");
+	  Parser p = Parser.getParser();
+    Network g = p.network();
+    PathFinder pf = new PathFinder(g, point1, fastestroute, transportation);
+    Iterable<Road> roads = pf.pathTo(point2);
+    outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
+    String command = "move";
+    double lastX = points.get(point2).getX();
+    double lastY = points.get(point2).getY();
+    double[] currX = new double[2], currY = new double[2];
+    for (Road road : roads) { 
+      if (lastX == points.get(road.getFrom()).getX() && lastY == points.get(road.getFrom()).getY()) {
+        currX[0] = points.get(road.getFrom()).getX();
+        currX[1] = points.get(road.getTo()).getX();
+        currY[0] = points.get(road.getFrom()).getY();
+        currY[1] = points.get(road.getTo()).getY();
+      } else if (lastX == points.get(road.getTo()).getX() && lastY == points.get(road.getTo()).getY()) {
+        currX[0] = points.get(road.getTo()).getX();
+        currX[1] = points.get(road.getFrom()).getX();
+        currY[0] = points.get(road.getTo()).getY();
+        currY[1] = points.get(road.getFrom()).getY();
+      }
+      for (int i = 0; i < currX.length && i < currY.length; i++) {
+        outputBuilder.append("."+command+"("+currX[i]+", "+currY[i]+")");
+        if (command.equals("move")) command = "line";
+      }
+      lastX = currX[1];
+      lastY = currY[1];
+    }
+    outputBuilder.append(",{stroke: 'rgb("+RoadType.ROUTE.getColorAsString()+")', strokeWidth: '"+RoadType.ROUTE.getStroke()+"%', fillOpacity: 0, class: 'ROUTE', id: 'ROUTE'});\n");
+    return outputBuilder.toString();
 	}
 	
 	/**

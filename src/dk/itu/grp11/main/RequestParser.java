@@ -111,12 +111,18 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("removeRoads") != -1) {
       outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));
     } else if (file.indexOf("setCanvas") != -1) {
-      if (params.size() < 4) FileServer.sessions.get(params.get("sessionID")).resetMinMax();
+      if (params.size() < 4) {
+        synchronized(FileServer.sessions.get(params.get("sessionID"))) {
+          FileServer.sessions.get(params.get("sessionID")).resetMinMax();
+        }
+      }
       else {
-        FileServer.sessions.get(params.get("sessionID")).setXStart(Integer.parseInt(params.get("x")));
-        FileServer.sessions.get(params.get("sessionID")).setYStart(Integer.parseInt(params.get("y")));
-        FileServer.sessions.get(params.get("sessionID")).setXDiff(Integer.parseInt(params.get("width")));
-        FileServer.sessions.get(params.get("sessionID")).setYDiff(Integer.parseInt(params.get("height")));
+        synchronized (FileServer.sessions.get(params.get("sessionID"))) {
+          FileServer.sessions.get(params.get("sessionID")).setXStart(Integer.parseInt(params.get("x")));
+          FileServer.sessions.get(params.get("sessionID")).setYStart(Integer.parseInt(params.get("y")));
+          FileServer.sessions.get(params.get("sessionID")).setXDiff(Integer.parseInt(params.get("width")));
+          FileServer.sessions.get(params.get("sessionID")).setYDiff(Integer.parseInt(params.get("height")));
+        }
       }
       outStream = new ByteArrayInputStream(("Success").getBytes("UTF-8"));
     } else {

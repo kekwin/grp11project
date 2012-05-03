@@ -49,7 +49,9 @@ public enum RoadType {
   UKENDT1(95, 0.1, new Color(0,0,0), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
   UKENDT2(0, 0.1, new Color(0,0,0), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
   
-  STEDNAVN(99, 0.3, new Color(255,255,0), 10000);
+  STEDNAVN(99, 0.3, new Color(255,255,0), 10000),
+  
+  ROUTE(100, 0.5, new Color(0,0,255), 100000);
   
   private int id;
   private double stroke;
