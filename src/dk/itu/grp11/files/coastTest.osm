@@ -1,0 +1,361 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="Osmosis 0.40.1">
+  <bound box="54.37361,7.70110,58.02074,15.52582" origin="0.40.1"/>
+  <node id="117107" version="3" timestamp="2010-12-05T18:44:28Z" uid="9010" user="rasher" changeset="6554839" lat="55.8479019" lon="9.8266689">
+    <tag k="highway" v="bus_stop"/>
+    <tag k="operator" v="Midttrafik"/>
+    <tag k="route_ref" v="3;8"/>
+  </node>
+  <node id="117344" version="8" timestamp="2012-01-09T20:01:09Z" uid="328556" user="MichaelVL" changeset="10345463" lat="56.1249575" lon="10.2154466">
+    <tag k="highway" v="bus_stop"/>
+  </node>
+  <node id="117348" version="3" timestamp="2010-12-15T16:52:00Z" uid="48588" user="rasmusv" changeset="6669348" lat="56.1285341" lon="10.2132061">
+    <tag k="highway" v="bus_stop"/>
+  </node>
+  <node id="118055" version="2" timestamp="2011-01-29T16:33:27Z" uid="29061" user="KPG" changeset="7124091" lat="55.4090417" lon="8.7209826"/>
+  <node id="118075" version="11" timestamp="2009-07-16T14:03:49Z" uid="13997" user="Kent B Hansen" changeset="1844840" lat="55.3358199" lon="8.769293"/>
+  <node id="118089" version="13" timestamp="2009-07-16T14:19:16Z" uid="13997" user="Kent B Hansen" changeset="1844940" lat="55.3221098" lon="8.7549619"/>
+  <node id="118092" version="8" timestamp="2008-12-29T21:02:40Z" uid="29632" user="ablansinger" changeset="662799" lat="55.3208389" lon="8.7573881"/>
+  <node id="118139" version="13" timestamp="2009-07-16T14:19:17Z" uid="13997" user="Kent B Hansen" changeset="1844940" lat="55.3199476" lon="8.7537385"/>
+  <node id="118734" version="5" timestamp="2010-12-20T09:58:14Z" uid="359193" user="JeffH" changeset="6714258" lat="55.6716228" lon="12.5678248">
+    <tag k="highway" v="traffic_signals"/>
+  </node>
+  <node id="118840" version="6" timestamp="2012-03-19T09:43:46Z" uid="604299" user="Stefania_M" changeset="11027859" lat="55.6420872" lon="12.5751532"/>
+  <node id="557804" version="6" timestamp="2012-01-25T07:19:42Z" uid="11533" user="Esben Damgaard" changeset="10490934" lat="55.3816714" lon="10.3975608"/>
+  <node id="697797" version="6" timestamp="2012-01-31T21:42:22Z" uid="35273" user="Ernst Poulsen" changeset="10553873" lat="55.6744221" lon="12.573012">
+    <tag k="highway" v="traffic_signals"/>
+  </node>
+<way id="4121407" version="4" timestamp="2012-03-14T16:29:15Z" uid="149691" user="mok0" changeset="10979539">
+    <nd ref="22602927"/>
+    <nd ref="22602925"/>
+    <nd ref="1674696091"/>
+    <nd ref="1674696102"/>
+    <nd ref="22602922"/>
+    <nd ref="1205572299"/>
+    <nd ref="22602919"/>
+    <nd ref="1674696100"/>
+    <nd ref="1674696097"/>
+    <nd ref="22602915"/>
+    <nd ref="1205572239"/>
+    <nd ref="1674696075"/>
+    <nd ref="22602912"/>
+    <nd ref="1205572279"/>
+    <nd ref="1674696067"/>
+    <nd ref="22602909"/>
+    <nd ref="22602908"/>
+    <nd ref="22602943"/>
+    <nd ref="22602940"/>
+    <nd ref="22602937"/>
+    <nd ref="22602932"/>
+    <nd ref="1205572247"/>
+    <nd ref="22602927"/>
+    <tag k="landuse" v="meadow"/>
+    <tag k="name" v="Hundsholm"/>
+    <tag k="natural" v="coastline"/>
+    <tag k="place" v="island"/>
+    <tag k="source" v="fugro2005"/>
+  </way>
+  <way id="4121410" version="5" timestamp="2012-03-02T10:17:51Z" uid="149691" user="mok0" changeset="10846564">
+    <nd ref="22603006"/>
+    <nd ref="22603003"/>
+    <nd ref="1655773199"/>
+    <nd ref="22602997"/>
+    <nd ref="22603052"/>
+    <nd ref="1655773197"/>
+    <nd ref="22603049"/>
+    <nd ref="1655773203"/>
+    <nd ref="1655773204"/>
+    <nd ref="22603046"/>
+    <nd ref="1655773220"/>
+    <nd ref="1655773226"/>
+    <nd ref="22603038"/>
+    <nd ref="1655773244"/>
+    <nd ref="1345587058"/>
+    <nd ref="22603035"/>
+    <nd ref="22603032"/>
+    <nd ref="22603029"/>
+    <nd ref="22603026"/>
+    <nd ref="1345587059"/>
+    <nd ref="597677260"/>
+    <nd ref="22603022"/>
+    <nd ref="22603019"/>
+    <nd ref="22603015"/>
+    <nd ref="1655773353"/>
+    <nd ref="22603013"/>
+    <nd ref="1655773327"/>
+    <nd ref="1655773312"/>
+    <nd ref="1655773294"/>
+    <nd ref="22603009"/>
+    <nd ref="1655773237"/>
+    <nd ref="1655773229"/>
+    <nd ref="1655773222"/>
+    <nd ref="1655773218"/>
+    <nd ref="1655773216"/>
+    <nd ref="22603006"/>
+    <tag k="landuse" v="meadow"/>
+    <tag k="name" v="Ægholm"/>
+    <tag k="natural" v="coastline"/>
+    <tag k="place" v="island"/>
+  </way>
+  <way id="4121413" version="6" timestamp="2012-03-03T08:42:30Z" uid="149691" user="mok0" changeset="10855387">
+    <nd ref="22603107"/>
+    <nd ref="22603105"/>
+    <nd ref="22603100"/>
+    <nd ref="597677254"/>
+    <nd ref="597677259"/>
+    <nd ref="1345587057"/>
+    <nd ref="22603096"/>
+    <nd ref="22603091"/>
+    <nd ref="22603087"/>
+    <nd ref="22603084"/>
+    <nd ref="22603081"/>
+    <nd ref="22603074"/>
+    <nd ref="1345587060"/>
+    <nd ref="22603072"/>
+    <nd ref="22603062"/>
+    <nd ref="22603059"/>
+    <nd ref="22603058"/>
+    <nd ref="22603140"/>
+    <nd ref="22603135"/>
+    <nd ref="22603129"/>
+    <nd ref="22603126"/>
+    <nd ref="22603123"/>
+    <nd ref="22603120"/>
+    <nd ref="22603113"/>
+    <nd ref="22603110"/>
+    <nd ref="22603107"/>
+    <tag k="landuse" v="meadow"/>
+    <tag k="name" v="Sværm"/>
+    <tag k="natural" v="coastline"/>
+    <tag k="place" v="island"/>
+    <tag k="source" v="PGS(could be inacurately)"/>
+  </way>
+  <way id="4121422" version="7" timestamp="2012-03-06T18:11:33Z" uid="149691" user="mok0" changeset="10892788">
+    <nd ref="22603302"/>
+    <nd ref="22603298"/>
+    <nd ref="22603272"/>
+    <nd ref="22603266"/>
+    <nd ref="22603261"/>
+    <nd ref="22603258"/>
+    <nd ref="22603256"/>
+    <nd ref="1345586753"/>
+    <nd ref="1345586717"/>
+    <nd ref="1345586715"/>
+    <nd ref="1345586721"/>
+    <nd ref="22603253"/>
+    <nd ref="1345586705"/>
+    <nd ref="1345586728"/>
+    <nd ref="22603250"/>
+    <nd ref="22603247"/>
+    <nd ref="22603244"/>
+    <nd ref="22603381"/>
+    <nd ref="22603357"/>
+    <nd ref="1345586711"/>
+    <nd ref="22603354"/>
+    <nd ref="22603352"/>
+    <nd ref="1345586742"/>
+    <nd ref="1345586730"/>
+    <nd ref="1345586703"/>
+    <nd ref="22603343"/>
+    <nd ref="22603340"/>
+    <nd ref="22603338"/>
+    <nd ref="22603328"/>
+    <nd ref="22603325"/>
+    <nd ref="597677261"/>
+    <nd ref="22603322"/>
+    <nd ref="22603320"/>
+    <nd ref="22603316"/>
+    <nd ref="22603314"/>
+    <nd ref="22603310"/>
+    <nd ref="22603308"/>
+    <nd ref="1345586732"/>
+    <nd ref="22603302"/>
+    <tag k="landuse" v="meadow"/>
+    <tag k="name" v="Yderste Holm"/>
+    <tag k="natural" v="coastline"/>
+    <tag k="place" v="island"/>
+    <tag k="source" v="PGS(could be inacurately)"/>
+  </way>
+  <way id="4121423" version="6" timestamp="2012-03-23T22:05:42Z" uid="48588" user="rasmusv" changeset="11079100">
+    <nd ref="22603441"/>
+    <nd ref="1687769842"/>
+    <nd ref="1687769845"/>
+    <nd ref="1687769849"/>
+    <nd ref="22603438"/>
+    <nd ref="1687769852"/>
+    <nd ref="1687769859"/>
+    <nd ref="1687769863"/>
+    <nd ref="22603435"/>
+    <nd ref="1687769861"/>
+    <nd ref="22603432"/>
+    <nd ref="1687769862"/>
+    <nd ref="22603431"/>
+    <nd ref="1687769864"/>
+    <nd ref="22603459"/>
+    <nd ref="1687769865"/>
+    <nd ref="1687769867"/>
+    <nd ref="1687769869"/>
+    <nd ref="1687769871"/>
+    <nd ref="22603456"/>
+    <nd ref="1687769874"/>
+    <nd ref="1687769873"/>
+    <nd ref="1687769875"/>
+    <nd ref="1687769876"/>
+    <nd ref="1687769877"/>
+    <nd ref="1687769881"/>
+    <nd ref="1687769885"/>
+    <nd ref="1687769889"/>
+    <nd ref="1687769887"/>
+    <nd ref="1687769886"/>
+    <nd ref="1687769883"/>
+    <nd ref="1687769879"/>
+    <nd ref="1687769880"/>
+    <nd ref="1687769884"/>
+    <nd ref="1687769890"/>
+    <nd ref="1687769891"/>
+    <nd ref="1687769893"/>
+    <nd ref="597677253"/>
+    <nd ref="1687769896"/>
+    <nd ref="1687769897"/>
+    <nd ref="1687769905"/>
+    <nd ref="1687769902"/>
+    <nd ref="1687769901"/>
+    <nd ref="1687769904"/>
+    <nd ref="1687769907"/>
+    <nd ref="1687769908"/>
+    <nd ref="22603450"/>
+    <nd ref="1687769894"/>
+    <nd ref="22603447"/>
+    <nd ref="22603444"/>
+    <nd ref="1687769860"/>
+    <nd ref="1687769850"/>
+    <nd ref="1687769847"/>
+    <nd ref="1687769843"/>
+    <nd ref="22603441"/>
+    <tag k="name" v="Karlskold"/>
+    <tag k="natural" v="coastline"/>
+    <tag k="place" v="island"/>
+    <tag k="source" v="Fugro (2005)"/>
+  </way>
+  <way id="4121428" version="5" timestamp="2012-03-03T08:42:28Z" uid="149691" user="mok0" changeset="10855387">
+    <nd ref="22603483"/>
+    <nd ref="22603480"/>
+    <nd ref="22603477"/>
+    <nd ref="1657204622"/>
+    <nd ref="22603472"/>
+    <nd ref="22603466"/>
+    <nd ref="22603758"/>
+    <nd ref="22603755"/>
+    <nd ref="1657204618"/>
+    <nd ref="22603752"/>
+    <nd ref="22603749"/>
+    <nd ref="22603746"/>
+    <nd ref="22603737"/>
+    <nd ref="1657204706"/>
+    <nd ref="1657204712"/>
+    <nd ref="1657204732"/>
+    <nd ref="22603733"/>
+    <nd ref="1657204756"/>
+    <nd ref="1657204788"/>
+    <nd ref="1657204825"/>
+    <nd ref="22603727"/>
+    <nd ref="1657204842"/>
+    <nd ref="1657204916"/>
+    <nd ref="1657204967"/>
+    <nd ref="1657204970"/>
+    <nd ref="1657204981"/>
+    <nd ref="22603725"/>
+    <nd ref="22603719"/>
+    <nd ref="22603716"/>
+    <nd ref="22603713"/>
+    <nd ref="22603711"/>
+    <nd ref="22603707"/>
+    <nd ref="22603705"/>
+    <nd ref="22603701"/>
+    <nd ref="22603699"/>
+    <nd ref="22603695"/>
+    <nd ref="22603692"/>
+    <nd ref="22603688"/>
+    <nd ref="22603686"/>
+    <nd ref="22603685"/>
+    <nd ref="22603683"/>
+    <nd ref="22603682"/>
+    <nd ref="22603680"/>
+    <nd ref="22603679"/>
+    <nd ref="22603678"/>
+    <nd ref="22603676"/>
+    <nd ref="22603675"/>
+    <nd ref="22603673"/>
+    <nd ref="22603671"/>
+    <nd ref="22603667"/>
+    <nd ref="22603665"/>
+    <nd ref="22603662"/>
+    <nd ref="1657205509"/>
+    <nd ref="22603659"/>
+    <nd ref="22603656"/>
+    <nd ref="22603650"/>
+    <nd ref="22603647"/>
+    <nd ref="22603645"/>
+    <nd ref="22603641"/>
+    <nd ref="22603637"/>
+    <nd ref="22603635"/>
+    <nd ref="597677249"/>
+    <nd ref="22603628"/>
+    <nd ref="1657205489"/>
+    <nd ref="1657205506"/>
+    <nd ref="22603626"/>
+    <nd ref="597677251"/>
+    <nd ref="1657205544"/>
+    <nd ref="22603620"/>
+    <nd ref="22603617"/>
+    <nd ref="22603615"/>
+    <nd ref="22603612"/>
+    <nd ref="22603608"/>
+    <nd ref="22603601"/>
+    <nd ref="1657205623"/>
+    <nd ref="22603595"/>
+    <nd ref="22603592"/>
+    <nd ref="22603589"/>
+    <nd ref="22603586"/>
+    <nd ref="22603583"/>
+    <nd ref="22603581"/>
+    <nd ref="22603576"/>
+    <nd ref="1657205620"/>
+    <nd ref="22603570"/>
+    <nd ref="22603568"/>
+    <nd ref="22603566"/>
+    <nd ref="1657205559"/>
+    <nd ref="22603563"/>
+    <nd ref="22603552"/>
+    <nd ref="22603550"/>
+    <nd ref="22603546"/>
+    <nd ref="22603544"/>
+    <nd ref="22603540"/>
+    <nd ref="22603538"/>
+    <nd ref="22603535"/>
+    <nd ref="22603532"/>
+    <nd ref="22603526"/>
+    <nd ref="22603524"/>
+    <nd ref="22603520"/>
+    <nd ref="22603517"/>
+    <nd ref="22603514"/>
+    <nd ref="22603511"/>
+    <nd ref="1657204680"/>
+    <nd ref="22603505"/>
+    <nd ref="22603501"/>
+    <nd ref="22603498"/>
+    <nd ref="22603495"/>
+    <nd ref="22603492"/>
+    <nd ref="22603489"/>
+    <nd ref="1657204736"/>
+    <nd ref="22603486"/>
+    <nd ref="22603483"/>
+    <tag k="landuse" v="meadow"/>
+    <tag k="name" v="Hjortsholm"/>
+    <tag k="natural" v="coastline"/>
+    <tag k="place" v="island"/>
+    <tag k="source" v="fugro2005"/>
+  </way>
+
+
+</osm>

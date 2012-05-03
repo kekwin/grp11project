@@ -1,5 +1,7 @@
 package dk.itu.grp11.data;
 
+import org.w3c.dom.Node;
+
 public class LatLonToUTM {
 
 	  private static final double a = 6378137; 
@@ -30,17 +32,16 @@ public class LatLonToUTM {
 	    double M = a*((1-(e*e/4)-3*Math.pow(e,4)/64-5*Math.pow(e,6)/256)*latr-(3*e*e/8+3*Math.pow(e,4)/32+45*Math.pow(e,6)/1024)*Math.sin(2*latr)+(15*Math.pow(e,4)/256+45*Math.pow(e,6)/1024)*Math.sin(4*latr)-(35*Math.pow(e,6)/3072)*Math.sin(6*latr));
 	    double x = 500000+(k0*N*(A0 + (1-T+C0)*(Math.pow(A0,3))/6 + (5-18*T+T*T+72*C0-58*ee)*(Math.pow(A0,5))/120));
 	    double y =k0*(M + N*Math.tan(latr)*(A0*A0/2 + (5 - T +9*C0 +4*C0*C0 )*Math.pow(A0,4)/24 + (61-148*T+16*T*T)*Math.pow(A0,6)/720 ));
-
-	    System.out.println(x);
-	    System.out.println(y);
+	    
 	    pos[0]=x;
 	    pos[1]=y;
-	    System.out.println(pos[0] + " " + pos[1]);
+
 	    // Should be returning either an object of node or road, but for testing purposes i used an array to see.
 	    return pos;
 	  }
 	 public static void main(String[] args) {
 	    // random test numbers
-		 convert(5030303,500204);
+		 convert(55.4090417,8.7209826);
 	  }
+	
 	}
