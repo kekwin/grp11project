@@ -7,6 +7,8 @@ import java.util.Iterator;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.main.Session;
+import dk.itu.grp11.route.Network;
+import dk.itu.grp11.route.PathFinder;
 import dk.itu.grp11.util.DimensionalTree;
 import dk.itu.grp11.util.DynArray;
 import dk.itu.grp11.util.Interval;
