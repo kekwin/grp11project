@@ -16,7 +16,13 @@ import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
 
 public class NetworkTest {
-
+  private Network g;
+  
+  public NetworkTest() {
+    Parser p = Parser.getParser();
+    g = p.network();
+  }
+  /*
   @Test
   public void test0() {
     Set<Road> roads = new HashSet<>();
@@ -76,19 +82,38 @@ public class NetworkTest {
       }
       assertEquals(expected, pf.distTo(to), 0);
     }
-  }
+  }*/
   
   @Test
   public void test1() {
-    Parser p = Parser.getParser();
-    Network g = p.network();
-    PathFinder pf = new PathFinder(g, 599909, false, TransportationType.CAR);
-    System.out.println(pf.distTo(599840));
+    PathFinder pf = new PathFinder(g, 598955, false, TransportationType.WALK);
+    System.out.println("Nr. Lyndelse -> Gundsømagle " + pf.distTo(406550));
     /*
      * 599909 -> 599836 = 70.70321
      * 599909 -> 599840 = 74.15599
      * 
      */
+    //TODO Not finished
+  }
+
+  @Test
+  public void test2() {
+    PathFinder pf = new PathFinder(g, 598955, false, TransportationType.CAR);
+    System.out.println(pf.distTo(598444));
+    //TODO Not finished
+  }
+  
+  @Test
+  public void test3() {
+    PathFinder pf = new PathFinder(g, 406585, false, TransportationType.CAR);
+    System.out.println("Gundsømagle: " + pf.distTo(406550));
+    //TODO Not finished
+  }
+  
+  @Test
+  public void test4() {
+    PathFinder pf = new PathFinder(g, 407262, false, TransportationType.CAR);
+    System.out.println("Gundsømagle: " + pf.distTo(406550));
     //TODO Not finished
   }
 }
