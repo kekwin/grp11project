@@ -2,11 +2,16 @@ package dk.itu.grp11.data;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,7 +23,12 @@ import org.w3c.dom.NodeList;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+
 import dk.itu.grp11.enums.TrafficDirection;
+
+import dk.itu.grp11.route.Network;
+import dk.itu.grp11.util.DimensionalTree;
+
 
 /**
  * Parses information about a road network.
@@ -39,6 +49,7 @@ public class Parser {
   private static HashMap<Integer, Point> points;
   private static DimensionalTree<Double, RoadType, Road> roads;
   private static HashMap<Integer, String> postalCodes;
+  private static SortedMap<String, Road> nameToRoad;
   private static Network graph;
 
   /**
@@ -168,8 +179,9 @@ public class Parser {
   private void parseRoads(HashMap<Integer, Point> points) {
     System.out.println("- Parsing roads");
     HashSet<Road> roadsForGraph = new HashSet<>(); //Temporary set for building the Graph
+    nameToRoad = new TreeMap<>();
     roads = new DimensionalTree<Double, RoadType, Road>();
-    try(BufferedReader input = new BufferedReader(new FileReader(roadFile))) {
+    try(BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(roadFile), "ISO8859_1"))) {
       String line = null;
       /*
        * readLine is a bit quirky : it returns the content of a line MINUS the
@@ -227,14 +239,16 @@ public class Parser {
    */
   private static Road createRoad(String input) {
     String[] inputSplit = input.split(",");
-    return new Road(
-        Integer.parseInt(inputSplit[0]),                  // 0 = id of from point
-        Integer.parseInt(inputSplit[1]),                  // 1 = id of to point
-        inputSplit[6],                                    // 6 = name
-        RoadType.getById(Integer.parseInt(inputSplit[5])),// 5 = road type
-        TrafficDirection.getDirectionById(inputSplit[27].replace("'", "").trim()),// 27 = traffic direction
-        Double.parseDouble(inputSplit[2]),                // 2 = length
-        Double.parseDouble(inputSplit[26]));              // 26 = time
+    Road r = new Road(
+        Integer.parseInt(inputSplit[0]),                                    // 0 = id of from point
+        Integer.parseInt(inputSplit[1]),                                    // 1 = id of to point
+        inputSplit[6].substring(1, inputSplit[6].length()-1),               // 6 = name
+        RoadType.getById(Integer.parseInt(inputSplit[5])),                  // 5 = road type
+        TrafficDirection.getDirectionById(inputSplit[27].replace("'", "")), // 27 = traffic direction
+        Double.parseDouble(inputSplit[2]),                                  // 2 = length
+        Double.parseDouble(inputSplit[26]));                                // 26 = time
+    nameToRoad.put(r.getName().toLowerCase(new Locale("ISO8859_1")), r);
+    return r;
   }
   
   //TODO
@@ -345,6 +359,16 @@ public class Parser {
   
   public HashMap<Integer, String> postalCodes() {
     return postalCodes;
+  }
+  
+  public SortedMap<String, Road> filterPrefix(String prefix) {
+    if(prefix.length() > 0) {
+        prefix = prefix.toLowerCase();
+        char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
+        String end = prefix.substring(0, prefix.length()-1) + nextLetter;
+        return nameToRoad.subMap(prefix, end);
+    }
+    return nameToRoad;
   }
   
   public double mapBound(MapBound mb) {

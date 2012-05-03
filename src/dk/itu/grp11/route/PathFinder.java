@@ -1,9 +1,11 @@
-package dk.itu.grp11.data;
+package dk.itu.grp11.route;
 
 import java.util.Stack;
 
+import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
+import dk.itu.grp11.util.IndexMinPQ;
 
 public class PathFinder {
   private Road[] roadTo;

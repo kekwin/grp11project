@@ -304,7 +304,6 @@ jQuery(function($){
 
   $.ajaxSetup({
       beforeSend: function(jqXHR) {
-          console.log("added");
           $.xhrPool.push(jqXHR);
           $('.loader').css('display', '');
       },

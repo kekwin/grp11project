@@ -52,7 +52,7 @@ public enum RoadType {
   
   STEDNAVN(99, 0.3, new Color(255,255,0), 10000),
   
-  ROUTE(100, 0.3, new Color(0,0,255), 100000);
+  ROUTE(100, 0.5, new Color(0,0,255), 100000);
   
   
   

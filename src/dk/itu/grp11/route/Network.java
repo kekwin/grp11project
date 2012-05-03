@@ -1,8 +1,9 @@
-package dk.itu.grp11.data;
+package dk.itu.grp11.route;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.TrafficDirection;
 
 /**
