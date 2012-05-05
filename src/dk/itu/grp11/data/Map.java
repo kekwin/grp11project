@@ -77,6 +77,7 @@ public class Map {
     }
 		
 	  // Adding all calculated road types within the viewbox
+	  int startLen = outputBuilder.length();
 		for (RoadType roadType : roadTypes) {
   		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, x+w, roadType);
   		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(y, y+h, roadType);
@@ -89,7 +90,8 @@ public class Map {
   		}
 		}
 		
-		return outputBuilder.toString();
+		if (startLen < outputBuilder.length()) return outputBuilder.toString();
+		else return "";
 	}
 	
 	public String getCoastLine() {
@@ -118,25 +120,27 @@ public class Map {
 	
 	private StringBuffer drawRoadSet(StringBuffer outputBuilder, HashSet<Road> roadsFound, Session session, RoadType roadType) {
 	  int csLimit = 1000; //JavaScript CallStack limit
-    String id = "";
     Iterator<Road> i = roadsFound.iterator();
     while (i.hasNext()) {
-      outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
+      StringBuffer id = new StringBuffer();
+      StringBuffer path = new StringBuffer();
+      path.append("var path = svg.createPath();\nsvg.path(path");
       for (int j = 0; j < csLimit/2 && i.hasNext(); j++) {
         Road roadFound = i.next();
         if (roadFound != null) {
-          outputBuilder.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
           if (session != null) {
             synchronized(session) {
               if (!session.isRoadDrawn(roadFound.getId())) {
-                id += roadFound.getId()+",";
+                id.append(roadFound.getId()+",");
                 session.addRoadID(roadFound.getId());
+                path.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
               }
             }
           }
         }
       }
-      outputBuilder.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 1, fill:'rgb(255,0,0)', class: 'zoom"+roadType.getZoomLevel()+"', id: '"+id+"'});\n");
+      path.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 0, class: 'zoom"+roadType.getZoomLevel()+"', id: '"+id.toString()+"'});\n");
+      if (id.length() > 0) outputBuilder.append(path);
     }
     return outputBuilder;
 	}
