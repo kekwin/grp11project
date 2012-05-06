@@ -1,4 +1,4 @@
-package dk.itu.grp11.data;
+package dk.itu.grp11.util;
 
 import org.w3c.dom.Node;
 
