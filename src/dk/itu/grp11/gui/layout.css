@@ -186,7 +186,7 @@ div.line {
 	margin: 0;
 	display:block;
 	float: left;
-	overflow:scroll;
+	overflow:auto;
 	max-height:300px;
 	border:1px gray solid;
 	background: white;
