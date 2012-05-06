@@ -1,5 +1,6 @@
 package dk.itu.grp11.data;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -164,8 +165,8 @@ public class Parser {
               if (attributes.getQName(i).equalsIgnoreCase("ID")) id = Integer.parseInt(attributes.getValue(i));
             }
             if (id > 0 && lat > 0 && lon > 0) {
-              double[] coords = LatLonToUTM.convert(lat, lon);
-              Point p = new Point(id, coords[0], coords[1]);
+              Point2D coords = LatLonToUTM.convert(lat, lon);
+              Point p = new Point(id, coords.getX(), coords.getY());
               points.put(p.getID()+pointsOffset, p);
             }
           } else if (qName.equalsIgnoreCase("WAY")) {
