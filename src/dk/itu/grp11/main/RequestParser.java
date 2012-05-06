@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -110,7 +111,8 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("getMap") != -1) {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
-      outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(params.get("term"))).getBytes("UTF-8")); //term
+      String term = params.get("term").replace("+", " ").replaceAll("%C3%A6|%C3%86", "æ").replaceAll("%C3%B8|%C3%98", "ø").replaceAll("%C3%A5|%C3%85", "å"); //decoding URL
+      outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(term)).getBytes("UTF-8")); //term
     } else if (file.indexOf("removeRoads") != -1) {
       outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));
     } else if (file.indexOf("getCoastLine") != -1) {

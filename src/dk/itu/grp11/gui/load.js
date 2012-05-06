@@ -396,6 +396,10 @@ jQuery(function($){
 	source: "autoCompletion",
 	minLength: 2,
   });
+  $("#to").autocomplete({
+	source: "autoCompletion",
+	minLength: 2,
+  });
   
   $(".overlay form input[type=submit]").click(function(e) {
 	e.preventDefault();
