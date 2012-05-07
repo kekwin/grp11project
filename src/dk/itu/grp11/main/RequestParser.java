@@ -52,6 +52,7 @@ public class RequestParser extends Thread {
   }
   /** Overrided from Thread, this method is needed for running with multiple threads at the same time. */
   public void run() {
+    //long time = System.nanoTime();
     if (request != null) {
       try {
         parseRequest(request);
@@ -61,6 +62,7 @@ public class RequestParser extends Thread {
         System.err.println(e);
       }
     }
+    //System.out.println("Request took: "+((System.nanoTime()-time)/1000000000.0)+"s");
   }
   /**Takes a String that could look like this: /getMap?x=943702&y=6366840&width=69061&height=35214&zoomlevel=1&=1334088780921
    * Then it splits it so we get the data we actually need
@@ -111,7 +113,7 @@ public class RequestParser extends Thread {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
       String term = params.get("term").replace("+", " ").replaceAll("%C3%A6|%C3%86", "æ").replaceAll("%C3%B8|%C3%98", "ø").replaceAll("%C3%A5|%C3%85", "å").
-                    replaceAll("%C3%A4|%C3%84", "ä").replaceAll("%C3%B6|%C3%96", "ö"); //Decoding URL
+                    replaceAll("%C3%A4|%C3%84", "ä").replaceAll("%C3%B6|%C3%96", "ö").replaceAll("%2C", ","); //Decoding URL
       outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(term)).getBytes("UTF-8")); //term
     } else if (file.indexOf("removeRoads") != -1) {
       outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));

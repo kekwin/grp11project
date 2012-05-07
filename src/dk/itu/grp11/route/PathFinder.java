@@ -2,7 +2,6 @@ package dk.itu.grp11.route;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.TrafficDirection;

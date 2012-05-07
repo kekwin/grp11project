@@ -93,8 +93,8 @@ public class Parser {
       File coastFileSweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
       ps = new Parser(points, roads, zip, coast, coastTest, coastFileSweden);
       ps.parsePoints();
-      ps.parseRoads(ps.points());
       ps.parsePostalCodes();
+      ps.parseRoads(ps.points());
       ps.parseCoastline();
     }
     return ps;
@@ -117,8 +117,8 @@ public class Parser {
       
       ps = new Parser(points, roads, zip, coast, coastTest, sweden);
       ps.parsePoints();
-      ps.parseRoads(ps.points());
       ps.parsePostalCodes();
+      ps.parseRoads(ps.points());
       ps.parseCoastline();
       
     }
@@ -167,7 +167,7 @@ public class Parser {
       DefaultHandler handler = new DefaultHandler() {
         
         boolean inWay = false;
-        LinkedList<Integer> currWay; 
+        LinkedList<Integer> currWay;
         
         public void startElement(String uri, String localName,String qName, Attributes attributes) throws SAXException {
           if (qName.equalsIgnoreCase("NODE")) {
@@ -263,6 +263,7 @@ public class Parser {
    *          A line from the kdv_unload.txt document.
    * @return A Road object containing the information from the line.
    */
+  //TODO Fix stuff - Anders
   private static Road createRoad(String input) {
     String[] inputSplit = input.split(",");
     Road r = new Road(
@@ -275,7 +276,15 @@ public class Parser {
         TrafficDirection.getDirectionById(inputSplit[27].replace("'", "")), // 27 = traffic direction
         Double.parseDouble(inputSplit[2]),                                  // 2 = length
         Double.parseDouble(inputSplit[26]));                                // 26 = time
-    roadNames.put(r.getName().toLowerCase(new Locale("ISO8859_1")), r);
+    String from = ""+r.getFromZip();
+    if(postalCodes.get(r.getFromZip()) != null)
+      from = postalCodes.get(r.getFromZip());
+    String to = ""+r.getToZip();
+    if(postalCodes.get(r.getToZip()) != null)
+      to = postalCodes.get(r.getToZip());
+      
+    roadNames.put(r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + from.toLowerCase(new Locale("ISO8859_1")), r);
+    roadNames.put(r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + to.toLowerCase(new Locale("ISO8859_1")), r);
     return r;
   }
 
@@ -349,7 +358,16 @@ public class Parser {
   public static String mapToJquery(SortedMap<String, Road> map) {
     String jq = "[ ";
     for(Entry<String, Road> e : map.entrySet()) {
-      jq += ", \"" + e.getValue().getName() + "\"";
+      Road r = e.getValue();
+      String from = ""+r.getFromZip();
+      if(postalCodes.get(r.getFromZip()) != null)
+        from = postalCodes.get(r.getFromZip());
+      String to = ""+r.getToZip();
+      if(postalCodes.get(r.getToZip()) != null)
+        to = postalCodes.get(r.getToZip());
+      
+      jq += ", \"" + e.getValue().getName() + ", " + from + "\"";
+      if(!from.equals(to)) jq += ", \"" + e.getValue().getName() + ", " +  to + "\"";
     }
     return jq.replaceFirst(",", "") + " ]";
   }
