@@ -107,14 +107,21 @@ public class Map {
 	    outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
 	    outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
 	    StringBuffer data = new StringBuffer();
-  	  for (Integer point : outline) {
-	  	    data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
-  	    command = "L";
-  	  }
-  	  //data.append("Z");
-  	  outputBuilder.append("path.setAttributeNS(null, 'd', '"+data.toString()+"');\n");
+	    if (outline.size() > 0) {
+    	  for (Integer point : outline) {
+  	  	    data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
+    	    command = "L";
+    	  }
+    	  //data.append("Z");
+    	  outputBuilder.append("path.setAttributeNS(null, 'd', '"+data.toString()+"');\n");
+	    }
   	  outputBuilder.append("group.appendChild(path);\n");
 	  }
+	  outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
+	  outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
+	  Parser p = Parser.getParser();
+	  outputBuilder.append("path.setAttributeNS(null, 'd', 'M"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MAXY)+"L"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MAXY)+"Z');\n");
+	  outputBuilder.append("group.appendChild(path);\n");
 	  return outputBuilder.toString();
   }
 	

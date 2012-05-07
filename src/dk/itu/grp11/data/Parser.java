@@ -1,17 +1,12 @@
 package dk.itu.grp11.data;
 
-import java.awt.List;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.SequenceInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -214,6 +209,7 @@ public class Parser {
       };
       saxParser.parse(coastFile, handler);
       saxParser.parse(coastFileSweden, handler);
+      
       
 
     } catch (SAXException|ParserConfigurationException|IOException e) {
