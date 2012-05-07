@@ -23,6 +23,8 @@ jQuery(function($){
   var requests = 0;
   var requestsDone = 0;
   var maxNumToRemove = 800;
+  var actionDelay = 1000;
+  var runningDelay = setTimeout(function() {}, 0);
   
   /************************************************************************************************
    * Functions
@@ -132,31 +134,34 @@ jQuery(function($){
     });
   }
   function refreshSVG() {
-    var svg = document.getElementById("map");
-    var viewbox = svg.getAttribute("viewBox");
-    var split = viewbox.split(" ");
-    var xStart = parseInt(split[0]);
-    var yStart = parseInt(split[1]);
-    var xDiff = parseInt(split[2]);
-    var yDiff = parseInt(split[3]);
-    var xIncr = Math.ceil(xDiff/slices);
-    var yIncr = Math.ceil(yDiff/slices);
-    $.ajax({
-      url: "setCanvas",
-      cache: false,
-      type: "GET",
-      data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
-    }).done(function( zoom ) {
+    clearTimeout(runningDelay);
+    runningDelay = setTimeout(function() {
+      var svg = document.getElementById("map");
+      var viewbox = svg.getAttribute("viewBox");
+      var split = viewbox.split(" ");
+      var xStart = parseInt(split[0]);
+      var yStart = parseInt(split[1]);
+      var xDiff = parseInt(split[2]);
+      var yDiff = parseInt(split[3]);
+      var xIncr = Math.ceil(xDiff/slices);
+      var yIncr = Math.ceil(yDiff/slices);
       $.ajax({
-        url: zoomLevelUrl,
+        url: "setCanvas",
         cache: false,
         type: "GET",
-        data: "sessionID="+sessionID,
+        data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
       }).done(function( zoom ) {
-        zoomLevel = parseInt(zoom);
-        load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoom);
+        $.ajax({
+          url: zoomLevelUrl,
+          cache: false,
+          type: "GET",
+          data: "sessionID="+sessionID,
+        }).done(function( zoom ) {
+          zoomLevel = parseInt(zoom);
+          load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoom);
+        });
       });
-    });
+    }, actionDelay);
   }
   function load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel) {
     $.xhrPool.abortAll;
@@ -356,25 +361,27 @@ jQuery(function($){
   });
   
   $(document).bind('keydown',function(k) {
-    switch(k.keyCode) {
-    case 37:
-      moveSVG("west");
-      break;
-    case 38:
-      moveSVG("north");
-      break;
-    case 39:
-      moveSVG("east");
-      break;
-    case 40: 
-      moveSVG("south");
-      break;
-    case 107:
-      zoomSVG("in", 0, 0);
-      break;
-    case 109: 
-      zoomSVG("out", 0, 0);
-      break;
+    if ($("*:focus").attr("id") == undefined) {
+      switch(k.keyCode) {
+      case 37:
+        moveSVG("west");
+        break;
+      case 38:
+        moveSVG("north");
+        break;
+      case 39:
+        moveSVG("east");
+        break;
+      case 40: 
+        moveSVG("south");
+        break;
+      case 107:
+        zoomSVG("in", 0, 0);
+        break;
+      case 109: 
+        zoomSVG("out", 0, 0);
+        break;
+      }
     }
   });
   
@@ -386,10 +393,13 @@ jQuery(function($){
   });
   
   $(document).dblclick(function(e) {
-    var x = calculateCoordX(e.pageX);
-    var y = calculateCoordY(e.pageY);
-    zoomSVG("in", x, y);
-    clearSelection();
+    var element = $(e.target).closest('.map');
+    if (element.length) {
+      var x = calculateCoordX(e.pageX);
+      var y = calculateCoordY(e.pageY);
+      zoomSVG("in", x, y);
+      clearSelection();
+    }
   });
   
   $("#from").autocomplete({

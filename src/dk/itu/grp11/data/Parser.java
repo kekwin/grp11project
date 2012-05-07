@@ -46,6 +46,7 @@ public class Parser {
   private static File postalCodesFile;
   private static File coastFile;
   private static File coastTest;
+  private static File coastFileSweden;
   
   private static EnumMap<MapBound, Double> mapBounds;
   private static HashMap<Integer, Point> points;
@@ -62,12 +63,13 @@ public class Parser {
    * @param pointFile A java.File object referencing the file containing nodes.
    * @param roadFile A java.File object referencing the file containing connections.
    */
-  public Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest) {
+  public Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest, File coastFileSweden) {
     Parser.pointFile = pointFile;
     Parser.roadFile = roadFile;
     Parser.postalCodesFile = postalCodesFile;
     Parser.coastFile = coastFile;
     Parser.coastTest = coastTest;
+    Parser.coastFileSweden = coastFileSweden;
     
     mapBounds = new EnumMap<MapBound, Double>(MapBound.class);
     mapBounds.put(MapBound.MINX, 1000000.0);
@@ -83,7 +85,8 @@ public class Parser {
       File zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
       File coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
       File coastTest = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm");
-      ps = new Parser(points, roads, zip, coast, coastTest);
+      File coastFileSweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
+      ps = new Parser(points, roads, zip, coast, coastTest, coastFileSweden);
       ps.parsePoints();
       ps.parsePostalCodes();
       ps.parseRoads(ps.points());
@@ -99,18 +102,20 @@ public class Parser {
    * @param connectionFile
    * @return
    */
-  public static Parser getTestParser(File points, File roads, File zip, File coast) {
+  public static Parser getTestParser(File points, File roads, File zip, File coast, File sweden) {
     if (ps == null) {
       if(points == null) points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       if(roads == null) roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       if(zip == null) zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
       if(coast == null) coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
+      if(sweden == null) sweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
       
-      ps = new Parser(points, roads, zip, coast, coastTest);
+      ps = new Parser(points, roads, zip, coast, coastTest, sweden);
       ps.parsePoints();
       ps.parsePostalCodes();
       ps.parseRoads(ps.points());
       ps.parseCoastline();
+      
     }
     return ps;
   }
@@ -148,6 +153,10 @@ public class Parser {
     try {
       System.out.println("- Parsing coastline points and lines");
       SAXParserFactory factory = SAXParserFactory.newInstance();
+      final Double maxX = mapBounds.get(MapBound.MAXX);
+      final Double maxY = mapBounds.get(MapBound.MAXY);
+      final Double minX = mapBounds.get(MapBound.MINX);
+      final Double minY = mapBounds.get(MapBound.MINY);
       SAXParser saxParser = factory.newSAXParser();
      
       DefaultHandler handler = new DefaultHandler() {
@@ -165,9 +174,11 @@ public class Parser {
               if (attributes.getQName(i).equalsIgnoreCase("ID")) id = Integer.parseInt(attributes.getValue(i));
             }
             if (id > 0 && lat > 0 && lon > 0) {
-              Point2D coords = LatLonToUTM.convert(lat, lon);
-              Point p = new Point(id, coords.getX(), coords.getY());
-              points.put(p.getID()+pointsOffset, p);
+	            Point2D coords = LatLonToUTM.convert(lat, lon);
+            	if (coords.getX() < maxX && coords.getX() > minX && coords.getY() < maxY && coords.getY() > minY) {
+            	  Point p = new Point(id, coords.getX(), coords.getY());
+  	              points.put(p.getID()+pointsOffset, p);
+            	}
             }
           } else if (qName.equalsIgnoreCase("WAY")) {
             inWay = true;
@@ -180,7 +191,9 @@ public class Parser {
               }
             }
             if (currID > 0) {
-              currWay.add(currID);
+            	if (points.containsKey(currID+pointsOffset)) {
+            		currWay.add(currID);
+            	}
             }
           }
         }
@@ -194,8 +207,10 @@ public class Parser {
 
         
       };
-      
       saxParser.parse(coastFile, handler);
+      saxParser.parse(coastFileSweden, handler);
+      
+      
 
     } catch (SAXException|ParserConfigurationException|IOException e) {
       System.out.println("Could not parse Coastline points: "+e);

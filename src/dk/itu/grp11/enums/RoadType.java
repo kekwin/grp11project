@@ -37,7 +37,7 @@ public enum RoadType {
   VEJ_3_TIL_6M(5, 0.1, new Color(150,150,150), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   PROJ_VEJ_3_TIL_6M(25, 0.1, new Color(150,150,150), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   
-  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   ANDEN_VEJAFKOERSEL(35, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   PROJ_VEJ_UNDER_3M(26, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   ANDEN_VEJTUNNEL(45, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
