@@ -110,9 +110,13 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("getMap") != -1) {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
-      outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(params.get("term"))).getBytes("UTF-8")); //term
+      String term = params.get("term").replace("+", " ").replaceAll("%C3%A6|%C3%86", "æ").replaceAll("%C3%B8|%C3%98", "ø").replaceAll("%C3%A5|%C3%85", "å").
+                    replaceAll("%C3%A4|%C3%84", "ä").replaceAll("%C3%B6|%C3%96", "ö"); //Decoding URL
+      outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(term)).getBytes("UTF-8")); //term
     } else if (file.indexOf("removeRoads") != -1) {
       outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));
+    } else if (file.indexOf("getCoastLine") != -1) {
+      outStream = new ByteArrayInputStream(map.getCoastLine().getBytes("UTF-8"));
     } else if (file.indexOf("setCanvas") != -1) {
       if (params.size() < 4) {
         synchronized(FileServer.sessions.get(params.get("sessionID"))) {

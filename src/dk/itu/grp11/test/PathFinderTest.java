@@ -24,17 +24,17 @@ public class PathFinderTest {
     System.out.println("\nTEST 0");
     Set<Road> roads = new HashSet<>();
     
-    roads.add(new Road(1, 2, "Vej 1", RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 10, 0.5));
-    roads.add(new Road(2, 3, "Vej 2", RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 30, 0.2));
-    roads.add(new Road(1, 4, "Vej 3", RoadType.MOTORVEJ, TrafficDirection.TO_FROM, 7, 0.7));
-    roads.add(new Road(4, 3, "Vej 4", RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 22, 0.8));
-    roads.add(new Road(1, 5, "Vej 5", RoadType.MOTORVEJ, TrafficDirection.FROM_TO, 3, 0.33));
-    //roads.add(new Road(1, 5, "Vej 5", RoadType.MOTORVEJ, TrafficDirection.DRIVING_NOT_ALLOWED, 3, 0.33)); will go through point 6 to get to point 5
-    roads.add(new Road(4, 5, "Vej 6", RoadType.VEJ_3_TIL_6M, TrafficDirection.DRIVING_NOT_ALLOWED, 2, 0.12));
-    roads.add(new Road(4, 5, "Vej 10", RoadType.STI, TrafficDirection.BOTH_WAYS, 4, 0.10));
-    roads.add(new Road(3, 5, "Vej 7", RoadType.MOTORVEJ, TrafficDirection.FROM_TO, 33, 0.54));
-    roads.add(new Road(1, 6, "Vej 8", RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 2, 0.5));
-    roads.add(new Road(6, 5, "Vej 9", RoadType.MOTORVEJ, TrafficDirection.FROM_TO, 1, 0.5));
+    roads.add(new Road(1, 2, "Vej 1", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 10, 0.5));
+    roads.add(new Road(2, 3, "Vej 2", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 30, 0.2));
+    roads.add(new Road(1, 4, "Vej 3", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.TO_FROM, 7, 0.7));
+    roads.add(new Road(4, 3, "Vej 4", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 22, 0.8));
+    roads.add(new Road(1, 5, "Vej 5", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.FROM_TO, 3, 0.33));
+    //roads.add(new Road(1, 5, "Vej 5", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.DRIVING_NOT_ALLOWED, 3, 0.33)); will go through point 6 to get to point 5
+    roads.add(new Road(4, 5, "Vej 6", 5000, 5000, RoadType.VEJ_3_TIL_6M, TrafficDirection.DRIVING_NOT_ALLOWED, 2, 0.12));
+    roads.add(new Road(4, 5, "Vej 10", 5000, 5000, RoadType.STI, TrafficDirection.BOTH_WAYS, 4, 0.10));
+    roads.add(new Road(3, 5, "Vej 7", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.FROM_TO, 33, 0.54));
+    roads.add(new Road(1, 6, "Vej 8", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.BOTH_WAYS, 2, 0.5));
+    roads.add(new Road(6, 5, "Vej 9", 5000, 5000, RoadType.MOTORVEJ, TrafficDirection.FROM_TO, 1, 0.5));
     
     Network g = new Network(7, roads);
     
@@ -75,7 +75,7 @@ public class PathFinderTest {
         case 5: expected = 13; break;
         case 6: expected = 10; break;
         case 7: expected = Double.POSITIVE_INFINITY; break;
-        default: expected = Double.NEGATIVE_INFINITY;
+        default: expected = Double.NEGATIVE_INFINITY; //Not really expected - will therefore make the test fail
       }
       assertEquals(expected, pf.distTo(to), 0);
     }

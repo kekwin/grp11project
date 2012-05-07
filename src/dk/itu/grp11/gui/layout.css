@@ -3,11 +3,7 @@ html {
   width: 100%;
 }
 body {
-  font: 13px/1.231 arial,helvetica,clean,sans-serif
-}
-div.overlay {
-  position: relative;
-  z-index: 1;
+  font: 13px/1.231 arial,helvetica,clean,sans-serif;
 }
 #map-container {
   position: absolute;
@@ -22,55 +18,20 @@ div.overlay {
   background-color: rgba(0, 162, 232, 0.5);
   border: 2px solid rgba(0, 162, 232, 1.0);
 }
-div.overlay {
-  position: relative;
-  position: absolute;
-  left: 100px;
-  height: 250px;
-  width: 220px;
-  margin-top: 20px;
-  background: rgba(59, 189, 255, 0.1);
-  border: 1px solid rgba(0,0,0,0.5);
-  border-radius: 10px 10px 10px 10px;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
-  -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
-  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
-  -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
-}
-div.overlay:hover {
-  border: 1px solid rgba(255, 201, 14, 1);
-  background: rgba(255, 242, 0, 0.1);
+#map {
+  -moz-transform: scaleY(-1); /* Gecko */
+  -o-transform: scaleY(-1); /* Opera */
+  -webkit-transform: scaleY(-1); /* webkit */
+  transform: scaleY(-1); /* standard */
+  filter: FlipW; /* IE 6/7/8 */
 }
 img.roadtype {
   height: 40px;
   width: 40px;
 }
-div.overlay ul li {
-  list-style: none;
-  display: inline-block;
-  width: 32%;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  position: relative;
-}
-div.overlay ul {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
 h2 {
   margin: 0;
   padding: 0 0 10px 0;
-}
-input[type=radio] {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-input[type=text] {
-  width: 100%;
 }
 div.loader {
   height: 150px;
@@ -126,6 +87,52 @@ div.left {
   top: 50%;
   margin-top: -15px;
 }
+
+
+/* OVERLAY */
+div.overlay {
+  position: relative;
+  position: absolute;
+  z-index: 1;
+  left: 100px;
+  height: 250px;
+  width: 220px;
+  margin-top: 20px;
+  background: rgba(59, 189, 255, 0.1);
+  border: 1px solid rgba(0,0,0,0.5);
+  border-radius: 10px 10px 10px 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+}
+div.overlay:hover {
+  border: 1px solid rgba(255, 201, 14, 1);
+  background: rgba(255, 242, 0, 0.1);
+}
+div.overlay ul li {
+  list-style: none;
+  display: inline-block;
+  width: 32%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  position: relative;
+}
+div.overlay ul {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+input[type=radio] {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+input[type=text] {
+  width: 100%;
+}
 div.plus {
   -moz-transform:rotate(90deg);
   -webkit-transform:rotate(90deg);
@@ -144,14 +151,6 @@ div.minus {
   bottom: 0;
   right: -31px;
 }
-div.line {
-  height: 250px;
-  border: 1px solid #D3D3D3;
-  width: 0px;
-  position: absolute;
-  top: 19.5px;
-  right: -22px;
-}
 div.arrow > div {
   -moz-transform:rotate(-90deg);
   -webkit-transform:rotate(-90deg);
@@ -168,10 +167,48 @@ div.arrow > div {
 div.minus > div {
   top: 10px;
 }
-#map {
-  -moz-transform: scaleY(-1); /* Gecko */
-  -o-transform: scaleY(-1); /* Operah */
-  -webkit-transform: scaleY(-1); /* webkit */
-  transform: scaleY(-1); /* standard */
-  filter: FlipW; /* IE 6/7/8 */
+div.line {
+  height: 250px;
+  border: 1px solid #D3D3D3;
+  width: 0px;
+  position: absolute;
+  top: 19.5px;
+  right: -22px;
+}
+
+
+/* AUTOCOMPLETION */
+.ui-autocomplete { position: absolute; cursor: default; }	
+* html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
+.ui-menu {
+	list-style:none;
+	padding: 2px;
+	margin: 0;
+	display:block;
+	float: left;
+	overflow:auto;
+	max-height:300px;
+	border:1px gray solid;
+	background: white;
+}
+.ui-menu .ui-menu-item {
+	margin:0;
+	padding: 0;
+	zoom: 1;
+	float: left;
+	clear: left;
+	width: 100%;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none;
+	display:block;
+	padding:.2em .4em;
+	line-height:1.5;
+	zoom:1;
+}
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+	font-weight: bold;
+	background: #ebebeb;
+	border:1px lightgray solid;
 }
