@@ -52,6 +52,7 @@ public class RequestParser extends Thread {
   }
   /** Overrided from Thread, this method is needed for running with multiple threads at the same time. */
   public void run() {
+    //long time = System.nanoTime();
     if (request != null) {
       try {
         parseRequest(request);
@@ -61,6 +62,7 @@ public class RequestParser extends Thread {
         System.err.println(e);
       }
     }
+    //System.out.println("Request took: "+((System.nanoTime()-time)/1000000000.0)+"s");
   }
   /**Takes a String that could look like this: /getMap?x=943702&y=6366840&width=69061&height=35214&zoomlevel=1&=1334088780921
    * Then it splits it so we get the data we actually need

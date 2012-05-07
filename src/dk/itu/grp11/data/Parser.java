@@ -1,5 +1,6 @@
 package dk.itu.grp11.data;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +29,7 @@ import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.route.Network;
 import dk.itu.grp11.util.DimensionalTree;
+import dk.itu.grp11.util.LatLonToUTM;
 
 
 /**
@@ -49,11 +51,11 @@ public class Parser {
   private static HashMap<Integer, Point> points;
   private static DimensionalTree<Double, RoadType, Road> roads;
   private static HashMap<Integer, String> postalCodes;
-  private static SortedMap<String, Road> nameToRoad;
+  private static SortedMap<String, Road> roadNames;
   private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>();
   private static Network graph;
-  private static int pointOffset = 800000;
-  private static int minMaxOffset = 50000;
+  private static int pointsOffset = 800000;
+  private static int mapBoundOffset = 50000;
 
   /**
    * 
@@ -79,13 +81,13 @@ public class Parser {
       File points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       File roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       File zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
-      File coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm"); // To be used...
-      File coastTest = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); 
+      File coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
+      File coastTest = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm");
       ps = new Parser(points, roads, zip, coast, coastTest);
       ps.parsePoints();
       ps.parseRoads(ps.points());
-      ps.parseCoastline();
       ps.parsePostalCodes();
+      ps.parseCoastline();
     }
     return ps;
   }
@@ -108,6 +110,7 @@ public class Parser {
       ps.parsePoints();
       ps.parseRoads(ps.points());
       ps.parsePostalCodes();
+      ps.parseCoastline();
     }
     return ps;
   }
@@ -132,32 +135,13 @@ public class Parser {
         points.put(p.getID(), p);
 
         // Finding maximum and minimum x and y coordinates
-        updateMinMax(p.getX(), p.getY());
+        updateMapBounds(p.getX(), p.getY());
       }
      
     	  
       }catch (IOException ex) {
       ex.printStackTrace();
     }
-  }
-  
-  private void updateMinMax(double x, double y) {
-    if (x > mapBounds.get(MapBound.MAXX)-minMaxOffset){
-      mapBounds.put(MapBound.MAXX, x+minMaxOffset);
-    }
-    if (x < mapBounds.get(MapBound.MINX)+minMaxOffset){
-      mapBounds.put(MapBound.MINX, x-minMaxOffset);
-    }
-    if (y > mapBounds.get(MapBound.MAXY)-minMaxOffset){
-      mapBounds.put(MapBound.MAXY, y+minMaxOffset);
-    }
-    if (y < mapBounds.get(MapBound.MINY)+minMaxOffset){
-      mapBounds.put(MapBound.MINY, y-minMaxOffset);
-    }
-  }
-  
-  public static int getPointOffset() {
-    return pointOffset;
   }
   
   private void parseCoastline() {
@@ -181,9 +165,9 @@ public class Parser {
               if (attributes.getQName(i).equalsIgnoreCase("ID")) id = Integer.parseInt(attributes.getValue(i));
             }
             if (id > 0 && lat > 0 && lon > 0) {
-              double[] coords = LatLonToUTM.convert(lat, lon);
-              Point p = new Point(id, coords[0], coords[1]);
-              points.put(p.getID()+pointOffset, p);
+              Point2D coords = LatLonToUTM.convert(lat, lon);
+              Point p = new Point(id, coords.getX(), coords.getY());
+              points.put(p.getID()+pointsOffset, p);
             }
           } else if (qName.equalsIgnoreCase("WAY")) {
             inWay = true;
@@ -225,7 +209,7 @@ public class Parser {
   private void parseRoads(HashMap<Integer, Point> points) {
     System.out.println("- Parsing roads");
     HashSet<Road> roadsForGraph = new HashSet<>(); //Temporary set for building the Graph
-    nameToRoad = new TreeMap<>();
+    roadNames = new TreeMap<>();
     roads = new DimensionalTree<Double, RoadType, Road>();
     try(BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(roadFile), "ISO8859_1"))) {
       String line = null;
@@ -272,7 +256,7 @@ public class Parser {
         TrafficDirection.getDirectionById(inputSplit[27].replace("'", "")), // 27 = traffic direction
         Double.parseDouble(inputSplit[2]),                                  // 2 = length
         Double.parseDouble(inputSplit[26]));                                // 26 = time
-    nameToRoad.put(r.getName().toLowerCase(new Locale("ISO8859_1")), r);
+    roadNames.put(r.getName().toLowerCase(new Locale("ISO8859_1")), r);
     return r;
   }
 
@@ -317,6 +301,44 @@ public class Parser {
     }
   }
   
+  private void updateMapBounds(double x, double y) {
+    if (x > mapBounds.get(MapBound.MAXX)-mapBoundOffset){
+      mapBounds.put(MapBound.MAXX, x+mapBoundOffset);
+    }
+    if (x < mapBounds.get(MapBound.MINX)+mapBoundOffset){
+      mapBounds.put(MapBound.MINX, x-mapBoundOffset);
+    }
+    if (y > mapBounds.get(MapBound.MAXY)-mapBoundOffset){
+      mapBounds.put(MapBound.MAXY, y+mapBoundOffset);
+    }
+    if (y < mapBounds.get(MapBound.MINY)+mapBoundOffset){
+      mapBounds.put(MapBound.MINY, y-mapBoundOffset);
+    }
+  }
+  
+  public SortedMap<String, Road> roadsWithPrefix(String prefix) {
+    if(prefix.length() > 0) {
+        prefix = prefix.toLowerCase();
+        char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
+        String end = prefix.substring(0, prefix.length()-1) + nextLetter;
+        return roadNames.subMap(prefix, end);
+    }
+    return roadNames;
+  }
+  
+  // TODO work in progress...
+  public static String mapToJquery(SortedMap<String, Road> map) {
+    String jq = "[ ";
+    for(Entry<String, Road> e : map.entrySet()) {
+      jq += ", \"" + e.getValue().getName() + "\"";
+    }
+    return jq.replaceFirst(",", "") + " ]";
+  }
+  
+  public static int getPointsOffset() {
+    return pointsOffset;
+  }
+  
   public HashMap<Integer, Point> points() {
     return points;
   }
@@ -337,27 +359,12 @@ public class Parser {
     return postalCodes;
   }
   
+  public SortedMap<String, Road> roadNames() {
+    return roadNames;
+  }
+  
   public String zipToCity(int zip) {
     return postalCodes.get(zip);
-  }
-  
-  public SortedMap<String, Road> roadsWithPrefix(String prefix) {
-    if(prefix.length() > 0) {
-        prefix = prefix.toLowerCase();
-        char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
-        String end = prefix.substring(0, prefix.length()-1) + nextLetter;
-        return nameToRoad.subMap(prefix, end);
-    }
-    return nameToRoad;
-  }
-  
-  // TODO work in progress...
-  public static String mapToJquery(SortedMap<String, Road> map) {
-    String jq = "[ ";
-    for(Entry<String, Road> e : map.entrySet()) {
-      jq += ", \"" + e.getValue().getName() + "\"";
-    }
-    return jq.replaceFirst(",", "") + " ]";
   }
   
   public double mapBound(MapBound mb) {

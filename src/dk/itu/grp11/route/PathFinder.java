@@ -1,6 +1,7 @@
 package dk.itu.grp11.route;
 
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.TrafficDirection;
@@ -144,9 +145,9 @@ public class PathFinder {
   public Iterable<Road> pathTo(int p) {
     if (!hasPathTo(p))
       return null;
-    Stack<Road> path = new Stack<Road>();
+    Queue<Road> path = new LinkedList<Road>();
     for (Road e = roadTo[p]; e != null; e = roadTo[e.getFrom()]) {
-      path.push(e);
+      path.add(e);
     }
     return path;
   }
