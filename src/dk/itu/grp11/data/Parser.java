@@ -55,8 +55,8 @@ public class Parser {
   private static SortedMap<String, Road> roadNames;
   private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>();
   private static Network graph;
-  private static int pointsOffset = 800000;
-  private static int mapBoundOffset = 50000;
+  public static int pointsOffset = 800000;
+  public static int mapBoundOffset = 50000;
 
   /**
    * 
@@ -272,15 +272,22 @@ public class Parser {
         TrafficDirection.getDirectionById(inputSplit[27].replace("'", "")), // 27 = traffic direction
         Double.parseDouble(inputSplit[2]),                                  // 2 = length
         Double.parseDouble(inputSplit[26]));                                // 26 = time
+    
+    //Adding the road to the road neame collection
     String from = ""+r.getFromZip();
-    if(postalCodes.get(r.getFromZip()) != null)
-      from = postalCodes.get(r.getFromZip());
     String to = ""+r.getToZip();
-    if(postalCodes.get(r.getToZip()) != null)
-      to = postalCodes.get(r.getToZip());
-      
-    roadNames.put(r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + from.toLowerCase(new Locale("ISO8859_1")), r);
-    roadNames.put(r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + to.toLowerCase(new Locale("ISO8859_1")), r);
+    if(postalCodes.get(r.getFromZip()) != null) //If we have the name for the postal code
+      from = postalCodes.get(r.getFromZip());   // - then replace it
+    if(postalCodes.get(r.getToZip()) != null)   //If we have the name for the postal code
+      to = postalCodes.get(r.getToZip());       // - then replace it
+    
+    String fromString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + from.toLowerCase(new Locale("ISO8859_1"));
+    String toString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + to.toLowerCase(new Locale("ISO8859_1"));
+    
+    if(roadNames.containsKey(fromString)) fromString += " 1";
+    if(roadNames.containsKey(toString)) toString += " 1";
+    roadNames.put(fromString, r);
+    roadNames.put(toString, r);
     return r;
   }
 
@@ -326,23 +333,19 @@ public class Parser {
   }
   
   private void updateMapBounds(double x, double y) {
-    if (x > mapBounds.get(MapBound.MAXX)-mapBoundOffset){
+    if (x > mapBounds.get(MapBound.MAXX)-mapBoundOffset)
       mapBounds.put(MapBound.MAXX, x+mapBoundOffset);
-    }
-    if (x < mapBounds.get(MapBound.MINX)+mapBoundOffset){
+    if (x < mapBounds.get(MapBound.MINX)+mapBoundOffset)
       mapBounds.put(MapBound.MINX, x-mapBoundOffset);
-    }
-    if (y > mapBounds.get(MapBound.MAXY)-mapBoundOffset){
+    if (y > mapBounds.get(MapBound.MAXY)-mapBoundOffset)
       mapBounds.put(MapBound.MAXY, y+mapBoundOffset);
-    }
-    if (y < mapBounds.get(MapBound.MINY)+mapBoundOffset){
+    if (y < mapBounds.get(MapBound.MINY)+mapBoundOffset)
       mapBounds.put(MapBound.MINY, y-mapBoundOffset);
-    }
   }
   
   public SortedMap<String, Road> roadsWithPrefix(String prefix) {
     if(prefix.length() > 0) {
-        prefix = prefix.toLowerCase();
+        prefix = prefix.toLowerCase(new Locale("ISO8859_1"));
         char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
         String end = prefix.substring(0, prefix.length()-1) + nextLetter;
         return roadNames.subMap(prefix, end);
@@ -350,7 +353,6 @@ public class Parser {
     return roadNames;
   }
   
-  // TODO work in progress...
   public static String mapToJquery(SortedMap<String, Road> map) {
     String jq = "[ ";
     for(Entry<String, Road> e : map.entrySet()) {
@@ -363,7 +365,7 @@ public class Parser {
         to = postalCodes.get(r.getToZip());
       
       jq += ", \"" + e.getValue().getName() + ", " + from + "\"";
-      if(!from.equals(to)) jq += ", \"" + e.getValue().getName() + ", " +  to + "\"";
+      if(r.getFromZip() != r.getToZip()) jq += ", \"" + e.getValue().getName() + ", " +  to + "\"";
     }
     return jq.replaceFirst(",", "") + " ]";
   }

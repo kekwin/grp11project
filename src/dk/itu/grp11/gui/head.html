@@ -21,12 +21,13 @@
 
         <input type="text" label="" value="To address" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" id="to">
         <ul>
-          <li><input type="radio" name="type"><img src="bike.png" class="roadtype" /></li>
-          <li><input type="radio" name="type"><img src="car.png" class="roadtype" /></li>
-          <li><input type="radio" name="type"><img src="man.png" class="roadtype" /></li>
+          <li><input type="radio" name="type" value="bicycle"><img src="bike.png" class="roadtype" /></li>
+          <li><input type="radio" name="type" value="car" checked><img src="car.png" class="roadtype" /></li>
+          <li><input type="radio" name="type" value="walk"><img src="man.png" class="roadtype" /></li>
         </ul>
         <input type="submit" value="Find rute">
       </form>
+    <div class="routeinfo"><span id="dist">dist</span> (<span id="time">time</span>)</div>
     </div>
     <div>
       <div class="top arrow" id="up"></div>

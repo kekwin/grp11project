@@ -159,6 +159,9 @@ public class Map {
     Network g = p.network();
     PathFinder pf = new PathFinder(g, point1, fastestroute, transportation);
     Iterable<Road> roads = pf.pathTo(point2);
+    outputBuilder.append("$('#dist').text('"+pf.distTo(point2)+"m');\n");
+    outputBuilder.append("$('#time').text('"+pf.timeTo(point2)+"min');\n");
+    outputBuilder.append("$('#routeinfo').css({opacity: \"0\", visibility: \"visible\"}); $(window).load(function() { $('#routeinfo').animate({opacity: 0.5}, 1500); });\n"); //TODO WHY YOU NOT WORK!!?
     outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
     String command = "move";
     double lastX = points.get(point2).getX();

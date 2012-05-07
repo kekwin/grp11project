@@ -417,9 +417,9 @@ jQuery(function($){
       url: "getRoute",
       cache: false,
       type: "GET",
-      data: "sessionID="+sessionID+"&from="+$('#from').val()+"&to="+$('#to').val(),
+      data: "sessionID="+sessionID+"&from="+encodeURI($('#from').val())+"&to="+$('#to').val()+"&type="+$("input:radio[name='type']:checked").val(),
     }).done(function(resp) {
-      eval(resp);
+	  eval(resp);
     });
   });
   

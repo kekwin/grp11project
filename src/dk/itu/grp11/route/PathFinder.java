@@ -1,9 +1,13 @@
 package dk.itu.grp11.route;
 
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import dk.itu.grp11.data.Parser;
+import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
+import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
 import dk.itu.grp11.util.IndexMinPQ;
@@ -16,6 +20,7 @@ public class PathFinder {
   private IndexMinPQ<Double> pq;
   private boolean time;
   private TransportationType transType;
+  private EnumMap<MapBound, Double> bounds;
 
   /**
    * Finds the shortest path in a Network graph from a source point. The path is
@@ -40,6 +45,11 @@ public class PathFinder {
     pq = new IndexMinPQ<Double>(G.numPoints());
     this.time = time;
     this.transType = transType;
+    bounds = new EnumMap<MapBound, Double>(MapBound.class);
+    bounds.put(MapBound.MINX, Double.POSITIVE_INFINITY);
+    bounds.put(MapBound.MAXX, Double.NEGATIVE_INFINITY);
+    bounds.put(MapBound.MINY, Double.POSITIVE_INFINITY);
+    bounds.put(MapBound.MAXY, Double.NEGATIVE_INFINITY);
 
     for (int p = 0; p < G.numPoints(); p++) {
       primaryWeight[p] = Double.POSITIVE_INFINITY;
@@ -146,9 +156,28 @@ public class PathFinder {
     if (!hasPathTo(p))
       return null;
     Queue<Road> path = new LinkedList<Road>();
-    for (Road e = roadTo[p]; e != null; e = roadTo[e.getFrom()]) {
-      path.add(e);
+    for (Road r = roadTo[p]; r != null; r = roadTo[r.getFrom()]) {
+      path.add(r);
+      Point p1 = Parser.getParser().points().get(r.getFrom());
+      Point p2 = Parser.getParser().points().get(r.getTo());
+      updatePathBounds(p1.getX(), p1.getY());
+      updatePathBounds(p2.getX(), p2.getY());
     }
     return path;
+  }
+  
+  private void updatePathBounds(double x, double y) {
+    if (x > bounds.get(MapBound.MAXX)-Parser.mapBoundOffset)
+      bounds.put(MapBound.MAXX, x+Parser.mapBoundOffset);
+    if (x < bounds.get(MapBound.MINX)+Parser.mapBoundOffset)
+      bounds.put(MapBound.MINX, x-Parser.mapBoundOffset);
+    if (y > bounds.get(MapBound.MAXY)-Parser.mapBoundOffset)
+      bounds.put(MapBound.MAXY, y+Parser.mapBoundOffset);
+    if (y < bounds.get(MapBound.MINY)+Parser.mapBoundOffset)
+      bounds.put(MapBound.MINY, y-Parser.mapBoundOffset);
+  }
+  
+  public double pathBound(MapBound mb) {
+    return bounds.get(mb);
   }
 }

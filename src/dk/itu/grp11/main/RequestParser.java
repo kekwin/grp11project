@@ -11,12 +11,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
 import dk.itu.grp11.data.Parser;
-import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.TransportationType;
 /**
@@ -115,20 +115,30 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("getMap") != -1) {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
     } else if (file.indexOf("getRoute") != -1) {
-      Road from = Parser.getParser().roadNames().get(params.get("from"));
-      Road to = Parser.getParser().roadNames().get(params.get("to"));
-      System.out.println("from: " +from);
+      Road from = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("from").toLowerCase(), "ISO8859_1"));
+      Road to = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("to").toLowerCase(), "ISO8859_1"));
+      System.out.println("from: " + from);
       System.out.println("to: " + to);
+      System.out.println("type: " + params.get("type"));
+      TransportationType trans; boolean fastest = false;
+      if(params.get("type").equals("walk")) {
+        trans = TransportationType.WALK;
+      }
+      if(params.get("type").equals("bicycle")) {
+        trans = TransportationType.BICYCLE;
+      }
+      else {
+        trans = TransportationType.CAR;
+        fastest = true; //The time data is only for cars
+      }
       
-      String route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), TransportationType.CAR, true);
-      System.out.println("route:");
-      System.out.println(route);
+      String route;
+      if(from == null || to == null) route = "alert('Could not calculate route. From- or to-road is not valid.');";
+      else route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), trans, fastest);
       
-      //TODO take more parameters
       outStream = new ByteArrayInputStream(route.getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
-      String term = params.get("term").replace("+", " ").replaceAll("%C3%A6|%C3%86", "æ").replaceAll("%C3%B8|%C3%98", "ø").replaceAll("%C3%A5|%C3%85", "å").
-                    replaceAll("%C3%A4|%C3%84", "ä").replaceAll("%C3%B6|%C3%96", "ö").replaceAll("%2C", ","); //Decoding URL
+      String term = URLDecoder.decode(params.get("term"), "UTF-8"); //TODO maybe ISO8859_1
       outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(term)).getBytes("UTF-8")); //term
     } else if (file.indexOf("removeRoads") != -1) {
       outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));
