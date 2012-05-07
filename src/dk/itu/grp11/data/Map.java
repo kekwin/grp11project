@@ -108,7 +108,7 @@ public class Map {
 	    outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
 	    StringBuffer data = new StringBuffer();
   	  for (Integer point : outline) {
-  	    data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
+	  	    data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
   	    command = "L";
   	  }
   	  //data.append("Z");

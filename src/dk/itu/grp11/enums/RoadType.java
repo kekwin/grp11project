@@ -15,41 +15,40 @@ import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
 public enum RoadType {
   COASTLINE(101, 0.1, new Color(0,128,0), 1),
   MOTORVEJ(1, 0.3, new Color(255,0,0), 1, TransportationType.CAR),
+  MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 1, TransportationType.CAR),
   PROJ_MOTORVEJ(21, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
+  PROJ_MOTORTRAFIKVEJ(22, 0.1, new Color(0,255,0), 1, TransportationType.CAR),
   MOTORVEJSTUNNEL(41, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
+  MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 1, TransportationType.CAR),
   FAERGEFORBINDELSE(80, 0.1, new Color(0,0,255), 1, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 1, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
   
-  MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 2, TransportationType.CAR),
-  PROJ_MOTORTRAFIKVEJ(22, 0.1, new Color(0,255,0), 2, TransportationType.CAR),
-  MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 2, TransportationType.CAR),
-  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 2, TransportationType.CAR),
+  SEKUNDAERRUTE_OVER_6M(4, 0.1, new Color(150,150,150), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  MOTORVEJSAFKOERSEL(31, 0.1, new Color(255,100,100), 2, TransportationType.CAR),
+  MOTORTRAFIKVEJSARKOERSEL(32, 0.1, new Color(100,255,100), 2, TransportationType.CAR),
+  PRIMAERVEJSAFKOERSEL(33, 0.1, new Color(100,100,100), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  SEKUNDAERVEJSAFKOERSEL(34, 0.1, new Color(150,150,150), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PROJ_SEKUNDAERVEJ(24, 0.1, new Color(150,150,150), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PRIMAERVEJSTUNNEL(43, 0.1, new Color(0,0,0), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  SEKUNDAERVEJSTUNNEL(44, 0.1, new Color(150,150,150), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   
-  SEKUNDAERRUTE_OVER_6M(4, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  MOTORVEJSAFKOERSEL(31, 0.1, new Color(255,100,100), 4, TransportationType.CAR),
-  MOTORTRAFIKVEJSARKOERSEL(32, 0.1, new Color(100,255,100), 4, TransportationType.CAR),
-  PRIMAERVEJSAFKOERSEL(33, 0.1, new Color(100,100,100), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  SEKUNDAERVEJSAFKOERSEL(34, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  PROJ_SEKUNDAERVEJ(24, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  PRIMAERVEJSTUNNEL(43, 0.1, new Color(0,0,0), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  SEKUNDAERVEJSTUNNEL(44, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  VEJ_3_TIL_6M(5, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PROJ_VEJ_3_TIL_6M(25, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   
-  VEJ_3_TIL_6M(5, 0.1, new Color(150,150,150), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  PROJ_VEJ_3_TIL_6M(25, 0.1, new Color(150,150,150), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  ANDEN_VEJAFKOERSEL(35, 0.1, new Color(64,128,128), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PROJ_VEJ_UNDER_3M(26, 0.1, new Color(64,128,128), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  ANDEN_VEJTUNNEL(45, 0.1, new Color(64,128,128), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  MINDRE_VEJTUNNEL(46, 0.1, new Color(64,128,128), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   
-  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  ANDEN_VEJAFKOERSEL(35, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  PROJ_VEJ_UNDER_3M(26, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  ANDEN_VEJTUNNEL(45, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  MINDRE_VEJTUNNEL(46, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  
-  STI(8, 0.05, new Color(220,100,60), 32, TransportationType.BICYCLE, TransportationType.WALK),
-  MARKVEJ(10, 0.1, new Color(126,49,23), 32, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  GÅGADE(11, 0.1, new Color(185,185,0), 32, TransportationType.WALK),
-  PROJ_STI(28, 0.05, new Color(220,100,60), 32, TransportationType.BICYCLE, TransportationType.WALK),
-  STITUNNEL(48, 0.05, new Color(220,100,60), 32, TransportationType.BICYCLE, TransportationType.WALK),
-  UKENDT1(95, 0.1, new Color(0,0,0), 32, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
-  UKENDT2(0, 0.1, new Color(0,0,0), 32, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
+  STI(8, 0.05, new Color(220,100,60), 16, TransportationType.BICYCLE, TransportationType.WALK),
+  MARKVEJ(10, 0.1, new Color(126,49,23), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  GÅGADE(11, 0.1, new Color(185,185,0), 16, TransportationType.WALK),
+  PROJ_STI(28, 0.05, new Color(220,100,60), 16, TransportationType.BICYCLE, TransportationType.WALK),
+  STITUNNEL(48, 0.05, new Color(220,100,60), 16, TransportationType.BICYCLE, TransportationType.WALK),
+  UKENDT1(95, 0.1, new Color(0,0,0), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
+  UKENDT2(0, 0.1, new Color(0,0,0), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
   
   STEDNAVN(99, 0.3, new Color(255,255,0), 10000),
   
