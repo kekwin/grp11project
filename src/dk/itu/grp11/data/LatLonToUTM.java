@@ -1,14 +1,12 @@
 package dk.itu.grp11.data;
 
-import org.w3c.dom.Node;
-
 public class LatLonToUTM {
 
 	  private static final double a = 6378137; 
 	  private static final double b = 6356752.314; 
-	  private static final double f = (a-b)/a;
-	  private static final double invf = 1/f;
-	  private static final double rm = Math.sqrt(a*b);
+	  //private static final double f = (a-b)/a;
+	  //private static final double invf = 1/f;
+	  //private static final double rm = Math.sqrt(a*b);
 	  private static final double k0 = 0.9996;
 	  private static final double e = Math.sqrt(1-(b/a)*(b/a));
 	  private static final double ee = (e*e)/(1-e*e);
@@ -20,7 +18,7 @@ public class LatLonToUTM {
 	    double pos[] = new double[2];
 	    double latr = (lat*Math.PI)/180;
 	    // Not sure why longtitude is never used, seems weird. But its the same in the given formula..
-	    double lonr = (lon*Math.PI)/180;
+	    //double lonr = (lon*Math.PI)/180;
 	    int zone = 32;
 	    int zoneCM = 6*zone-183;
 	    double deltaLon = lon-zoneCM;

@@ -6,6 +6,7 @@ import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.enums.MapBound;
 
 public class Session {
+  @SuppressWarnings("unused")
   private String sessionID;
   private int xStart;
   private int yStart;
