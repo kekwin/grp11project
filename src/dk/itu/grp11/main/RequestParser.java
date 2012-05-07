@@ -16,6 +16,9 @@ import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
 import dk.itu.grp11.data.Parser;
+import dk.itu.grp11.data.Point;
+import dk.itu.grp11.data.Road;
+import dk.itu.grp11.enums.TransportationType;
 /**
  * 
  * @author Group 11
@@ -111,6 +114,18 @@ public class RequestParser extends Thread {
       outStream = new ByteArrayInputStream((""+Map.getZoomLevelY(FileServer.sessions.get(params.get("sessionID")).getYDiff())).getBytes("UTF-8"));
     } else if (file.indexOf("getMap") != -1) {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
+    } else if (file.indexOf("getRoute") != -1) {
+      Road from = Parser.getParser().roadNames().get(params.get("from"));
+      Road to = Parser.getParser().roadNames().get(params.get("to"));
+      System.out.println("from: " +from);
+      System.out.println("to: " + to);
+      
+      String route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), TransportationType.CAR, true);
+      System.out.println("route:");
+      System.out.println(route);
+      
+      //TODO take more parameters
+      outStream = new ByteArrayInputStream(route.getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
       String term = params.get("term").replace("+", " ").replaceAll("%C3%A6|%C3%86", "æ").replaceAll("%C3%B8|%C3%98", "ø").replaceAll("%C3%A5|%C3%85", "å").
                     replaceAll("%C3%A4|%C3%84", "ä").replaceAll("%C3%B6|%C3%96", "ö").replaceAll("%2C", ","); //Decoding URL

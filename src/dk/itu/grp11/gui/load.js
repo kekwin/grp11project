@@ -403,7 +403,14 @@ jQuery(function($){
   
   $(".overlay form input[type=submit]").click(function(e) {
 	e.preventDefault();
-	alert("Do stuff");
+	$.ajax({
+      url: "getRoute",
+      cache: false,
+      type: "GET",
+      data: "sessionID="+sessionID+"&from="+$('#from').val()+"&to="+$('#to').val(),
+    }).done(function(resp) {
+      eval(resp);
+    });
   });
   
 });
