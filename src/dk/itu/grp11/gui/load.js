@@ -417,7 +417,7 @@ jQuery(function($){
       url: "getRoute",
       cache: false,
       type: "GET",
-      data: "sessionID="+sessionID+"&from="+encodeURI($('#from').val())+"&to="+$('#to').val()+"&type="+$("input:radio[name='type']:checked").val(),
+      data: "sessionID="+sessionID+"&from="+encodeURI($('#from').val())+"&to="+encodeURI($('#to').val())+"&type="+$("input:radio[name='type']:checked").val()+"&ferries="+$('#ferries').is(':checked')+"&highways="+$('#highways').is(':checked'),
     }).done(function(resp) {
 	  eval(resp);
     });

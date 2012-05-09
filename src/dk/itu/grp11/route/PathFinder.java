@@ -8,6 +8,7 @@ import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
+import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
 import dk.itu.grp11.util.IndexMinPQ;
@@ -18,9 +19,11 @@ public class PathFinder {
   private double[] secondaryWeight; // The corresponding weight. Time if time =
                                     // true. Length if time = false.
   private IndexMinPQ<Double> pq;
-  private boolean time;
   private TransportationType transType;
   private EnumMap<MapBound, Double> bounds;
+  private boolean time;
+  private boolean ferries;
+  private boolean highways;
 
   /**
    * Finds the shortest path in a Network graph from a source point. The path is
@@ -38,13 +41,15 @@ public class PathFinder {
    *          The type of transportation
    */
   public PathFinder(Network G, int source, boolean time,
-      TransportationType transType) {
+      TransportationType transType, boolean ferries, boolean highways) {
     roadTo = new Road[G.numPoints()];
     primaryWeight = new double[G.numPoints() + 1];
     secondaryWeight = new double[G.numPoints() + 1];
     pq = new IndexMinPQ<Double>(G.numPoints());
     this.time = time;
     this.transType = transType;
+    this.ferries = ferries;
+    this.highways = highways;
     bounds = new EnumMap<MapBound, Double>(MapBound.class);
     bounds.put(MapBound.MINX, Double.POSITIVE_INFINITY);
     bounds.put(MapBound.MAXX, Double.NEGATIVE_INFINITY);
@@ -78,27 +83,27 @@ public class PathFinder {
       // transportation type
       if (((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) || transType == TransportationType.WALK)
           && r.getType().isAllowed(transType)) {
-        int w = r.getTo();
-        double weight, sWeight;
-        if (time) {
-          weight = r.getTime();
-          sWeight = r.getLength();
-        } else {
-          weight = r.getLength();
-          sWeight = r.getTime();
-        }
-        if (primaryWeight[w] > primaryWeight[p] + weight) {
-          primaryWeight[w] = primaryWeight[p] + weight;
-          secondaryWeight[w] = secondaryWeight[p] + sWeight;
-          roadTo[w] = r;
-          if (pq.contains(w))
-            pq.change(w, primaryWeight[w]);
-          else
-            pq.insert(w, primaryWeight[w]);
-        }
+          //TODO calculate for highways and ferries
+          int w = r.getTo();
+          double weight, sWeight;
+          if (time) {
+            weight = r.getTime();
+            sWeight = r.getLength();
+          } else {
+            weight = r.getLength();
+            sWeight = r.getTime();
+          }
+          if (primaryWeight[w] > primaryWeight[p] + weight) {
+            primaryWeight[w] = primaryWeight[p] + weight;
+            secondaryWeight[w] = secondaryWeight[p] + sWeight;
+            roadTo[w] = r;
+            if (pq.contains(w))
+              pq.change(w, primaryWeight[w]);
+            else
+              pq.insert(w, primaryWeight[w]);
+          }
       }
     }
-
   }
 
   /**
@@ -146,10 +151,11 @@ public class PathFinder {
   }
 
   /**
-   * Returns the route to a point as an Iterable.
-   * In order from the given point to the source point.
+   * Returns the route to a point as an Iterable. In order from the given point
+   * to the source point.
    * 
-   * @param p The point
+   * @param p
+   *          The point
    * @return The route. Returns null if no such path exist.
    */
   public Iterable<Road> pathTo(int p) {
@@ -165,18 +171,18 @@ public class PathFinder {
     }
     return path;
   }
-  
+
   private void updatePathBounds(double x, double y) {
-    if (x > bounds.get(MapBound.MAXX)-Parser.mapBoundOffset)
-      bounds.put(MapBound.MAXX, x+Parser.mapBoundOffset);
-    if (x < bounds.get(MapBound.MINX)+Parser.mapBoundOffset)
-      bounds.put(MapBound.MINX, x-Parser.mapBoundOffset);
-    if (y > bounds.get(MapBound.MAXY)-Parser.mapBoundOffset)
-      bounds.put(MapBound.MAXY, y+Parser.mapBoundOffset);
-    if (y < bounds.get(MapBound.MINY)+Parser.mapBoundOffset)
-      bounds.put(MapBound.MINY, y-Parser.mapBoundOffset);
+    if (x > bounds.get(MapBound.MAXX) - Parser.mapBoundOffset)
+      bounds.put(MapBound.MAXX, x + Parser.mapBoundOffset);
+    if (x < bounds.get(MapBound.MINX) + Parser.mapBoundOffset)
+      bounds.put(MapBound.MINX, x - Parser.mapBoundOffset);
+    if (y > bounds.get(MapBound.MAXY) - Parser.mapBoundOffset)
+      bounds.put(MapBound.MAXY, y + Parser.mapBoundOffset);
+    if (y < bounds.get(MapBound.MINY) + Parser.mapBoundOffset)
+      bounds.put(MapBound.MINY, y - Parser.mapBoundOffset);
   }
-  
+
   public double pathBound(MapBound mb) {
     return bounds.get(mb);
   }

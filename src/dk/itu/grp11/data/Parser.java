@@ -274,20 +274,20 @@ public class Parser {
         Double.parseDouble(inputSplit[26]));                                // 26 = time
     
     //Adding the road to the road neame collection
-    String from = ""+r.getFromZip();
-    String to = ""+r.getToZip();
-    if(postalCodes.get(r.getFromZip()) != null) //If we have the name for the postal code
-      from = postalCodes.get(r.getFromZip());   // - then replace it
-    if(postalCodes.get(r.getToZip()) != null)   //If we have the name for the postal code
-      to = postalCodes.get(r.getToZip());       // - then replace it
-    
-    String fromString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + from.toLowerCase(new Locale("ISO8859_1"));
-    String toString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + to.toLowerCase(new Locale("ISO8859_1"));
-    
-    if(roadNames.containsKey(fromString)) fromString += " 1";
-    if(roadNames.containsKey(toString)) toString += " 1";
-    roadNames.put(fromString, r);
-    roadNames.put(toString, r);
+    if(r.getFromZip() != 0 && r.getToZip() != 0) {
+      String from = ""+r.getFromZip();
+      String to = ""+r.getToZip();
+      if(postalCodes.get(r.getFromZip()) != null) //If we have the name for the postal code
+        from = postalCodes.get(r.getFromZip());   // - then replace it
+      if(postalCodes.get(r.getToZip()) != null)   //If we have the name for the postal code
+        to = postalCodes.get(r.getToZip());       // - then replace it
+      
+      String fromString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + from.toLowerCase(new Locale("ISO8859_1"));
+      String toString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + to.toLowerCase(new Locale("ISO8859_1"));
+      
+      roadNames.put(fromString, r);
+      roadNames.put(toString, r);
+    }
     return r;
   }
 

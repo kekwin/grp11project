@@ -35,7 +35,7 @@ public class FileServer {
    */
   public FileServer(Map map) {
     this.map = map;
-    System.out.println(map.getRoute(30722, 621556, TransportationType.CAR, true));
+    System.out.println(map.getRoute(30722, 621556, TransportationType.CAR, true, true, true));
   }
   
   public static FileServer getFileServer() {

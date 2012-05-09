@@ -40,7 +40,7 @@ public class Road {
     this.direction = direction;
     this.length = length;
     this.time = time;
-    this.id = nxtID++;
+    this.id = ++nxtID;
   }
 
   /**
@@ -94,7 +94,7 @@ public class Road {
   }
 
   public String toString() {
-    return "["+id+"] name='" + name + "' type=" + type + " from=" + from + " to=" + to + " length=" + length + " time=" + time;
+    return "[id='"+id+"' name='" + name + "' type=" + type + " from=" + from + " to=" + to + " zipFrom='" + zipFrom + "' zipTo='" + zipTo + "' direction='" + direction + "' length=" + length + " time=" + time + "]";
   }
 
 }
