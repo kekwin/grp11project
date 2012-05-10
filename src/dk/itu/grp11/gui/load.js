@@ -46,6 +46,18 @@ jQuery(function($){
         type: "GET",
         data: "sessionID="+sessionID
       }).done(function(resp) {
+        var split = resp.split(" ");
+        var svg = document.getElementById('map');
+        var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttributeNS(null, 'fill-opacity', '1');
+        group.setAttributeNS(null, 'fill', 'rgb(255,255,255)');
+        group.setAttributeNS(null, 'stroke', 'rgb(0,0,0)');
+        group.setAttributeNS(null, 'stroke-width', '0.05%');
+        svg.appendChild(group);
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttributeNS(null, 'class', 'OUTLINE');
+        path.setAttributeNS(null, 'd', 'M'+split[0]+','+split[1]+'L'+(parseInt(split[0])+parseInt(split[2]))+','+split[1]+'L'+(parseInt(split[0])+parseInt(split[2]))+','+(parseInt(split[1])+parseInt(split[3]))+'L'+split[0]+','+(parseInt(split[1])+parseInt(split[3]))+'Z');
+        group.appendChild(path);
         setViewBox(resp);
         $.ajax({
           url: "setCanvas",
@@ -53,16 +65,8 @@ jQuery(function($){
           type: "GET",
           data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
         }).done(function() {
-          $.ajax({
-            url: "getCoastLine",
-            cache: false,
-            type: "GET",
-            data: "sessionID="+sessionID
-          }).done(function(resp) {
-            refreshSVG();
-            eval(resp);
-            setFullVariables();
-          });
+          refreshSVG();
+          setFullVariables();
         });
       });
     });
@@ -80,7 +84,6 @@ jQuery(function($){
     var split = resp.split(" ");
     if (wider == true && wider != null) {
       xDiff = Math.floor(parseInt(split[3])/ratio);
-      console.log((parseInt(split[2])-xDiff)/2);
       xStart = Math.ceil(parseInt(split[0])+((parseInt(split[2])-xDiff)/2));
       yDiff = parseInt(split[3]);
       yStart = parseInt(split[1]);
@@ -265,14 +268,49 @@ jQuery(function($){
       xDiff = Math.ceil(xDiff/(1-zoomPercentage));
       yDiff = Math.ceil(yDiff/(1-zoomPercentage));
     }
-    xDiff = validateXDiff(xDiff);
-    yDiff = validateYDiff(yDiff);
+    zoomSVGCoords(xStart, yStart, xDiff, yDiff, 200, false);
+  }
+  function zoomSVGCoords(xStart, yStart, xDiff, yDiff, time, directCall) {
+    if (directCall == true) {
+      if (wider) {
+        if (yDiff > xDiff) {
+          yDiff2 = yDiff;
+          xDiff2 = yDiff*ratio;
+          xStart = xStart-((xDiff2-xDiff)/2)
+        } else if (xDiff > yDiff) {
+          xDiff2 = xDiff;
+          yDiff2 = xDiff/ratio;
+          yStart = yStart-((yDiff2-yDiff)/2);
+        }
+      } else {
+        if (xDiff < yDiff) {
+          xDiff2 = xDiff;
+          yDiff2 = xDiff*ratio;
+          yStart = yStart-((yDiff2-yDiff)/2);
+        } else if (yDiff < xDiff) {
+          yDiff2 = yDiff;
+          xDiff2 = yDiff/ratio;
+          xStart = xStart-((xDiff2-xDiff)/2);
+        }
+      }
+    } else {
+      xDiff2 = xDiff;
+      yDiff2 = yDiff;
+    }
+    
+    xStart = Math.floor(xStart);
+    yStart = Math.floor(yStart);
+    xDiff = Math.ceil(xDiff);
+    yDiff = Math.ceil(yDiff);
+
+    xDiff = validateXDiff(xDiff2);
+    yDiff = validateYDiff(yDiff2);
     xStart = validateXStart(xStart, xDiff);
     yStart = validateYStart(yStart, yDiff);
     $('#map').stop();
     $('#map').animate({
       svgViewBox: xStart+' '+yStart+' '+xDiff+' '+yDiff
-    }, 200, function() {
+    }, time, function() {
       refreshSVG();
     });
   }
@@ -326,6 +364,21 @@ jQuery(function($){
     else if (document.selection) document.selection.empty();
   }
   
+  function loadCoastLine() {
+    $.ajax({
+      url: "getCoastLine",
+      cache: false,
+      type: "GET",
+      data: "sessionID="+sessionID
+    }).done(function(resp) {
+      eval(resp);
+    });
+  }
+  
+  function removeCoastLine() {
+    $('.COASTLINE').remove();
+  }
+  
   $.xhrPool = [];
   $.xhrPool.abortAll = function() {
       $(this).each(function(idx, jqXHR) {
@@ -347,7 +400,11 @@ jQuery(function($){
           var index = $.xhrPool.indexOf(jqXHR);
           if (index > -1) {
               $.xhrPool.splice(index, 1);
-              if ($.xhrPool.length == 0) $('.loader').css('display', 'none');
+              if ($.xhrPool.length == 0) {
+                $('.loader').css('display', 'none');
+                var svg = $('#map-container').svg('get');
+                document.getElementById('map').forceRedraw();
+              }
           }
       }
   });
@@ -377,6 +434,14 @@ jQuery(function($){
   });
   $('#minus').click(function() {
     zoomSVG("out", 0, 0);
+  });
+  $('#coastline').click(function() {
+    if($(this).is(':checked')) if (confirm("Turning on coastline can have a performance impact on slower computers. Are you sure you wish to do this?")) {
+      loadCoastLine();
+    } else {
+      $(this).attr('checked', false);
+    }
+    else removeCoastLine();
   });
   
   $(document).bind('keydown',function(k) {

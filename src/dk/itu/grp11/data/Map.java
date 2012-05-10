@@ -29,6 +29,7 @@ public class Map {
   private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
   private HashSet<LinkedList<Integer>> coastline;
+  private int routeOffset = 10000;
 	
 	/**
 	* Loads a map by points and roads
@@ -97,19 +98,6 @@ public class Map {
 	public String getCoastLine() {
 	  StringBuffer outputBuilder = new StringBuffer();
 	  outputBuilder.append("var svg = document.getElementById('map');\n");
-	  outputBuilder.append("var group2 = document.createElementNS('http://www.w3.org/2000/svg', 'g');\n");
-    outputBuilder.append("group2.setAttributeNS(null, 'fill-opacity', '1');\n");
-    outputBuilder.append("group2.setAttributeNS(null, 'fill', 'rgb(255,255,255)');\n");
-    outputBuilder.append("group2.setAttributeNS(null, 'stroke', 'rgb(0,0,0)');\n");
-    outputBuilder.append("group2.setAttributeNS(null, 'stroke-width', '0.05%');\n");
-    outputBuilder.append("svg.appendChild(group2);\n");
-    outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
-    outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
-    Parser p = Parser.getParser();
-    outputBuilder.append("path.setAttributeNS(null, 'd', 'M"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MAXY)+"L"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MAXY)+"Z');\n");
-    outputBuilder.append("path.setAttributeNS(null, 'fill', 'rgb(255,255,255)');");
-    outputBuilder.append("path.setAttributeNS(null, 'fill-opacity', '1');");
-    outputBuilder.append("group2.appendChild(path);\n");
 	  outputBuilder.append("var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');\n");
 	  outputBuilder.append("group.setAttributeNS(null, 'fill-opacity', '0');\n");
 	  outputBuilder.append("group.setAttributeNS(null, 'stroke', 'rgb("+RoadType.COASTLINE.getColorAsString()+")');\n");
@@ -210,6 +198,8 @@ public class Map {
       lastY = currY[1];
     }
     outputBuilder.append(",{stroke: 'rgb("+RoadType.ROUTE.getColorAsString()+")', strokeWidth: '"+RoadType.ROUTE.getStroke()+"%', fillOpacity: 0, class: 'ROUTE', id: 'ROUTE'});\n");
+    outputBuilder.append("zoomSVGCoords("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", 2000, true);");
+    //outputBuilder.append("svg.rect("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", {stroke: 'rgb(0,0,0)', strokeWidth: '0.2%', fill: 'none'});");
     return outputBuilder.toString();
 	}
 	
