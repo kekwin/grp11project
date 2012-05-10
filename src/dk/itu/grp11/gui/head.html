@@ -15,7 +15,7 @@
     <div class="plus arrow" id="plus"><div>+</div></div>
     <div class="minus arrow" id="minus"><div>-</div></div>
     <div class="line"></div>
-      <form>
+      <form id="routeform">
         <h2>Map Settings</h2>
 		<input type="text" label="" value="From address" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" id="from">
 
@@ -27,7 +27,7 @@
         </ul>
         <input type="submit" value="Find rute">
       </form>
-    <div class="routeinfo"><span id="dist">dist</span> (<span id="time">time</span>)</div>
+    <div id="routeinfo"><span id="dist">dist</span> (<span id="time">time</span>)</div>
     </div>
     <div>
       <div class="top arrow" id="up"></div>

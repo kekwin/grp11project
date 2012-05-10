@@ -1,6 +1,7 @@
 html {
   height: 100%;
   width: 100%;
+  background: rgba(240,240,240,1);
 }
 body {
   font: 13px/1.231 arial,helvetica,clean,sans-serif;
@@ -36,10 +37,11 @@ h2 {
 div.loader {
   height: 150px;
   position: absolute;
-  top: 20px;
+  top: 30px;
   left: 0;
   right: 0;
   text-align: center;
+  z-index: 1000;
 }
 div.loader img {
   height: 150px;
@@ -107,10 +109,10 @@ div.overlay {
   -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
   -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
 }
-/*div.overlay:hover {
+div.overlay:hover {
   border: 1px solid rgba(255, 201, 14, 1);
   background: rgba(255, 242, 0, 0.1);
-}*/
+}
 div.overlay ul li {
   list-style: none;
   display: inline-block;
@@ -175,10 +177,11 @@ div.line {
   top: 19.5px;
   right: -22px;
 }
-div.routeinfo {
+div#routeinfo {
   color:#3399cc;
+  opacity: 0;
 }
-div.routeinfo #time {
+div#routeinfo #time {
   font-style:italic;
 }
 

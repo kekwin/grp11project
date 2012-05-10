@@ -25,6 +25,8 @@ jQuery(function($){
   var maxNumToRemove = 800;
   var actionDelay = 1000;
   var runningDelay = setTimeout(function() {}, 0);
+  var ratio = 1;
+  var wider = null;
   
   /************************************************************************************************
    * Functions
@@ -76,23 +78,40 @@ jQuery(function($){
   }
   function setViewBox(resp) {
     var split = resp.split(" ");
-    if ($(window).height() < $(window).width()) {
-      yStart = Math.abs(parseInt(split[1]));
+    if (wider == true && wider != null) {
+      xDiff = Math.floor(parseInt(split[3])/ratio);
+      console.log((parseInt(split[2])-xDiff)/2);
+      xStart = Math.ceil(parseInt(split[0])+((parseInt(split[2])-xDiff)/2));
       yDiff = parseInt(split[3]);
-      ratio = $(window).width()/$(window).height();
-      xDiff = Math.ceil(yDiff*ratio);
-      xStart = Math.floor(parseInt(split[0])-((xDiff-parseInt(split[2]))/2));
-      zoomLevelUrl = "getZoomLevelX";
-    } else {
-      xStart = Math.abs(parseInt(split[0]));
+      yStart = parseInt(split[1]);
+    } else if (wider != null) {
+      yDiff = Math.floor(parseInt(split[2])/ratio);
+      yStart = Math.ceil(parseInt(split[1])+((parseInt(split[3])-yDiff)/2));
       xDiff = parseInt(split[2]);
+      xStart = parseInt(split[0]);
+    } else {
+      xStart = parseInt(split[0]);
+      yStart = parseInt(split[1]);
+      xDiff = parseInt(split[2]);
+      yDiff = parseInt(split[3]);
+    }
+    if ($(window).height() < $(window).width()) {
+      ratio = $(window).width()/$(window).height();
+      xDiff2 = Math.ceil(yDiff*ratio);
+      yDiff2 = yDiff;
+      xStart = Math.floor(xStart-((xDiff2-xDiff)/2));
+      zoomLevelUrl = "getZoomLevelX";
+      wider = true;
+    } else {
       ratio = $(window).height()/$(window).width();
-      yDiff = Math.ceil(xDiff*ratio);
-      yStart = Math.floor(parseInt(split[1])-((yDiff-parseInt(split[3]))/2));
+      yDiff2 = Math.ceil(xDiff*ratio);
+      xDiff2 = xDiff;
+      yStart = Math.floor(yStart-((yDiff2-yDiff)/2));
       zoomLevelUrl = "getZoomLevelY";
+      wider = false;
     }
     var svg = document.getElementById("map");
-    svg.setAttribute("viewBox", xStart+" "+yStart+" "+xDiff+" "+yDiff);
+    svg.setAttribute("viewBox", xStart+" "+yStart+" "+xDiff2+" "+yDiff2);
   }
   function createSVG() {
     $('#map').remove();
@@ -411,7 +430,7 @@ jQuery(function($){
 	minLength: 2,
   });
   
-  $(".overlay form input[type=submit]").click(function(e) {
+  $("#routeform").submit(function(e) {
 	e.preventDefault();
 	$.ajax({
       url: "getRoute",
@@ -419,8 +438,15 @@ jQuery(function($){
       type: "GET",
       data: "sessionID="+sessionID+"&from="+encodeURI($('#from').val())+"&to="+$('#to').val()+"&type="+$("input:radio[name='type']:checked").val(),
     }).done(function(resp) {
-	  eval(resp);
+      if ($('#ROUTE').length) $('#ROUTE').remove();
+	    eval(resp);
     });
+  });
+  
+  $(window).resize(function() {
+    var svg = document.getElementById("map");
+    setViewBox(svg.getAttribute("viewBox"));
+    refreshSVG();
   });
   
 });

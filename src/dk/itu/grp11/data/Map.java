@@ -1,5 +1,7 @@
 package dk.itu.grp11.data;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -97,6 +99,19 @@ public class Map {
 	public String getCoastLine() {
 	  StringBuffer outputBuilder = new StringBuffer();
 	  outputBuilder.append("var svg = document.getElementById('map');\n");
+	  outputBuilder.append("var group2 = document.createElementNS('http://www.w3.org/2000/svg', 'g');\n");
+    outputBuilder.append("group2.setAttributeNS(null, 'fill-opacity', '1');\n");
+    outputBuilder.append("group2.setAttributeNS(null, 'fill', 'rgb(255,255,255)');\n");
+    outputBuilder.append("group2.setAttributeNS(null, 'stroke', 'rgb(0,0,0)');\n");
+    outputBuilder.append("group2.setAttributeNS(null, 'stroke-width', '0.05%');\n");
+    outputBuilder.append("svg.appendChild(group2);\n");
+    outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
+    outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
+    Parser p = Parser.getParser();
+    outputBuilder.append("path.setAttributeNS(null, 'd', 'M"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MAXY)+"L"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MAXY)+"Z');\n");
+    outputBuilder.append("path.setAttributeNS(null, 'fill', 'rgb(255,255,255)');");
+    outputBuilder.append("path.setAttributeNS(null, 'fill-opacity', '1');");
+    outputBuilder.append("group2.appendChild(path);\n");
 	  outputBuilder.append("var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');\n");
 	  outputBuilder.append("group.setAttributeNS(null, 'fill-opacity', '0');\n");
 	  outputBuilder.append("group.setAttributeNS(null, 'stroke', 'rgb("+RoadType.COASTLINE.getColorAsString()+")');\n");
@@ -117,11 +132,6 @@ public class Map {
 	    }
   	  outputBuilder.append("group.appendChild(path);\n");
 	  }
-	  outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
-	  outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
-	  Parser p = Parser.getParser();
-	  outputBuilder.append("path.setAttributeNS(null, 'd', 'M"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MINY)+"L"+p.mapBound(MapBound.MAXX)+","+p.mapBound(MapBound.MAXY)+"L"+p.mapBound(MapBound.MINX)+","+p.mapBound(MapBound.MAXY)+"Z');\n");
-	  outputBuilder.append("group.appendChild(path);\n");
 	  return outputBuilder.toString();
   }
 	
@@ -159,9 +169,10 @@ public class Map {
     Network g = p.network();
     PathFinder pf = new PathFinder(g, point1, fastestroute, transportation);
     Iterable<Road> roads = pf.pathTo(point2);
-    outputBuilder.append("$('#dist').text('"+pf.distTo(point2)+"m');\n");
-    outputBuilder.append("$('#time').text('"+pf.timeTo(point2)+"min');\n");
-    outputBuilder.append("$('#routeinfo').css({opacity: \"0\", visibility: \"visible\"}); $(window).load(function() { $('#routeinfo').animate({opacity: 0.5}, 1500); });\n"); //TODO WHY YOU NOT WORK!!?
+    NumberFormat formatter = new DecimalFormat("#.##");
+    outputBuilder.append("$('#dist').text('"+formatter.format(pf.distTo(point2))+"m');\n");
+    outputBuilder.append("$('#time').text('"+formatter.format(pf.timeTo(point2))+"min');\n");
+    outputBuilder.append("$('#routeinfo').animate({opacity: 1}, 1500);\n");
     outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
     String command = "move";
     double lastX = points.get(point2).getX();
