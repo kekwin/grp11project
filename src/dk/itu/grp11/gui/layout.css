@@ -35,17 +35,17 @@ h2 {
   padding: 0 0 10px 0;
 }
 div.loader {
-  height: 150px;
+  height: 50px;
   position: absolute;
-  top: 30px;
+  top: 60px;
   left: 0;
   right: 0;
   text-align: center;
   z-index: 1000;
 }
 div.loader img {
-  height: 150px;
-  width: 150px;
+  height: 50px;
+  width: 50px;
 }
 div.arrow {
   height: 30px;

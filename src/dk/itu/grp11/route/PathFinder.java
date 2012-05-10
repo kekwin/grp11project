@@ -83,25 +83,25 @@ public class PathFinder {
       // transportation type
       if (((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) || transType == TransportationType.WALK)
           && r.getType().isAllowed(transType)) {
-          //TODO calculate for highways and ferries
-          int w = r.getTo();
-          double weight, sWeight;
-          if (time) {
-            weight = r.getTime();
-            sWeight = r.getLength();
-          } else {
-            weight = r.getLength();
-            sWeight = r.getTime();
-          }
-          if (primaryWeight[w] > primaryWeight[p] + weight) {
-            primaryWeight[w] = primaryWeight[p] + weight;
-            secondaryWeight[w] = secondaryWeight[p] + sWeight;
-            roadTo[w] = r;
-            if (pq.contains(w))
-              pq.change(w, primaryWeight[w]);
-            else
-              pq.insert(w, primaryWeight[w]);
-          }
+        // TODO calculate for highways and ferries
+        int w = r.getTo();
+        double weight, sWeight;
+        if (time) {
+          weight = r.getTime();
+          sWeight = r.getLength();
+        } else {
+          weight = r.getLength();
+          sWeight = r.getTime();
+        }
+        if (primaryWeight[w] > primaryWeight[p] + weight) {
+          primaryWeight[w] = primaryWeight[p] + weight;
+          secondaryWeight[w] = secondaryWeight[p] + sWeight;
+          roadTo[w] = r;
+          if (pq.contains(w))
+            pq.change(w, primaryWeight[w]);
+          else
+            pq.insert(w, primaryWeight[w]);
+        }
       }
     }
   }
@@ -173,14 +173,14 @@ public class PathFinder {
   }
 
   private void updatePathBounds(double x, double y) {
-    if (x > bounds.get(MapBound.MAXX) - Parser.mapBoundOffset)
-      bounds.put(MapBound.MAXX, x + Parser.mapBoundOffset);
-    if (x < bounds.get(MapBound.MINX) + Parser.mapBoundOffset)
-      bounds.put(MapBound.MINX, x - Parser.mapBoundOffset);
-    if (y > bounds.get(MapBound.MAXY) - Parser.mapBoundOffset)
-      bounds.put(MapBound.MAXY, y + Parser.mapBoundOffset);
-    if (y < bounds.get(MapBound.MINY) + Parser.mapBoundOffset)
-      bounds.put(MapBound.MINY, y - Parser.mapBoundOffset);
+    if (x > bounds.get(MapBound.MAXX))
+      bounds.put(MapBound.MAXX, x);
+    if (x < bounds.get(MapBound.MINX))
+      bounds.put(MapBound.MINX, x);
+    if (y > bounds.get(MapBound.MAXY))
+      bounds.put(MapBound.MAXY, y);
+    if (y < bounds.get(MapBound.MINY))
+      bounds.put(MapBound.MINY, y);
   }
 
   public double pathBound(MapBound mb) {
