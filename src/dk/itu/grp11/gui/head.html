@@ -16,16 +16,17 @@
     <div class="minus arrow" id="minus"><div>-</div></div>
     <div class="line"></div>
       <form id="routeform">
-        <h2>Map Settings</h2>
+        <h2>Route</h2>
 		<input type="text" label="" value="From address" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" id="from">
 
         <input type="text" label="" value="To address" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" id="to">
         <ul>
-          <li><input type="radio" name="type" value="bicycle"><img src="bike.png" class="roadtype" /></li>
-          <li><input type="radio" name="type" value="car" checked><img src="car.png" class="roadtype" /></li>
-          <li><input type="radio" name="type" value="walk"><img src="man.png" class="roadtype" /></li>
+          <li><abbr title="Bicycle"><label><input type="radio" name="type" value="bicycle"><img src="bike.png" class="roadtype" /></label></abbr></li>
+          <li><abbr title="Car"><label><input type="radio" name="type" value="car" checked><img src="car.png" class="roadtype" /></label></abbr></li>
+          <li><abbr title="Walk"><label><input type="radio" name="type" value="walk"><img src="man.png" class="roadtype" /></label></abbr></li>
         </ul>
-        <input type="submit" value="Find rute">
+        <label for="highways">Highways</label><input type="checkbox" id="highways" checked> <label for="ferries">Ferries</label><input type="checkbox" id="ferries" checked>
+        <input type="submit" value="Find route">
       </form>
     <div id="routeinfo"><span id="dist">dist</span> (<span id="time">time</span>)</div>
     </div>

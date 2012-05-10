@@ -116,4 +116,12 @@ public class ParserTest {
       System.out.println(entry.getValue().getName());
     }
   }
+  
+  @Test
+  public void whyStreetsWithZero() {
+    System.out.println("TEST");
+    for(Entry<String, Road> entry : Parser.getParser().roadsWithPrefix("nansensgade").entrySet()) {
+      System.out.println(entry.getValue());
+    }
+  }
 }

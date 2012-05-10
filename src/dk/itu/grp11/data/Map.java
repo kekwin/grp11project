@@ -1,7 +1,5 @@
 package dk.itu.grp11.data;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -162,16 +160,30 @@ public class Map {
     return outputBuilder;
 	}
 	
-	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute) {
+	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute, boolean ferries, boolean highways) {
 	  StringBuffer outputBuilder = new StringBuffer();
     outputBuilder.append("var svg = $('#map-container').svg('get');\n");
 	  Parser p = Parser.getParser();
     Network g = p.network();
-    PathFinder pf = new PathFinder(g, point1, fastestroute, transportation);
+    PathFinder pf = new PathFinder(g, point1, fastestroute, transportation, ferries, highways);
     Iterable<Road> roads = pf.pathTo(point2);
-    NumberFormat formatter = new DecimalFormat("#.##");
-    outputBuilder.append("$('#dist').text('"+formatter.format(pf.distTo(point2))+"m');\n");
-    outputBuilder.append("$('#time').text('"+formatter.format(pf.timeTo(point2))+"min');\n");
+    
+    //Converting time
+    String timeUnit = "min. ";
+    int time = (int) Math.round(pf.timeTo(point2));
+    if(time < 1) time = 1;
+    if(time > 59) { timeUnit = "t."; time /= 60; }
+    
+    //Converting distance
+    String distUnit = "m ";
+    int distance = (int) Math.round(pf.distTo(point2));
+    if(distance < 1) distance = 1;
+    if(distance > 999) { distance /= 1000; distUnit = "km"; }
+    
+    outputBuilder.append("$('#dist').text('"+distance+distUnit+"');\n");
+    if(transportation == TransportationType.CAR) outputBuilder.append("$('#time').text('"+time+timeUnit+"');\n");
+    else outputBuilder.append("$('#time').text('n/a');\n");
+    
     outputBuilder.append("$('#routeinfo').animate({opacity: 1}, 1500);\n");
     outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
     String command = "move";
