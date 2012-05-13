@@ -11,11 +11,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 
 import dk.itu.grp11.data.Map;
 import dk.itu.grp11.data.Parser;
+import dk.itu.grp11.data.Road;
+import dk.itu.grp11.enums.TransportationType;
 /**
  * 
  * @author Group 11
@@ -52,6 +55,7 @@ public class RequestParser extends Thread {
   }
   /** Overrided from Thread, this method is needed for running with multiple threads at the same time. */
   public void run() {
+    //long time = System.nanoTime();
     if (request != null) {
       try {
         parseRequest(request);
@@ -61,6 +65,7 @@ public class RequestParser extends Thread {
         System.err.println(e);
       }
     }
+    //System.out.println("Request took: "+((System.nanoTime()-time)/1000000000.0)+"s");
   }
   /**Takes a String that could look like this: /getMap?x=943702&y=6366840&width=69061&height=35214&zoomlevel=1&=1334088780921
    * Then it splits it so we get the data we actually need
@@ -109,9 +114,39 @@ public class RequestParser extends Thread {
       outStream = new ByteArrayInputStream((""+Map.getZoomLevelY(FileServer.sessions.get(params.get("sessionID")).getYDiff())).getBytes("UTF-8"));
     } else if (file.indexOf("getMap") != -1) {
       outStream = new ByteArrayInputStream(map.getPart(Double.parseDouble(params.get("x")), Double.parseDouble(params.get("y")), Double.parseDouble(params.get("width")), Double.parseDouble(params.get("height")), Integer.parseInt(params.get("zoomlevel")), FileServer.sessions.get(params.get("sessionID"))).getBytes("UTF-8"));
+    } else if (file.indexOf("getRoute") != -1) {
+      Road from = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("from"), "UTF-8").toLowerCase());
+      Road to = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("to"), "UTF-8").toLowerCase());
+      
+      //TODO route debug
+      System.out.println("from: " + from);
+      System.out.println("from(input): " + URLDecoder.decode(params.get("from"), "UTF-8").toLowerCase());
+      System.out.println("to: " + to);
+      System.out.println("to(input): " + URLDecoder.decode(params.get("to"), "UTF-8").toLowerCase());
+      System.out.println("type: " + params.get("type"));
+      System.out.println("ferries: " + params.get("ferries") + "   highways: " + params.get("highways"));
+      
+      boolean ferries = Boolean.getBoolean(params.get("ferries"));
+      boolean highways = Boolean.getBoolean(params.get("highways"));
+      TransportationType trans; boolean fastest = false;
+      if(params.get("type").equals("walk")) {
+        trans = TransportationType.WALK;
+      }
+      else if(params.get("type").equals("bicycle")) {
+        trans = TransportationType.BICYCLE;
+      }
+      else {
+        trans = TransportationType.CAR;
+        fastest = true; //The time data is only for cars
+      }
+      
+      String route;
+      if(from == null || to == null) route = "alert('Could not calculate route. From- or to-road is not valid.');";
+      else route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), trans, fastest, ferries, highways);
+      
+      outStream = new ByteArrayInputStream(route.getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
-      String term = params.get("term").replace("+", " ").replaceAll("%C3%A6|%C3%86", "æ").replaceAll("%C3%B8|%C3%98", "ø").replaceAll("%C3%A5|%C3%85", "å").
-                    replaceAll("%C3%A4|%C3%84", "ä").replaceAll("%C3%B6|%C3%96", "ö"); //Decoding URL
+      String term = URLDecoder.decode(params.get("term"), "UTF-8");
       outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(term)).getBytes("UTF-8")); //term
     } else if (file.indexOf("removeRoads") != -1) {
       outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));

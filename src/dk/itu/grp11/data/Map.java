@@ -29,6 +29,7 @@ public class Map {
   private DimensionalTree<Double, RoadType, Road> roads;
   private HashMap<Integer, Point> points;
   private HashSet<LinkedList<Integer>> coastline;
+  private int routeOffset = 10000;
 	
 	/**
 	* Loads a map by points and roads
@@ -107,12 +108,14 @@ public class Map {
 	    outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
 	    outputBuilder.append("path.setAttributeNS(null, 'class', 'COASTLINE');\n");
 	    StringBuffer data = new StringBuffer();
-  	  for (Integer point : outline) {
-  	    data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
-  	    command = "L";
-  	  }
-  	  //data.append("Z");
-  	  outputBuilder.append("path.setAttributeNS(null, 'd', '"+data.toString()+"');\n");
+	    if (outline.size() > 0) {
+    	  for (Integer point : outline) {
+  	  	    data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
+    	    command = "L";
+    	  }
+    	  //data.append("Z");
+    	  outputBuilder.append("path.setAttributeNS(null, 'd', '"+data.toString()+"');\n");
+	    }
   	  outputBuilder.append("group.appendChild(path);\n");
 	  }
 	  return outputBuilder.toString();
@@ -145,13 +148,31 @@ public class Map {
     return outputBuilder;
 	}
 	
-	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute) {
+	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute, boolean ferries, boolean highways) {
 	  StringBuffer outputBuilder = new StringBuffer();
     outputBuilder.append("var svg = $('#map-container').svg('get');\n");
 	  Parser p = Parser.getParser();
     Network g = p.network();
-    PathFinder pf = new PathFinder(g, point1, fastestroute, transportation);
+    PathFinder pf = new PathFinder(g, point1, fastestroute, transportation, ferries, highways);
     Iterable<Road> roads = pf.pathTo(point2);
+    
+    //Converting time
+    String timeUnit = "min. ";
+    int time = (int) Math.round(pf.timeTo(point2));
+    if(time < 1) time = 1;
+    if(time > 59) { timeUnit = "t."; time /= 60; }
+    
+    //Converting distance
+    String distUnit = "m ";
+    int distance = (int) Math.round(pf.distTo(point2));
+    if(distance < 1) distance = 1;
+    if(distance > 999) { distance /= 1000; distUnit = "km"; }
+    
+    outputBuilder.append("$('#dist').text('"+distance+distUnit+"');\n");
+    if(transportation == TransportationType.CAR) outputBuilder.append("$('#time').text('"+time+timeUnit+"');\n");
+    else outputBuilder.append("$('#time').text('n/a');\n");
+    
+    outputBuilder.append("$('#routeinfo').animate({opacity: 1}, 1500);\n");
     outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
     String command = "move";
     double lastX = points.get(point2).getX();
@@ -177,6 +198,8 @@ public class Map {
       lastY = currY[1];
     }
     outputBuilder.append(",{stroke: 'rgb("+RoadType.ROUTE.getColorAsString()+")', strokeWidth: '"+RoadType.ROUTE.getStroke()+"%', fillOpacity: 0, class: 'ROUTE', id: 'ROUTE'});\n");
+    outputBuilder.append("zoomSVGCoords("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", 2000, true);");
+    //outputBuilder.append("svg.rect("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", {stroke: 'rgb(0,0,0)', strokeWidth: '0.2%', fill: 'none'});");
     return outputBuilder.toString();
 	}
 	

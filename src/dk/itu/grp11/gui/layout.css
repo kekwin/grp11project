@@ -1,6 +1,7 @@
 html {
   height: 100%;
   width: 100%;
+  background: rgba(240,240,240,1);
 }
 body {
   font: 13px/1.231 arial,helvetica,clean,sans-serif;
@@ -34,16 +35,17 @@ h2 {
   padding: 0 0 10px 0;
 }
 div.loader {
-  height: 150px;
+  height: 50px;
   position: absolute;
-  top: 20px;
+  top: 60px;
   left: 0;
   right: 0;
   text-align: center;
+  z-index: 1000;
 }
 div.loader img {
-  height: 150px;
-  width: 150px;
+  height: 50px;
+  width: 50px;
 }
 div.arrow {
   height: 30px;
@@ -174,6 +176,13 @@ div.line {
   position: absolute;
   top: 19.5px;
   right: -22px;
+}
+div#routeinfo {
+  color:#3399cc;
+  opacity: 0;
+}
+div#routeinfo #time {
+  font-style:italic;
 }
 
 

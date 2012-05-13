@@ -14,7 +14,7 @@ import dk.itu.grp11.enums.TrafficDirection;
 import dk.itu.grp11.enums.TransportationType;
 import dk.itu.grp11.route.Network;
 import dk.itu.grp11.route.PathFinder;
-
+//TODO Not finished
 public class NetworkTest {
   private Network g;
   
@@ -93,27 +93,23 @@ public class NetworkTest {
      * 599909 -> 599840 = 74.15599
      * 
      */
-    //TODO Not finished
   }
 
   @Test
   public void test2() {
     PathFinder pf = new PathFinder(g, 598955, false, TransportationType.CAR);
     System.out.println(pf.distTo(598444));
-    //TODO Not finished
   }
   
   @Test
   public void test3() {
     PathFinder pf = new PathFinder(g, 406585, false, TransportationType.CAR);
     System.out.println("Gundsømagle: " + pf.distTo(406550));
-    //TODO Not finished
   }
   
   @Test
   public void test4() {
     PathFinder pf = new PathFinder(g, 407262, false, TransportationType.CAR);
     System.out.println("Gundsømagle: " + pf.distTo(406550));
-    //TODO Not finished
   }
 }

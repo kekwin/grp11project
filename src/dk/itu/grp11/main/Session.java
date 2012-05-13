@@ -6,7 +6,7 @@ import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.enums.MapBound;
 
 public class Session {
-  //TODO not using sessionID. Delete the field?
+  @SuppressWarnings("unused")
   private String sessionID;
   private int xStart;
   private int yStart;

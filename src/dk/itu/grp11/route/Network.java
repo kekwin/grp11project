@@ -1,10 +1,10 @@
 package dk.itu.grp11.route;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.TrafficDirection;
+import dk.itu.grp11.util.DynArray;
 
 /**
  * Describes a road network graph
@@ -15,7 +15,7 @@ import dk.itu.grp11.enums.TrafficDirection;
 public class Network {
   private final int P; // Number of vertices (Point)
   private int R; // Number of edges (Road)
-  private Set<Road>[] adj; // Roads you can get to, from a point
+  private DynArray<Road>[] adj; // Roads you can get to, from a point
 
   // Casting, as arrays cannot be of a generic type. This is OK to suppress.
   @SuppressWarnings("unchecked")
@@ -27,9 +27,9 @@ public class Network {
   private Network(int P) {
     this.P = P;
     this.R = 0;
-    adj = (HashSet<Road>[]) new HashSet[P + 1]; // +1 as IDs start at 1 not 0
+    adj = new DynArray[P+1]; // +1 as IDs start at 1 not 0
     for (int p = 0; p <= P; p++) {
-      adj[p] = new HashSet<Road>();
+      adj[p] = new DynArray<Road>(Road[].class);
     }
   }
 

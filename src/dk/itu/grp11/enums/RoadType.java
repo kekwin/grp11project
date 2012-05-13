@@ -13,7 +13,7 @@ import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
  *
  */
 public enum RoadType {
-  COASTLINE(101, 0.1, new Color(0,128,0), 1),
+  COASTLINE(101, 0.1, new Color(0,0,75), 1),
   MOTORVEJ(1, 0.3, new Color(255,0,0), 1, TransportationType.CAR),
   PROJ_MOTORVEJ(21, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
   MOTORVEJSTUNNEL(41, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
@@ -37,7 +37,7 @@ public enum RoadType {
   VEJ_3_TIL_6M(5, 0.1, new Color(150,150,150), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   PROJ_VEJ_3_TIL_6M(25, 0.1, new Color(150,150,150), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   
-  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  ANDEN_VEJ(6, 0.1, new Color(64,128,128), 8, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   ANDEN_VEJAFKOERSEL(35, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   PROJ_VEJ_UNDER_3M(26, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   ANDEN_VEJTUNNEL(45, 0.1, new Color(64,128,128), 16, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),

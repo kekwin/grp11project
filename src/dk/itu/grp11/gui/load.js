@@ -23,6 +23,10 @@ jQuery(function($){
   var requests = 0;
   var requestsDone = 0;
   var maxNumToRemove = 800;
+  var actionDelay = 1000;
+  var runningDelay = setTimeout(function() {}, 0);
+  var ratio = 1;
+  var wider = null;
   
   /************************************************************************************************
    * Functions
@@ -42,6 +46,18 @@ jQuery(function($){
         type: "GET",
         data: "sessionID="+sessionID
       }).done(function(resp) {
+        var split = resp.split(" ");
+        var svg = document.getElementById('map');
+        var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttributeNS(null, 'fill-opacity', '1');
+        group.setAttributeNS(null, 'fill', 'rgb(255,255,255)');
+        group.setAttributeNS(null, 'stroke', 'rgb(0,0,0)');
+        group.setAttributeNS(null, 'stroke-width', '0.05%');
+        svg.appendChild(group);
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttributeNS(null, 'class', 'OUTLINE');
+        path.setAttributeNS(null, 'd', 'M'+split[0]+','+split[1]+'L'+(parseInt(split[0])+parseInt(split[2]))+','+split[1]+'L'+(parseInt(split[0])+parseInt(split[2]))+','+(parseInt(split[1])+parseInt(split[3]))+'L'+split[0]+','+(parseInt(split[1])+parseInt(split[3]))+'Z');
+        group.appendChild(path);
         setViewBox(resp);
         $.ajax({
           url: "setCanvas",
@@ -49,16 +65,8 @@ jQuery(function($){
           type: "GET",
           data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
         }).done(function() {
-          $.ajax({
-            url: "getCoastLine",
-            cache: false,
-            type: "GET",
-            data: "sessionID="+sessionID
-          }).done(function(resp) {
-            refreshSVG();
-            eval(resp);
-            setFullVariables();
-          });
+          refreshSVG();
+          setFullVariables();
         });
       });
     });
@@ -74,23 +82,39 @@ jQuery(function($){
   }
   function setViewBox(resp) {
     var split = resp.split(" ");
-    if ($(window).height() < $(window).width()) {
-      yStart = Math.abs(parseInt(split[1]));
+    if (wider == true && wider != null) {
+      xDiff = Math.floor(parseInt(split[3])/ratio);
+      xStart = Math.ceil(parseInt(split[0])+((parseInt(split[2])-xDiff)/2));
       yDiff = parseInt(split[3]);
-      ratio = $(window).width()/$(window).height();
-      xDiff = Math.ceil(yDiff*ratio);
-      xStart = Math.floor(parseInt(split[0])-((xDiff-parseInt(split[2]))/2));
-      zoomLevelUrl = "getZoomLevelX";
-    } else {
-      xStart = Math.abs(parseInt(split[0]));
+      yStart = parseInt(split[1]);
+    } else if (wider != null) {
+      yDiff = Math.floor(parseInt(split[2])/ratio);
+      yStart = Math.ceil(parseInt(split[1])+((parseInt(split[3])-yDiff)/2));
       xDiff = parseInt(split[2]);
+      xStart = parseInt(split[0]);
+    } else {
+      xStart = parseInt(split[0]);
+      yStart = parseInt(split[1]);
+      xDiff = parseInt(split[2]);
+      yDiff = parseInt(split[3]);
+    }
+    if ($(window).height() < $(window).width()) {
+      ratio = $(window).width()/$(window).height();
+      xDiff2 = Math.ceil(yDiff*ratio);
+      yDiff2 = yDiff;
+      xStart = Math.floor(xStart-((xDiff2-xDiff)/2));
+      zoomLevelUrl = "getZoomLevelX";
+      wider = true;
+    } else {
       ratio = $(window).height()/$(window).width();
-      yDiff = Math.ceil(xDiff*ratio);
-      yStart = Math.floor(parseInt(split[1])-((yDiff-parseInt(split[3]))/2));
+      yDiff2 = Math.ceil(xDiff*ratio);
+      xDiff2 = xDiff;
+      yStart = Math.floor(yStart-((yDiff2-yDiff)/2));
       zoomLevelUrl = "getZoomLevelY";
+      wider = false;
     }
     var svg = document.getElementById("map");
-    svg.setAttribute("viewBox", xStart+" "+yStart+" "+xDiff+" "+yDiff);
+    svg.setAttribute("viewBox", xStart+" "+yStart+" "+xDiff2+" "+yDiff2);
   }
   function createSVG() {
     $('#map').remove();
@@ -132,31 +156,34 @@ jQuery(function($){
     });
   }
   function refreshSVG() {
-    var svg = document.getElementById("map");
-    var viewbox = svg.getAttribute("viewBox");
-    var split = viewbox.split(" ");
-    var xStart = parseInt(split[0]);
-    var yStart = parseInt(split[1]);
-    var xDiff = parseInt(split[2]);
-    var yDiff = parseInt(split[3]);
-    var xIncr = Math.ceil(xDiff/slices);
-    var yIncr = Math.ceil(yDiff/slices);
-    $.ajax({
-      url: "setCanvas",
-      cache: false,
-      type: "GET",
-      data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
-    }).done(function( zoom ) {
+    clearTimeout(runningDelay);
+    runningDelay = setTimeout(function() {
+      var svg = document.getElementById("map");
+      var viewbox = svg.getAttribute("viewBox");
+      var split = viewbox.split(" ");
+      var xStart = parseInt(split[0]);
+      var yStart = parseInt(split[1]);
+      var xDiff = parseInt(split[2]);
+      var yDiff = parseInt(split[3]);
+      var xIncr = Math.ceil(xDiff/slices);
+      var yIncr = Math.ceil(yDiff/slices);
       $.ajax({
-        url: zoomLevelUrl,
+        url: "setCanvas",
         cache: false,
         type: "GET",
-        data: "sessionID="+sessionID,
+        data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
       }).done(function( zoom ) {
-        zoomLevel = parseInt(zoom);
-        load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoom);
+        $.ajax({
+          url: zoomLevelUrl,
+          cache: false,
+          type: "GET",
+          data: "sessionID="+sessionID,
+        }).done(function( zoom ) {
+          zoomLevel = parseInt(zoom);
+          load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoom);
+        });
       });
-    });
+    }, actionDelay);
   }
   function load(xStart, yStart, xDiff, yDiff, xIncr, yIncr, zoomLevel) {
     $.xhrPool.abortAll;
@@ -241,14 +268,49 @@ jQuery(function($){
       xDiff = Math.ceil(xDiff/(1-zoomPercentage));
       yDiff = Math.ceil(yDiff/(1-zoomPercentage));
     }
-    xDiff = validateXDiff(xDiff);
-    yDiff = validateYDiff(yDiff);
+    zoomSVGCoords(xStart, yStart, xDiff, yDiff, 200, false);
+  }
+  function zoomSVGCoords(xStart, yStart, xDiff, yDiff, time, directCall) {
+    if (directCall == true) {
+      if (wider) {
+        if (yDiff > xDiff) {
+          yDiff2 = yDiff;
+          xDiff2 = yDiff*ratio;
+          xStart = xStart-((xDiff2-xDiff)/2)
+        } else if (xDiff > yDiff) {
+          xDiff2 = xDiff;
+          yDiff2 = xDiff/ratio;
+          yStart = yStart-((yDiff2-yDiff)/2);
+        }
+      } else {
+        if (xDiff < yDiff) {
+          xDiff2 = xDiff;
+          yDiff2 = xDiff*ratio;
+          yStart = yStart-((yDiff2-yDiff)/2);
+        } else if (yDiff < xDiff) {
+          yDiff2 = yDiff;
+          xDiff2 = yDiff/ratio;
+          xStart = xStart-((xDiff2-xDiff)/2);
+        }
+      }
+    } else {
+      xDiff2 = xDiff;
+      yDiff2 = yDiff;
+    }
+    
+    xStart = Math.floor(xStart);
+    yStart = Math.floor(yStart);
+    xDiff = Math.ceil(xDiff);
+    yDiff = Math.ceil(yDiff);
+
+    xDiff = validateXDiff(xDiff2);
+    yDiff = validateYDiff(yDiff2);
     xStart = validateXStart(xStart, xDiff);
     yStart = validateYStart(yStart, yDiff);
     $('#map').stop();
     $('#map').animate({
       svgViewBox: xStart+' '+yStart+' '+xDiff+' '+yDiff
-    }, 200, function() {
+    }, time, function() {
       refreshSVG();
     });
   }
@@ -302,6 +364,21 @@ jQuery(function($){
     else if (document.selection) document.selection.empty();
   }
   
+  function loadCoastLine() {
+    $.ajax({
+      url: "getCoastLine",
+      cache: false,
+      type: "GET",
+      data: "sessionID="+sessionID
+    }).done(function(resp) {
+      eval(resp);
+    });
+  }
+  
+  function removeCoastLine() {
+    $('.COASTLINE').remove();
+  }
+  
   $.xhrPool = [];
   $.xhrPool.abortAll = function() {
       $(this).each(function(idx, jqXHR) {
@@ -323,7 +400,11 @@ jQuery(function($){
           var index = $.xhrPool.indexOf(jqXHR);
           if (index > -1) {
               $.xhrPool.splice(index, 1);
-              if ($.xhrPool.length == 0) $('.loader').css('display', 'none');
+              if ($.xhrPool.length == 0) {
+                $('.loader').css('display', 'none');
+                var svg = $('#map-container').svg('get');
+                document.getElementById('map').forceRedraw();
+              }
           }
       }
   });
@@ -354,27 +435,37 @@ jQuery(function($){
   $('#minus').click(function() {
     zoomSVG("out", 0, 0);
   });
+  $('#coastline').click(function() {
+    if($(this).is(':checked')) if (confirm("Turning on coastline can have a performance impact on slower computers. Are you sure you wish to do this?")) {
+      loadCoastLine();
+    } else {
+      $(this).attr('checked', false);
+    }
+    else removeCoastLine();
+  });
   
   $(document).bind('keydown',function(k) {
-    switch(k.keyCode) {
-    case 37:
-      moveSVG("west");
-      break;
-    case 38:
-      moveSVG("north");
-      break;
-    case 39:
-      moveSVG("east");
-      break;
-    case 40: 
-      moveSVG("south");
-      break;
-    case 107:
-      zoomSVG("in", 0, 0);
-      break;
-    case 109: 
-      zoomSVG("out", 0, 0);
-      break;
+    if ($("*:focus").attr("id") == undefined) {
+      switch(k.keyCode) {
+      case 37:
+        moveSVG("west");
+        break;
+      case 38:
+        moveSVG("north");
+        break;
+      case 39:
+        moveSVG("east");
+        break;
+      case 40: 
+        moveSVG("south");
+        break;
+      case 107:
+        zoomSVG("in", 0, 0);
+        break;
+      case 109: 
+        zoomSVG("out", 0, 0);
+        break;
+      }
     }
   });
   
@@ -386,10 +477,13 @@ jQuery(function($){
   });
   
   $(document).dblclick(function(e) {
-    var x = calculateCoordX(e.pageX);
-    var y = calculateCoordY(e.pageY);
-    zoomSVG("in", x, y);
-    clearSelection();
+    var element = $(e.target).closest('.map');
+    if (element.length) {
+      var x = calculateCoordX(e.pageX);
+      var y = calculateCoordY(e.pageY);
+      zoomSVG("in", x, y);
+      clearSelection();
+    }
   });
   
   $("#from").autocomplete({
@@ -401,9 +495,23 @@ jQuery(function($){
 	minLength: 2,
   });
   
-  $(".overlay form input[type=submit]").click(function(e) {
+  $("#routeform").submit(function(e) {
 	e.preventDefault();
-	alert("Do stuff");
+	$.ajax({
+      url: "getRoute",
+      cache: false,
+      type: "GET",
+      data: "sessionID="+sessionID+"&from="+encodeURI($('#from').val())+"&to="+encodeURI($('#to').val())+"&type="+$("input:radio[name='type']:checked").val()+"&ferries="+$('#ferries').is(':checked')+"&highways="+$('#highways').is(':checked'),
+    }).done(function(resp) {
+      if ($('#ROUTE').length) $('#ROUTE').remove();
+	    eval(resp);
+    });
+  });
+  
+  $(window).resize(function() {
+    var svg = document.getElementById("map");
+    setViewBox(svg.getAttribute("viewBox"));
+    refreshSVG();
   });
   
 });
