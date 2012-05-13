@@ -6,6 +6,9 @@ html {
 body {
   font: 13px/1.231 arial,helvetica,clean,sans-serif;
 }
+abbr { /* Removes underline in Gecko */
+  border-bottom-width: 0;
+}
 #map-container {
   position: absolute;
   top: 0;

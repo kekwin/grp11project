@@ -117,6 +117,8 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("getRoute") != -1) {
       Road from = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("from"), "UTF-8").toLowerCase());
       Road to = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("to"), "UTF-8").toLowerCase());
+      boolean ferry = params.get("ferry").equals("true");
+      boolean highway = params.get("highway").equals("true");
       
       //TODO route debug
       System.out.println("from: " + from);
@@ -124,10 +126,10 @@ public class RequestParser extends Thread {
       System.out.println("to: " + to);
       System.out.println("to(input): " + URLDecoder.decode(params.get("to"), "UTF-8").toLowerCase());
       System.out.println("type: " + params.get("type"));
-      System.out.println("ferries: " + params.get("ferries") + "   highways: " + params.get("highways"));
+      System.out.println("ferry: " + ferry + "   highway: '" + highway + "'");
       
-      boolean ferries = Boolean.getBoolean(params.get("ferries"));
-      boolean highways = Boolean.getBoolean(params.get("highways"));
+      
+      
       TransportationType trans; boolean fastest = false;
       if(params.get("type").equals("walk")) {
         trans = TransportationType.WALK;
@@ -140,9 +142,9 @@ public class RequestParser extends Thread {
         fastest = true; //The time data is only for cars
       }
       
-      String route;
+      String route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), trans, fastest, ferry, highway);
       if(from == null || to == null) route = "alert('Could not calculate route. From- or to-road is not valid.');";
-      else route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), trans, fastest, ferries, highways);
+      else if(route.equals("")) route = "alert('No such route exist. If you have........');";
       
       outStream = new ByteArrayInputStream(route.getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {

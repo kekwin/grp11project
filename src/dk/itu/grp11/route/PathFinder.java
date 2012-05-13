@@ -83,7 +83,8 @@ public class PathFinder {
       // transportation type
       if (((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) || transType == TransportationType.WALK)
           && r.getType().isAllowed(transType)) {
-        // TODO calculate for highways and ferries
+        if(!ferries && r.getType() == RoadType.FAERGEFORBINDELSE) continue;
+        if(!highways && (r.getType() == RoadType.MOTORVEJ || r.getType() == RoadType.MOTORVEJSAFKOERSEL || r.getType() == RoadType.MOTORVEJSTUNNEL)) continue;
         int w = r.getTo();
         double weight, sWeight;
         if (time) {

@@ -147,60 +147,72 @@ public class Map {
     }
     return outputBuilder;
 	}
-	
+	/**
+	 * 
+	 * @param point1
+	 * @param point2
+	 * @param transportation
+	 * @param fastestroute
+	 * @param ferries
+	 * @param highways
+	 * @return JavaScript commands to draw the route (and zoom in to it). If no such route exist an empty string will be returned.
+	 */
 	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute, boolean ferries, boolean highways) {
 	  StringBuffer outputBuilder = new StringBuffer();
     outputBuilder.append("var svg = $('#map-container').svg('get');\n");
 	  Parser p = Parser.getParser();
     Network g = p.network();
     PathFinder pf = new PathFinder(g, point1, fastestroute, transportation, ferries, highways);
-    Iterable<Road> roads = pf.pathTo(point2);
-    
-    //Converting time
-    String timeUnit = "min. ";
-    int time = (int) Math.round(pf.timeTo(point2));
-    if(time < 1) time = 1;
-    if(time > 59) { timeUnit = "t."; time /= 60; }
-    
-    //Converting distance
-    String distUnit = "m ";
-    int distance = (int) Math.round(pf.distTo(point2));
-    if(distance < 1) distance = 1;
-    if(distance > 999) { distance /= 1000; distUnit = "km"; }
-    
-    outputBuilder.append("$('#dist').text('"+distance+distUnit+"');\n");
-    if(transportation == TransportationType.CAR) outputBuilder.append("$('#time').text('"+time+timeUnit+"');\n");
-    else outputBuilder.append("$('#time').text('n/a');\n");
-    
-    outputBuilder.append("$('#routeinfo').animate({opacity: 1}, 1500);\n");
-    outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
-    String command = "move";
-    double lastX = points.get(point2).getX();
-    double lastY = points.get(point2).getY();
-    double[] currX = new double[2], currY = new double[2];
-    for (Road road : roads) { 
-      if (lastX == points.get(road.getFrom()).getX() && lastY == points.get(road.getFrom()).getY()) {
-        currX[0] = points.get(road.getFrom()).getX();
-        currX[1] = points.get(road.getTo()).getX();
-        currY[0] = points.get(road.getFrom()).getY();
-        currY[1] = points.get(road.getTo()).getY();
-      } else if (lastX == points.get(road.getTo()).getX() && lastY == points.get(road.getTo()).getY()) {
-        currX[0] = points.get(road.getTo()).getX();
-        currX[1] = points.get(road.getFrom()).getX();
-        currY[0] = points.get(road.getTo()).getY();
-        currY[1] = points.get(road.getFrom()).getY();
+    if(pf.hasPathTo(point2)) {
+      Iterable<Road> roads = pf.pathTo(point2);
+      
+      //Converting time
+      String timeUnit = "min. ";
+      int time = (int) Math.round(pf.timeTo(point2));
+      if(time < 1) time = 1;
+      if(time > 59) { timeUnit = "t."; time /= 60; }
+      
+      //Converting distance
+      String distUnit = "m ";
+      int distance = (int) Math.round(pf.distTo(point2));
+      if(distance < 1) distance = 1;
+      if(distance > 999) { distance /= 1000; distUnit = "km"; }
+      
+      outputBuilder.append("$('#dist').text('"+distance+distUnit+"');\n");
+      if(transportation == TransportationType.CAR) outputBuilder.append("$('#time').text('"+time+timeUnit+"');\n");
+      else outputBuilder.append("$('#time').text('n/a');\n");
+      
+      outputBuilder.append("$('#routeinfo').animate({opacity: 1}, 1500);\n");
+      outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
+      String command = "move";
+      double lastX = points.get(point2).getX();
+      double lastY = points.get(point2).getY();
+      double[] currX = new double[2], currY = new double[2];
+      for (Road road : roads) { 
+        if (lastX == points.get(road.getFrom()).getX() && lastY == points.get(road.getFrom()).getY()) {
+          currX[0] = points.get(road.getFrom()).getX();
+          currX[1] = points.get(road.getTo()).getX();
+          currY[0] = points.get(road.getFrom()).getY();
+          currY[1] = points.get(road.getTo()).getY();
+        } else if (lastX == points.get(road.getTo()).getX() && lastY == points.get(road.getTo()).getY()) {
+          currX[0] = points.get(road.getTo()).getX();
+          currX[1] = points.get(road.getFrom()).getX();
+          currY[0] = points.get(road.getTo()).getY();
+          currY[1] = points.get(road.getFrom()).getY();
+        }
+        for (int i = 0; i < currX.length && i < currY.length; i++) {
+          outputBuilder.append("."+command+"("+currX[i]+", "+currY[i]+")");
+          if (command.equals("move")) command = "line";
+        }
+        lastX = currX[1];
+        lastY = currY[1];
       }
-      for (int i = 0; i < currX.length && i < currY.length; i++) {
-        outputBuilder.append("."+command+"("+currX[i]+", "+currY[i]+")");
-        if (command.equals("move")) command = "line";
-      }
-      lastX = currX[1];
-      lastY = currY[1];
+      outputBuilder.append(",{stroke: 'rgb("+RoadType.ROUTE.getColorAsString()+")', strokeWidth: '"+RoadType.ROUTE.getStroke()+"%', fillOpacity: 0, class: 'ROUTE', id: 'ROUTE'});\n");
+      outputBuilder.append("zoomSVGCoords("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", 2000, true);");
+      //outputBuilder.append("svg.rect("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", {stroke: 'rgb(0,0,0)', strokeWidth: '0.2%', fill: 'none'});");
+      return outputBuilder.toString();
     }
-    outputBuilder.append(",{stroke: 'rgb("+RoadType.ROUTE.getColorAsString()+")', strokeWidth: '"+RoadType.ROUTE.getStroke()+"%', fillOpacity: 0, class: 'ROUTE', id: 'ROUTE'});\n");
-    outputBuilder.append("zoomSVGCoords("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", 2000, true);");
-    //outputBuilder.append("svg.rect("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", {stroke: 'rgb(0,0,0)', strokeWidth: '0.2%', fill: 'none'});");
-    return outputBuilder.toString();
+    else return "";
 	}
 	
 	/**
