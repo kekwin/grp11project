@@ -282,8 +282,8 @@ public class Parser {
       if(postalCodes.get(r.getToZip()) != null)   //If we have the name for the postal code
         to = postalCodes.get(r.getToZip());       // - then replace it
       
-      String fromString = r.getName().toLowerCase(new Locale("ISO8859_1")) + " " + from.toLowerCase(new Locale("ISO8859_1"));
-      String toString = r.getName().toLowerCase(new Locale("ISO8859_1")) + " " + to.toLowerCase(new Locale("ISO8859_1"));
+      String fromString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + from.toLowerCase(new Locale("ISO8859_1"));
+      String toString = r.getName().toLowerCase(new Locale("ISO8859_1")) + ", " + to.toLowerCase(new Locale("ISO8859_1"));
       
       roadNames.put(fromString, r);
       roadNames.put(toString, r);
@@ -345,7 +345,7 @@ public class Parser {
   
   public SortedMap<String, Road> roadsWithPrefix(String prefix) {
     if(prefix.length() > 0) {
-        prefix = prefix.toLowerCase(new Locale("ISO8859_1")).replace(",", " ").replace("  ", " ");
+        prefix = prefix.toLowerCase(new Locale("ISO8859_1"));
         char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
         String end = prefix.substring(0, prefix.length()-1) + nextLetter;
         return roadNames.subMap(prefix, end);

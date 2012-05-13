@@ -144,7 +144,7 @@ public class RequestParser extends Thread {
       
       String route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), trans, fastest, ferry, highway);
       if(from == null || to == null) route = "alert('Could not calculate route. From- or to-road is not valid.');";
-      else if(route.equals("")) route = "alert('No such route exist. If you have........');";
+      else if(route.equals("")) route = "alert('No such route exist. If you have disabled either highways or ferries, try enabling them again.');";
       
       outStream = new ByteArrayInputStream(route.getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
