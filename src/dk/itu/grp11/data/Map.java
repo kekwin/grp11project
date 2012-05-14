@@ -68,7 +68,6 @@ public class Map {
 	*/
 	public String getPart(double x, double y, double w, double h, int zoomlevel, Session session) {
 	  StringBuffer outputBuilder = new StringBuffer();
-		outputBuilder.append("var svg = $('#map-container').svg('get');\n");
 
 		DynArray<RoadType> roadTypes = new DynArray<RoadType>(RoadType[].class);
 	  for(RoadType rt : RoadType.values()) {
@@ -78,7 +77,6 @@ public class Map {
     }
 		
 	  // Adding all calculated road types within the viewbox
-	  int startLen = outputBuilder.length();
 		for (RoadType roadType : roadTypes) {
   		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, x+w, roadType);
   		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(y, y+h, roadType);
@@ -87,12 +85,36 @@ public class Map {
   		HashSet<Road> roadsFound = roads.query2D(i2D);
   		
   		if (roadsFound.size() > 0) {
-  		  drawRoadSet(outputBuilder, roadsFound, session, roadType);
+  		  outputBuilder.append("var svg = document.getElementById('map');\n");
+        StringBuffer id = new StringBuffer();
+        StringBuffer path = new StringBuffer();
+  	    for (Road roadFound : roadsFound) {
+	        if (roadFound != null) {
+	          if (session != null) {
+	            synchronized(session) {
+	              if (!session.isRoadDrawn(roadFound.getId())) {
+	                id.append(roadFound.getId()+",");
+	                session.addRoadID(roadFound.getId());
+	                path.append("M"+points.get(roadFound.getFrom()).getX()+","+points.get(roadFound.getFrom()).getY()+"L"+points.get(roadFound.getTo()).getX()+","+points.get(roadFound.getTo()).getY()+"");
+	              }
+	            }
+	          }
+	        }
+	      }
+  	    if (id.length() > 0) {
+  	      outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
+	        outputBuilder.append("path.setAttributeNS(null, 'fill-opacity', '0');\n");
+	        outputBuilder.append("path.setAttributeNS(null, 'stroke', 'rgb("+roadType.getColorAsString()+")');\n");
+	        outputBuilder.append("path.setAttributeNS(null, 'stroke-width', '"+roadType.getStroke()+"%');\n");
+    	    outputBuilder.append("path.setAttributeNS(null, 'd', '"+path.toString()+"');");
+    	    outputBuilder.append("path.setAttributeNS(null, 'id', '"+id.toString()+"');");
+    	    outputBuilder.append("path.setAttributeNS(null, 'class', 'zoom"+roadType.getZoomLevel()+"');");
+    	    outputBuilder.append("svg.appendChild(path);");
+  	    }
   		}
 		}
 		
-		if (startLen < outputBuilder.length()) return outputBuilder.toString();
-		else return "";
+		return outputBuilder.toString();
 	}
 	
 	public String getCoastLine() {
@@ -121,32 +143,6 @@ public class Map {
 	  return outputBuilder.toString();
   }
 	
-	private StringBuffer drawRoadSet(StringBuffer outputBuilder, HashSet<Road> roadsFound, Session session, RoadType roadType) {
-	  int csLimit = 1000; //JavaScript CallStack limit
-    Iterator<Road> i = roadsFound.iterator();
-    while (i.hasNext()) {
-      StringBuffer id = new StringBuffer();
-      StringBuffer path = new StringBuffer();
-      path.append("var path = svg.createPath();\nsvg.path(path");
-      for (int j = 0; j < csLimit/2 && i.hasNext(); j++) {
-        Road roadFound = i.next();
-        if (roadFound != null) {
-          if (session != null) {
-            synchronized(session) {
-              if (!session.isRoadDrawn(roadFound.getId())) {
-                id.append(roadFound.getId()+",");
-                session.addRoadID(roadFound.getId());
-                path.append(".move("+points.get(roadFound.getFrom()).getX()+", "+points.get(roadFound.getFrom()).getY()+").line("+points.get(roadFound.getTo()).getX()+", "+points.get(roadFound.getTo()).getY()+")");
-              }
-            }
-          }
-        }
-      }
-      path.append(",{stroke: 'rgb("+roadType.getColorAsString()+")', strokeWidth: '"+roadType.getStroke()+"%', fillOpacity: 0, class: 'zoom"+roadType.getZoomLevel()+"', id: '"+id.toString()+"'});\n");
-      if (id.length() > 0) outputBuilder.append(path);
-    }
-    return outputBuilder;
-	}
 	/**
 	 * 
 	 * @param point1
@@ -189,11 +185,18 @@ public class Map {
       outputBuilder.append("$('#dist').text('"+distance+" "+distUnit+"');\n");
       outputBuilder.append("$('#time').text('"+hours+"h "+minutes+"m');\n");
       outputBuilder.append("$('#routeinfo').animate({opacity: 1}, 1500);\n");
-      outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
-      String command = "move";
+      outputBuilder.append("var svg = document.getElementById('map');\n");
+      outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
+      outputBuilder.append("path.setAttributeNS(null, 'fill-opacity', '0');\n");
+      outputBuilder.append("path.setAttributeNS(null, 'stroke', 'rgb("+RoadType.ROUTE.getColorAsString()+")');\n");
+      outputBuilder.append("path.setAttributeNS(null, 'stroke-width', '"+RoadType.ROUTE.getStroke()+"%');\n");
+      outputBuilder.append("path.setAttributeNS(null, 'class', 'ROUTE');");
+      outputBuilder.append("path.setAttributeNS(null, 'id', 'ROUTE');");
+      String command = "M";
       double lastX = points.get(point2).getX();
       double lastY = points.get(point2).getY();
       double[] currX = new double[2], currY = new double[2];
+      StringBuffer dataString = new StringBuffer();
       for (Road road : roads) { 
         if (lastX == points.get(road.getFrom()).getX() && lastY == points.get(road.getFrom()).getY()) {
           currX[0] = points.get(road.getFrom()).getX();
@@ -207,13 +210,15 @@ public class Map {
           currY[1] = points.get(road.getFrom()).getY();
         }
         for (int i = 0; i < currX.length && i < currY.length; i++) {
-          outputBuilder.append("."+command+"("+currX[i]+", "+currY[i]+")");
-          if (command.equals("move")) command = "line";
+          dataString.append(""+command+""+currX[i]+", "+currY[i]+"");
+          if (command.equals("M")) command = "L";
         }
         lastX = currX[1];
         lastY = currY[1];
       }
-      outputBuilder.append(",{stroke: 'rgb("+RoadType.ROUTE.getColorAsString()+")', strokeWidth: '"+RoadType.ROUTE.getStroke()+"%', fillOpacity: 0, class: 'ROUTE', id: 'ROUTE'});\n");
+      outputBuilder.append("path.setAttributeNS(null, 'd', '"+dataString.toString()+"');");
+      dataString = null;
+      outputBuilder.append("svg.appendChild(path);");
       outputBuilder.append("zoomSVGCoords("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", 2000, true);");
       //outputBuilder.append("svg.rect("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", {stroke: 'rgb(0,0,0)', strokeWidth: '0.2%', fill: 'none'});");
       return outputBuilder.toString();
