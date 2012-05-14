@@ -47,6 +47,7 @@ public class Parser {
   private static File coastFile;
   private static File coastTest;
   private static File coastFileSweden;
+  private static File coastFileGermany;
   
   private static EnumMap<MapBound, Double> mapBounds;
   private static HashMap<Integer, Point> points;
@@ -63,13 +64,14 @@ public class Parser {
    * @param pointFile A java.File object referencing the file containing nodes.
    * @param roadFile A java.File object referencing the file containing connections.
    */
-  private Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest, File coastFileSweden) {
+  private Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest, File coastFileSweden, File coastFileGermany) {
     Parser.pointFile = pointFile;
     Parser.roadFile = roadFile;
     Parser.postalCodesFile = postalCodesFile;
     Parser.coastFile = coastFile;
     Parser.coastTest = coastTest;
     Parser.coastFileSweden = coastFileSweden;
+    Parser.coastFileGermany = coastFileGermany;
     
     mapBounds = new EnumMap<MapBound, Double>(MapBound.class);
     mapBounds.put(MapBound.MINX, 1000000.0);
@@ -86,7 +88,8 @@ public class Parser {
       File coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
       File coastTest = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm");
       File coastFileSweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
-      ps = new Parser(points, roads, zip, coast, coastTest, coastFileSweden);
+      File coastFileGermany = new File("src\\dk\\itu\\grp11\\files\\coastLineGermany.osm");
+      ps = new Parser(points, roads, zip, coast, coastTest, coastFileSweden, coastFileGermany);
       ps.parsePoints();
       ps.parsePostalCodes();
       ps.parseRoads(ps.points());
@@ -102,15 +105,16 @@ public class Parser {
    * @param connectionFile
    * @return
    */
-  public static Parser getTestParser(File points, File roads, File zip, File coast, File sweden) {
+  public static Parser getTestParser(File points, File roads, File zip, File coast, File sweden, File germany) {
     if (ps == null) {
       if(points == null) points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       if(roads == null) roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       if(zip == null) zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
       if(coast == null) coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
       if(sweden == null) sweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
+      if(germany == null) germany = new File("src\\dk\\itu\\grp11\\files\\coastLineGermany.osm");
       
-      ps = new Parser(points, roads, zip, coast, coastTest, sweden);
+      ps = new Parser(points, roads, zip, coast, coastTest, sweden, germany);
       ps.parsePoints();
       ps.parsePostalCodes();
       ps.parseRoads(ps.points());
@@ -209,6 +213,7 @@ public class Parser {
       };
       saxParser.parse(coastFile, handler);
       saxParser.parse(coastFileSweden, handler);
+      saxParser.parse(coastFileGermany, handler);
       
       
 
