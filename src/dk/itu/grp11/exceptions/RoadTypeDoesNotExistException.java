@@ -1,8 +1,7 @@
 package dk.itu.grp11.exceptions;
 
+@SuppressWarnings("serial") //We never serialize our class
 public class RoadTypeDoesNotExistException extends RuntimeException {
-  private static final long serialVersionUID = -8569251840278245242L;
-
   public RoadTypeDoesNotExistException() {}
   public RoadTypeDoesNotExistException(String s) { super(s); }
 }

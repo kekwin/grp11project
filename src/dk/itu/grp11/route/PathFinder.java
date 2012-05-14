@@ -78,13 +78,23 @@ public class PathFinder {
    *          the point
    */
   private void relax(Network G, int p) {
-    for (Road r : G.adj(p)) {
+    for (Road r : G.adjacent(p)) {
       // Only relax if the road is allowed to be driven/walked on by the
-      // transportation type
+      // transportation type, in the allowed direction
       if (((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) || transType == TransportationType.WALK)
           && r.getType().isAllowed(transType)) {
+        
+        //Should ferries be included in the route or not?
         if(!ferries && r.getType() == RoadType.FAERGEFORBINDELSE) continue;
+        
+        //Should highways be included in the route or not?
         if(!highways && (r.getType() == RoadType.MOTORVEJ || r.getType() == RoadType.MOTORVEJSAFKOERSEL || r.getType() == RoadType.MOTORVEJSTUNNEL)) continue;
+        
+        //If not a car, motortrafikveje are not allowed
+        if((transType == TransportationType.WALK || transType == TransportationType.BICYCLE)
+           && (r.getType() == RoadType.MOTORTRAFIKVEJ || r.getType() == RoadType.MOTORTRAFIKVEJSARKOERSEL || r.getType() == RoadType.MOTORTRAFIKVEJSTUNNEL)) continue;
+        
+        //Relax
         int w = r.getTo();
         double weight, sWeight;
         if (time) {
