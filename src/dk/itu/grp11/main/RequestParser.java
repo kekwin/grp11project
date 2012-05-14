@@ -32,7 +32,7 @@ import dk.itu.grp11.enums.TransportationType;
 public class RequestParser extends Thread {
   
   private Map map;
-  String request;
+  private String request;
   
   private Socket con;
   private BufferedReader in;

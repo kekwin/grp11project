@@ -32,7 +32,7 @@ public class FileServer {
    * @param port The port to listen to
    * @param map The map to get data from
    */
-  public FileServer(Map map) {
+  private FileServer(Map map) {
     this.map = map;
   }
   

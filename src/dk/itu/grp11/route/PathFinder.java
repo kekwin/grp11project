@@ -78,7 +78,7 @@ public class PathFinder {
    *          the point
    */
   private void relax(Network G, int p) {
-    for (Road r : G.adj(p)) {
+    for (Road r : G.adjacent(p)) {
       // Only relax if the road is allowed to be driven/walked on by the
       // transportation type
       if (((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) || transType == TransportationType.WALK)
