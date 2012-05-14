@@ -2,19 +2,18 @@ package dk.itu.grp11.data;
 
 public class LatLonToUTM {
 
-	  private static final double a = 6378137; 
-	  private static final double b = 6356752.314; 
-	  //private static final double f = (a-b)/a;
-	  //private static final double invf = 1/f;
-	  //private static final double rm = Math.sqrt(a*b);
-	  private static final double k0 = 0.9996;
-	  private static final double e = Math.sqrt(1-(b/a)*(b/a));
-	  private static final double ee = (e*e)/(1-e*e);
+
 	  //TODO javadoc
 	  // Math for the Formula is found here: http://www.uwgb.edu/dutchs/usefuldata/UTMFormulas.HTM
 	  // It is very complicated.
 	  // Here its made into java code, and seems to work, but i have trouble with my eclipse and will have to test it later
 	  public static double[] convert(double lat, double lon) {
+	    double a = 6378137; 
+	    double b = 6356752.314; 
+	    double k0 = 0.9996;
+	    double e = Math.sqrt(1-(b/a)*(b/a));
+	    double ee = (e*e)/(1-e*e);
+	    
 	    double pos[] = new double[2];
 	    double latr = (lat*Math.PI)/180;
 	    // Not sure why longtitude is never used, seems weird. But its the same in the given formula..

@@ -37,7 +37,7 @@ public class Map {
 	* @param points All points in the network
 	* @param roads All roads in the network
 	*/
-	public Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, HashSet<LinkedList<Integer>> coastline) {
+	private Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, HashSet<LinkedList<Integer>> coastline) {
 	  this.points = points;
 		this.roads = roads;
 		this.coastline = coastline;

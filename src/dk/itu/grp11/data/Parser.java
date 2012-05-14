@@ -53,17 +53,17 @@ public class Parser {
   private static DimensionalTree<Double, RoadType, Road> roads;
   private static HashMap<Integer, String> postalCodes;
   private static SortedMap<String, Road> roadNames;
-  private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>();
+  private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>(); //TODO Hvorfor LinkedList og ikke vore egen DynArray?
   private static Network graph;
-  public static int pointsOffset = 800000;
-  public static int mapBoundOffset = 50000;
+  private static int pointsOffset = 800000;
+  private static int mapBoundOffset = 50000;
 
   /**
    * 
    * @param pointFile A java.File object referencing the file containing nodes.
    * @param roadFile A java.File object referencing the file containing connections.
    */
-  public Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest, File coastFileSweden) {
+  private Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest, File coastFileSweden) {
     Parser.pointFile = pointFile;
     Parser.roadFile = roadFile;
     Parser.postalCodesFile = postalCodesFile;
@@ -260,7 +260,7 @@ public class Parser {
    * @return A Road object containing the information from the line.
    */
   //TODO Fix stuff - Anders
-  private static Road createRoad(String input) {
+  private Road createRoad(String input) {
     String[] inputSplit = input.split(",");
     Road r = new Road(
         Integer.parseInt(inputSplit[0]),                                    // 0 = id of from point
@@ -299,7 +299,7 @@ public class Parser {
    *          A line from the kdv_node_unload.txt document.
    * @return A Point object containing the information from the line.
    */
-  private static Point createPoint(String input) {
+  private Point createPoint(String input) {
     String[] inputSplit = input.split(",");
     return new Point(
         Integer.parseInt(inputSplit[2]),    //2 = id of the point
@@ -353,9 +353,9 @@ public class Parser {
     return roadNames;
   }
   
-  public static String mapToJquery(SortedMap<String, Road> map) {
+  public static String mapToJquery(SortedMap<String, Road> roadNames) {
     String jq = "[ ";
-    for(Entry<String, Road> e : map.entrySet()) {
+    for(Entry<String, Road> e : roadNames.entrySet()) {
       Road r = e.getValue();
       String from = ""+r.getFromZip();
       if(postalCodes.get(r.getFromZip()) != null)
