@@ -19,11 +19,11 @@ public enum RoadType {
   MOTORVEJSTUNNEL(41, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
   FAERGEFORBINDELSE(80, 0.1, new Color(0,0,255), 1, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   
-  MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 2, TransportationType.CAR),
-  PROJ_MOTORTRAFIKVEJ(22, 0.1, new Color(0,255,0), 2, TransportationType.CAR),
-  MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 2, TransportationType.CAR),
-  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 2, TransportationType.CAR),
+  MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 1, TransportationType.CAR),
+  PROJ_MOTORTRAFIKVEJ(22, 0.1, new Color(0,255,0), 1, TransportationType.CAR),
+  MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 1, TransportationType.CAR),
+  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 1, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
   
   SEKUNDAERRUTE_OVER_6M(4, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   MOTORVEJSAFKOERSEL(31, 0.1, new Color(255,100,100), 4, TransportationType.CAR),
@@ -71,7 +71,7 @@ public enum RoadType {
     }
   }
   
-  RoadType(int id, double stroke, Color color, int zoomLevel, TransportationType... transportation) {
+  private RoadType(int id, double stroke, Color color, int zoomLevel, TransportationType... transportation) {
     this.id = id;
     this.stroke = stroke;
     this.color = color;
