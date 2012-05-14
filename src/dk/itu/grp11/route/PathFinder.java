@@ -107,6 +107,7 @@ public class PathFinder {
     }
   }
 
+  //TODO javadoc deprecated
   /**
    * Returns the distance to a given point. If the time boolean was set to false
    * in the constructor, the distance will be the shortest possible. Otherwise
@@ -124,9 +125,6 @@ public class PathFinder {
   }
 
   /**
-   * Returns the shortest time to a given point. If the time boolean was set to
-   * true in the constructor, the time will be the shortest possible. Otherwise
-   * it will be the time of the route of shortest distance.
    * 
    * @param p
    *          The point

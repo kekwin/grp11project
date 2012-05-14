@@ -165,23 +165,29 @@ public class Map {
     PathFinder pf = new PathFinder(g, point1, fastestroute, transportation, ferries, highways);
     if(pf.hasPathTo(point2)) {
       Iterable<Road> roads = pf.pathTo(point2);
-      
-      //Converting time
-      String timeUnit = "min. ";
-      int time = (int) Math.round(pf.timeTo(point2));
-      if(time < 1) time = 1;
-      if(time > 59) { timeUnit = "t."; time /= 60; }
+      double actualTime = pf.timeTo(point2);
       
       //Converting distance
-      String distUnit = "m ";
+      String distUnit = "m";
       int distance = (int) Math.round(pf.distTo(point2));
       if(distance < 1) distance = 1;
       if(distance > 999) { distance /= 1000; distUnit = "km"; }
       
-      outputBuilder.append("$('#dist').text('"+distance+distUnit+"');\n");
-      if(transportation == TransportationType.CAR) outputBuilder.append("$('#time').text('"+time+timeUnit+"');\n");
-      else outputBuilder.append("$('#time').text('n/a');\n");
+      //If the transportation type is not a car, we calculate the time
+      int bicylceSpeed = 20;
+      int walkSpeed = 5;
+      if(transportation == TransportationType.BICYCLE) actualTime = ((pf.distTo(point2)/1000) / bicylceSpeed)*60;
+      else if(transportation == TransportationType.WALK) actualTime = ((pf.distTo(point2)/1000) / walkSpeed)*60;
       
+      //Converting time
+      int time = (int) Math.round(actualTime);
+      if(time < 1) time = 1;
+      String hours = (time / 60)+"";
+      String minutes = (time % 60)+"";
+      
+
+      outputBuilder.append("$('#dist').text('"+distance+" "+distUnit+"');\n");
+      outputBuilder.append("$('#time').text('"+hours+"h "+minutes+"m');\n");
       outputBuilder.append("$('#routeinfo').animate({opacity: 1}, 1500);\n");
       outputBuilder.append("var path = svg.createPath();\nsvg.path(path");
       String command = "move";
