@@ -2,6 +2,10 @@ package dk.itu.grp11.enums;
 
 import java.util.HashMap;
 
+/**
+ * Defines traffic directions of roads.
+ *
+ */
 public enum TrafficDirection {
   TO_FROM("tf"), FROM_TO("ft"), BOTH_WAYS(""), DRIVING_NOT_ALLOWED("n");
   
@@ -22,6 +26,12 @@ public enum TrafficDirection {
     return id;
   }
   
+  /**
+   * Converts a direction id to the corresponding TrafficDirection
+   * 
+   * @param id
+   * @return
+   */
   public static TrafficDirection getDirectionById(String id) {
     return options.get(id);
   }

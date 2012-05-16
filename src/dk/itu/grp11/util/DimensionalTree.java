@@ -2,9 +2,7 @@ package dk.itu.grp11.util;
 
 import java.util.HashSet;
 
-
-
-
+//TODO javadoc is not finished
 /**
  * 
  * @author Group 11
@@ -30,10 +28,6 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
         this.d3 = type;
         this.value = value;
     }
-  }
-  
-  public DimensionalTree() {
-    
   }
   
   /***********************************************************************

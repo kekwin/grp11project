@@ -91,7 +91,6 @@ public class PathFinderTest {
      * 599909 -> 599840 = 74.15599
      * 
      */
-    //TODO Not finished
   }
   
   @Test
