@@ -5,6 +5,7 @@ import java.util.HashSet;
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.enums.MapBound;
 
+//TODO javadoc
 public class Session {
   @SuppressWarnings("unused")
   private String sessionID;

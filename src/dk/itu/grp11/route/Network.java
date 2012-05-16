@@ -13,26 +13,12 @@ import dk.itu.grp11.util.DynArray;
  * 
  */
 public class Network {
-  private final int P; // Number of vertices (Point)
-  private int R; // Number of edges (Road)
+  private final int numPoints; // Number of vertices (Point)
+  private int numRoads; // Number of edges (Road)
   private DynArray<Road>[] adj; // Roads you can get to, from a point
 
-  // Casting, as arrays cannot be of a generic type. This is OK to suppress.
+  //Casting, as arrays cannot be of a generic type. This is OK to suppress.
   @SuppressWarnings("unchecked")
-  /**
-   * Creates a Network-graph with P points, but do not connect any of them.
-   * 
-   * @param P number of points
-   */
-  private Network(int P) {
-    this.P = P;
-    this.R = 0;
-    adj = new DynArray[P+1]; // +1 as IDs start at 1 not 0
-    for (int p = 0; p <= P; p++) {
-      adj[p] = new DynArray<Road>(Road[].class);
-    }
-  }
-
   /**
    * Creates a Network-graph, based upon the given roads.
    * 
@@ -43,7 +29,12 @@ public class Network {
    *          roads being added to the network
    */
   public Network(int numberOfPoints, Set<Road> roads) {
-    this(numberOfPoints);
+    this.numPoints = numberOfPoints;
+    this.numRoads = 0;
+    adj = new DynArray[numberOfPoints+1]; // +1 as IDs start at 1 not 0
+    for (int p = 0; p <= numberOfPoints; p++) {
+      adj[p] = new DynArray<Road>(Road[].class);
+    }
     for (Road r : roads) {
       addRoad(r);
     }
@@ -76,7 +67,7 @@ public class Network {
         r.getFromZip(), r.getToZip(), r.getType(), d, r.getLength(),
         r.getTime());
     adj[opposite.getFrom()].add(opposite);
-    R += 2; // +2 as the opposite road is also added
+    numRoads += 2; // +2 as the opposite road is also added
   }
 
   /**
@@ -87,15 +78,15 @@ public class Network {
    *          the point
    * @return adjacency list for point p
    */
-  public Iterable<Road> adj(int p) {
+  public Iterable<Road> adjacent(int p) {
     return adj[p];
   }
 
   public int numPoints() {
-    return P;
+    return numPoints;
   }
 
   public int numRoads() {
-    return R;
+    return numRoads;
   }
 }

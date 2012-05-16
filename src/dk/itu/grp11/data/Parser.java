@@ -44,32 +44,29 @@ public class Parser {
   private static File pointFile;
   private static File roadFile;
   private static File postalCodesFile;
-  private static File coastFile;
-  private static File coastTest;
-  private static File coastFileSweden;
+  private static File coastFiles[];
   
   private static EnumMap<MapBound, Double> mapBounds;
   private static HashMap<Integer, Point> points;
   private static DimensionalTree<Double, RoadType, Road> roads;
   private static HashMap<Integer, String> postalCodes;
   private static SortedMap<String, Road> roadNames;
-  private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>();
+  private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>(); //TODO Hvorfor LinkedList og ikke vores egen DynArray?
   private static Network graph;
-  public static int pointsOffset = 800000;
-  public static int mapBoundOffset = 50000;
+  private static int pointsOffset = 800000; //TODO lidt kommentar her
+  private static int mapBoundOffset = 50000; //TODO lidt kommentar her
 
+  //TODO javadoc ikke færdig her
   /**
    * 
    * @param pointFile A java.File object referencing the file containing nodes.
    * @param roadFile A java.File object referencing the file containing connections.
    */
-  public Parser(File pointFile, File roadFile, File postalCodesFile, File coastFile, File coastTest, File coastFileSweden) {
+  private Parser(File pointFile, File roadFile, File postalCodesFile, File... coastFiles) {
     Parser.pointFile = pointFile;
     Parser.roadFile = roadFile;
     Parser.postalCodesFile = postalCodesFile;
-    Parser.coastFile = coastFile;
-    Parser.coastTest = coastTest;
-    Parser.coastFileSweden = coastFileSweden;
+    Parser.coastFiles = coastFiles;
     
     mapBounds = new EnumMap<MapBound, Double>(MapBound.class);
     mapBounds.put(MapBound.MINX, 1000000.0);
@@ -78,15 +75,16 @@ public class Parser {
     mapBounds.put(MapBound.MAXY, 0.0);
   }
 
+  //TODO javadoc
   public static Parser getParser() {
     if (ps == null) {
       File points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       File roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       File zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
-      File coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
-      File coastTest = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm");
+      File coastFileDenmark = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
       File coastFileSweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
-      ps = new Parser(points, roads, zip, coast, coastTest, coastFileSweden);
+      File coastFileGermany = new File("src\\dk\\itu\\grp11\\files\\coastLineGermany.osm");
+      ps = new Parser(points, roads, zip, coastFileDenmark, coastFileSweden, coastFileGermany);
       ps.parsePoints();
       ps.parsePostalCodes();
       ps.parseRoads(ps.points());
@@ -96,21 +94,30 @@ public class Parser {
   }
 
   /**
-   * For test purposes only
+   * (For test purposes only)
+   * A parser with custom file input to be used for testing.
+   * If null is given as any parameter argument, the default file will be parsed.
    * 
-   * @param nodeFile
-   * @param connectionFile
-   * @return
+   * @param points point file
+   * @param roads road file
+   * @param zip postal code file
+   * @param coast coast files
+   * @return a parser instantiated with the files given
    */
-  public static Parser getTestParser(File points, File roads, File zip, File coast, File sweden) {
+  public static Parser getTestParser(File points, File roads, File zip, File... coastFiles) {
     if (ps == null) {
       if(points == null) points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
       if(roads == null) roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
       if(zip == null) zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
-      if(coast == null) coast = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
-      if(sweden == null) sweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
+      if(coastFiles == null) {
+        coastFiles = new File[3];
+        coastFiles[0] = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
+        coastFiles[1] = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
+        coastFiles[2] = new File("src\\dk\\itu\\grp11\\files\\coastLineGermany.osm");
+        //coastFiles[3] = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
+      }
       
-      ps = new Parser(points, roads, zip, coast, coastTest, sweden);
+      ps = new Parser(points, roads, zip, coastFiles);
       ps.parsePoints();
       ps.parsePostalCodes();
       ps.parseRoads(ps.points());
@@ -149,6 +156,7 @@ public class Parser {
     }
   }
   
+  //TODO javadoc
   private void parseCoastline() {
     try {
       System.out.println("- Parsing coastline points and lines");
@@ -158,9 +166,7 @@ public class Parser {
       final Double minX = mapBounds.get(MapBound.MINX);
       final Double minY = mapBounds.get(MapBound.MINY);
       SAXParser saxParser = factory.newSAXParser();
-     
       DefaultHandler handler = new DefaultHandler() {
-        
         boolean inWay = false;
         LinkedList<Integer> currWay;
         
@@ -204,14 +210,10 @@ public class Parser {
             coastline.add(currWay);
           }
         }
-
-        
       };
-      saxParser.parse(coastFile, handler);
-      saxParser.parse(coastFileSweden, handler);
-      
-      
-
+      for(int i = 0; i < coastFiles.length; i++) {
+        saxParser.parse(coastFiles[i], handler);
+      }
     } catch (SAXException|ParserConfigurationException|IOException e) {
       System.out.println("Could not parse Coastline points: "+e);
     }
@@ -259,8 +261,7 @@ public class Parser {
    *          A line from the kdv_unload.txt document.
    * @return A Road object containing the information from the line.
    */
-  //TODO Fix stuff - Anders
-  private static Road createRoad(String input) {
+  private Road createRoad(String input) {
     String[] inputSplit = input.split(",");
     Road r = new Road(
         Integer.parseInt(inputSplit[0]),                                    // 0 = id of from point
@@ -299,7 +300,7 @@ public class Parser {
    *          A line from the kdv_node_unload.txt document.
    * @return A Point object containing the information from the line.
    */
-  private static Point createPoint(String input) {
+  private Point createPoint(String input) {
     String[] inputSplit = input.split(",");
     return new Point(
         Integer.parseInt(inputSplit[2]),    //2 = id of the point
@@ -307,6 +308,7 @@ public class Parser {
         Double.parseDouble(inputSplit[4])); //4 = y coordinate
   }
 
+  //TODO javadoc
   private void parsePostalCodes(){
     System.out.println("- Parsing postal codes");
     postalCodes = new HashMap<Integer, String>();
@@ -332,6 +334,7 @@ public class Parser {
     }
   }
   
+  //TODO javadoc
   private void updateMapBounds(double x, double y) {
     if (x > mapBounds.get(MapBound.MAXX)-mapBoundOffset)
       mapBounds.put(MapBound.MAXX, x+mapBoundOffset);
@@ -343,19 +346,32 @@ public class Parser {
       mapBounds.put(MapBound.MINY, y-mapBoundOffset);
   }
   
-  public SortedMap<String, Road> roadsWithPrefix(String prefix) {
+  /**
+   * Returns a sub map of the given map matching the prefix.
+   * The output will be a in jQuery syntax.
+   * 
+   * @param prefix the prefix
+   * @return the sub map
+   */
+  public String roadsWithPrefix(String prefix) {
     if(prefix.length() > 0) {
         prefix = prefix.toLowerCase(new Locale("ISO8859_1"));
         char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
         String end = prefix.substring(0, prefix.length()-1) + nextLetter;
-        return roadNames.subMap(prefix, end);
+        return mapToJquery(roadNames.subMap(prefix, end));
     }
-    return roadNames;
+    return mapToJquery(roadNames);
   }
   
-  public static String mapToJquery(SortedMap<String, Road> map) {
+  /**
+   * Creates jQuery syntax from a map. The map will have to contain road names and the Road object it self.
+   * 
+   * @param roadNames the map of road names and Road objects
+   * @return the jQuery
+   */
+  private static String mapToJquery(SortedMap<String, Road> roadNames) {
     String jq = "[ ";
-    for(Entry<String, Road> e : map.entrySet()) {
+    for(Entry<String, Road> e : roadNames.entrySet()) {
       Road r = e.getValue();
       String from = ""+r.getFromZip();
       if(postalCodes.get(r.getFromZip()) != null)

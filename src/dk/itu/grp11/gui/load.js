@@ -501,7 +501,7 @@ jQuery(function($){
       url: "getRoute",
       cache: false,
       type: "GET",
-      data: "sessionID="+sessionID+"&from="+encodeURI($('#from').val())+"&to="+encodeURI($('#to').val())+"&type="+$("input:radio[name='type']:checked").val()+"&ferries="+$('#ferries').is(':checked')+"&highways="+$('#highways').is(':checked'),
+      data: "sessionID="+sessionID+"&from="+encodeURI($('#from').val())+"&to="+encodeURI($('#to').val())+"&type="+$("input:radio[name='type']:checked").val()+"&ferry="+$('#ferry').is(':checked')+"&highway="+$('#highway').is(':checked'),
     }).done(function(resp) {
       if ($('#ROUTE').length) $('#ROUTE').remove();
 	    eval(resp);
