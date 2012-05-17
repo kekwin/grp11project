@@ -356,18 +356,20 @@ public class Parser {
   public String roadsWithPrefix(String prefix) {
     if(prefix.length() > 0) {
         prefix = prefix.toLowerCase(new Locale("ISO8859_1"));
-        char nextLetter = (char) (prefix.charAt(prefix.length() - 1) + 1);
-        String end = prefix.substring(0, prefix.length()-1) + nextLetter;
+        char nextChar = (char) (prefix.charAt(prefix.length() - 1) + 1);
+        String end = prefix.substring(0, prefix.length()-1) + nextChar;
         return mapToJquery(roadNames.subMap(prefix, end));
     }
     return mapToJquery(roadNames);
   }
   
   /**
-   * Creates jQuery syntax from a map. The map will have to contain road names and the Road object it self.
+   * Creates jQuery syntax from a map. The map will have to contain road names
+   * and the Road object itself.
    * 
-   * @param roadNames the map of road names and Road objects
-   * @return the jQuery
+   * @param roadNames
+   *          the map of road names and Road objects
+   * @return the jQuery string
    */
   private static String mapToJquery(SortedMap<String, Road> roadNames) {
     String jq = "[ ";

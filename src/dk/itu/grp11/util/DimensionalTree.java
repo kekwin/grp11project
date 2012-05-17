@@ -1,6 +1,7 @@
 package dk.itu.grp11.util;
 
 import java.util.HashSet;
+import java.util.Set;
 
 //TODO javadoc is not finished
 /**
@@ -56,18 +57,19 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
     return h;
   }
    
- /**
-  * Returns an array of elements bounded by the interval
-  * 
-  * @param rect the interval
-  * @return array of elements
-  */
-  public HashSet<Value> query2D(Interval2D<Key, Key2> rect) {
-    HashSet<Value> found = new HashSet<Value>();
+  /**
+   * Returns an array of elements bounded by the interval
+   * 
+   * @param rect
+   *          the interval
+   * @return array of elements
+   */
+  public Set<Value> query2D(Interval2D<Key, Key2> rect) {
+    Set<Value> found = new HashSet<Value>();
     return query2D(root, rect, found);
   }
 
-  private HashSet<Value> query2D(Node h, Interval2D<Key, Key2> rect, HashSet<Value> found) {
+  private Set<Value> query2D(Node h, Interval2D<Key, Key2> rect, Set<Value> found) {
     if (h == null) return null;
     if (rect.getIntervalX().getD3() != rect.getIntervalY().getD3()) throw new IllegalArgumentException();
     Key d1min = rect.getIntervalX().getLow();
@@ -95,25 +97,34 @@ public class DimensionalTree<Key extends Comparable<Key>, Key2 extends Comparabl
   /**
    * Checks if k1 is smaller than k2
    * 
-   * @param k1 The key which should be the smallest
-   * @param k2 The key which should be the biggest
+   * @param k1
+   *          The key which should be the smallest
+   * @param k2
+   *          The key which should be the biggest
    * @return true if k1 is smaller than k2
    */
-  private boolean less(Key k1, Key k2) { return k1.compareTo(k2) <  0; }
-    
+  private boolean less(Key k1, Key k2) {
+    return k1.compareTo(k2) < 0;
+  }
+
   /**
    * Compares two values to find out which is the smallest.
    * 
-   * @param k1 The key which should be the smallest
-   * @param k2 The key which should be the biggest
+   * @param k1
+   *          The key which should be the smallest
+   * @param k2
+   *          The key which should be the biggest
    * @return 0 if equal. -1 if k1 is smaller than k2. 1 if k1 is bigger than k2.
    */
-  private int compare(Key2 k1, Key2 k2) { 
-    if (k1.compareTo(k2) < 0) return -1;
-    else if (k1.compareTo(k2) > 0) return 1;
-    else return 0;
+  private int compare(Key2 k1, Key2 k2) {
+    if (k1.compareTo(k2) < 0)
+      return -1;
+    else if (k1.compareTo(k2) > 0)
+      return 1;
+    else
+      return 0;
   }
-    
+
   /**
    * Number of elements
    * 
