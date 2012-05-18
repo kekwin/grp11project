@@ -58,6 +58,7 @@ public class PathFinder {
 
     for (int p = 0; p < G.numPoints(); p++) {
       primaryWeight[p] = Double.POSITIVE_INFINITY;
+      secondaryWeight[p] = Double.POSITIVE_INFINITY;
     }
     primaryWeight[source] = 0.0;
 
