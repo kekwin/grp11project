@@ -59,8 +59,10 @@ public class Parser {
   //TODO javadoc ikke færdig her
   /**
    * 
-   * @param pointFile A java.File object referencing the file containing nodes.
-   * @param roadFile A java.File object referencing the file containing connections.
+   * @param pointFile the file containing points
+   * @param roadFile the file containing roads
+   * @param postalCodesFile the file containing postal code information
+   * @param coastFiles the file(s) containing coastline data
    */
   private Parser(File pointFile, File roadFile, File postalCodesFile, File... coastFiles) {
     Parser.pointFile = pointFile;
@@ -129,7 +131,7 @@ public class Parser {
 
   /**
    * Parses all points in the network and puts it in a HashMap with point-ID as key,
-   * and the point as value.
+   * and the point as value, as well as establishing the highest and lowest x and y coordinates.
    */
   private void parsePoints() {
     System.out.println("- Parsing points");
@@ -157,6 +159,9 @@ public class Parser {
   }
   
   //TODO javadoc
+  /**
+   * Parses the coastline data using a SaxParserFactory.
+   */
   private void parseCoastline() {
     try {
       System.out.println("- Parsing coastline points and lines");

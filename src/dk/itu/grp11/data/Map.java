@@ -36,6 +36,7 @@ public class Map {
 	* 
 	* @param points All points in the network
 	* @param roads All roads in the network
+	* @param coastline Our coasline data
 	*/
 	private Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, HashSet<LinkedList<Integer>> coastline) {
 	  this.points = points;
@@ -62,7 +63,7 @@ public class Map {
 	* @param w Width of viewbox
 	* @param h Height of viewbox
 	* @param zoomLevel the zoomlevel of this part
-	* @param fs
+	* @param session the session of the user who is requesting a new part.
 	* 
 	* @return String of SVG elements in the specified viewbox (with linebreaks)
 	*/
@@ -116,7 +117,10 @@ public class Map {
 		
 		return outputBuilder.toString();
 	}
-	
+	/**
+	 * 
+	 * @return Javascript commands to draw coastline data.
+	 */
 	public String getCoastLine() {
 	  StringBuffer outputBuilder = new StringBuffer();
 	  outputBuilder.append("var svg = document.getElementById('map');\n");
@@ -145,12 +149,12 @@ public class Map {
 	
 	/**
 	 * 
-	 * @param point1
-	 * @param point2
-	 * @param transportation
-	 * @param fastestroute
-	 * @param ferries
-	 * @param highways
+	 * @param point1 ID of the starting point
+	 * @param point2 ID of the ending point
+	 * @param transportation Transportation type desired
+	 * @param fastestroute whether the route should be the fastest or the shortest, true for fastest, false for shortest.
+	 * @param ferries whether or not the route should include ferries
+	 * @param highways whether or not the route should include highways
 	 * @return JavaScript commands to draw the route (and zoom in to it). If no such route exist an empty string will be returned.
 	 */
 	public String getRoute(int point1, int point2, TransportationType transportation, boolean fastestroute, boolean ferries, boolean highways) {
