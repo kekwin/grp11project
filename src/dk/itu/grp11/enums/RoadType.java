@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
+
 /**
- * Defines different roadtypes, their id, stroke thickness and color of the stroke.
+ * Defines different road types; their id, stroke thickness, color of the
+ * stroke, at what zoom level they should be shown and what types of
+ * transportations are allowed.
  * 
- * Each road type has these things defined for them, and when they need to be drawn these values are used
- * in the SVG to define the lines that represent individual roads.
- *
  */
 public enum RoadType {
   COASTLINE(101, 0.1, new Color(0,0,75), 1),
@@ -19,11 +19,11 @@ public enum RoadType {
   MOTORVEJSTUNNEL(41, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
   FAERGEFORBINDELSE(80, 0.1, new Color(0,0,255), 1, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   
-  MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 2, TransportationType.CAR),
-  PROJ_MOTORTRAFIKVEJ(22, 0.1, new Color(0,255,0), 2, TransportationType.CAR),
-  MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 2, TransportationType.CAR),
-  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 2, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
-  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 2, TransportationType.CAR),
+  MOTORTRAFIKVEJ(2, 0.2, new Color(0,255,0), 1, TransportationType.CAR),
+  PROJ_MOTORTRAFIKVEJ(22, 0.1, new Color(0,255,0), 1, TransportationType.CAR),
+  MOTORTRAFIKVEJSTUNNEL(42, 0.1, new Color(0,255,0), 1, TransportationType.CAR),
+  PRIMAERRUTE_OVER_6M(3, 0.1, new Color(0,0,0), 1, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
+  PROJ_PRIMAERVEJ(23, 0.1, new Color(0,0,0), 1, TransportationType.CAR),
   
   SEKUNDAERRUTE_OVER_6M(4, 0.1, new Color(150,150,150), 4, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK),
   MOTORVEJSAFKOERSEL(31, 0.1, new Color(255,100,100), 4, TransportationType.CAR),
@@ -55,8 +55,6 @@ public enum RoadType {
   
   ROUTE(100, 0.5, new Color(0,0,255), 100000);
   
-  
-  
   private int id;
   private double stroke;
   private Color color;
@@ -70,76 +68,86 @@ public enum RoadType {
       roadTypes.put(rt.getId(), rt);
     }
   }
-  
-  RoadType(int id, double stroke, Color color, int zoomLevel, TransportationType... transportation) {
+
+  private RoadType(int id, double stroke, Color color, int zoomLevel, TransportationType... transportation) {
     this.id = id;
     this.stroke = stroke;
     this.color = color;
     this.zoomLevel = zoomLevel;
-    
-    if(transportation != null) {
+
+    if (transportation != null) {
       this.transportation = new HashSet<>();
-      for(TransportationType tt : transportation)
+      for (TransportationType tt : transportation)
         this.transportation.add(tt);
     }
   }
+
   /**
-   * @return the id of the roadtype
+   * @return the id of the road type
    */
   public int getId() {
     return id;
   }
+
   /**
    * 
-   * @return the stroke width of the roadtype, defined in %.
+   * @return the stroke width of the road type, defined in %.
    */
   public double getStroke() {
     return stroke;
   }
+
   /**
    * 
-   * @return the color of the roadtype, as a Color object.
+   * @return the color of the road type, as a Color object.
    */
   public Color getColor() {
     return color;
   }
+
   /**
    * 
-   * @return the zoomlevel of the roadtype.
+   * @return the zoom level of the road type.
    */
   public int getZoomLevel() {
     return zoomLevel;
   }
+
   /**
    * 
-   * @return The color of the roadtype, as a string.
+   * @return The color of the road type, as a string.
    */
   public String getColorAsString() {
     return color.getRed() + "," + color.getGreen() + "," + color.getBlue();
   }
-/**
- * 
- * @param id the id of the RoadType, we wish to get.
- * @return returns the roadtype from the given id.
- */
+
+  /**
+   * Converts a road id to the corresponding RoadType
+   * 
+   * @param id
+   *          the id of the RoadType, we wish to get.
+   * @return returns the road type from the given id.
+   */
   public static RoadType getById(int id) {
-    if(!roadTypes.containsKey(id))
-      throw new RoadTypeDoesNotExistException(); //If no road with such id exist
+    if (!roadTypes.containsKey(id))
+      throw new RoadTypeDoesNotExistException(); // If no road with such id
+                                                 // exist
     return roadTypes.get(id);
   }
-  
+
   /**
    * Is the transportation type allowed on this road?
    * 
-   * @param tt The type to check if allowed
+   * @param tt
+   *          The type to check if allowed
    * @return true is transportation type is allowed, otherwise false
    */
   public boolean isAllowed(TransportationType tt) {
     return transportation.contains(tt);
   }
-  
+
   @Override
   public String toString() {
-    return RoadType.class + "[id=" + id + " stroke=" + stroke + " color=" + color + "]";
+    return RoadType.class + "[id=" + id + " stroke=" + stroke + " color=" + color + " zoomLevel=" + zoomLevel + "]";
   }
 }

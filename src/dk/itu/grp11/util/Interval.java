@@ -1,7 +1,7 @@
 package dk.itu.grp11.util;
 
 /**
-* Describes a interval
+* Describes an interval
 * 
 * @author Group 11
 *
@@ -11,7 +11,7 @@ public class Interval<T extends Comparable<T>, T2 extends Comparable<T2>> {
   private final T2 d3;
   
   /**
-   * Constructs a interval between low and high
+   * Constructs an interval between low and high
    * 
    * @param low the lower bound
    * @param high the upper bound

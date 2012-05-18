@@ -32,7 +32,7 @@ import dk.itu.grp11.enums.TransportationType;
 public class RequestParser extends Thread {
   
   private Map map;
-  String request;
+  private String request;
   
   private Socket con;
   private BufferedReader in;
@@ -117,17 +117,9 @@ public class RequestParser extends Thread {
     } else if (file.indexOf("getRoute") != -1) {
       Road from = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("from"), "UTF-8").toLowerCase());
       Road to = Parser.getParser().roadNames().get(URLDecoder.decode(params.get("to"), "UTF-8").toLowerCase());
+      boolean ferry = params.get("ferry").equals("true");
+      boolean highway = params.get("highway").equals("true");
       
-      //TODO route debug
-      System.out.println("from: " + from);
-      System.out.println("from(input): " + URLDecoder.decode(params.get("from"), "UTF-8").toLowerCase());
-      System.out.println("to: " + to);
-      System.out.println("to(input): " + URLDecoder.decode(params.get("to"), "UTF-8").toLowerCase());
-      System.out.println("type: " + params.get("type"));
-      System.out.println("ferries: " + params.get("ferries") + "   highways: " + params.get("highways"));
-      
-      boolean ferries = Boolean.getBoolean(params.get("ferries"));
-      boolean highways = Boolean.getBoolean(params.get("highways"));
       TransportationType trans; boolean fastest = false;
       if(params.get("type").equals("walk")) {
         trans = TransportationType.WALK;
@@ -142,12 +134,16 @@ public class RequestParser extends Thread {
       
       String route;
       if(from == null || to == null) route = "alert('Could not calculate route. From- or to-road is not valid.');";
-      else route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), trans, fastest, ferries, highways);
-      
+      else {
+        route = Map.getMap().getRoute(from.getFrom(), to.getFrom(), trans, fastest, ferry, highway);
+        if(route.equals(""))
+          route = "alert('No such route exist. If you have disabled either highways or ferries, try enabling them again.');";
+      }
+
       outStream = new ByteArrayInputStream(route.getBytes("UTF-8"));
     } else if (file.indexOf("autoCompletion") != -1) {
       String term = URLDecoder.decode(params.get("term"), "UTF-8");
-      outStream = new ByteArrayInputStream(Parser.mapToJquery(Parser.getParser().roadsWithPrefix(term)).getBytes("UTF-8")); //term
+      outStream = new ByteArrayInputStream(Parser.getParser().roadsWithPrefix(term).getBytes("UTF-8")); //term
     } else if (file.indexOf("removeRoads") != -1) {
       outStream = new ByteArrayInputStream((FileServer.sessions.get(params.get("sessionID")).removeRoads(params.get("IDs"))).getBytes("UTF-8"));
     } else if (file.indexOf("getCoastLine") != -1) {

@@ -68,22 +68,41 @@ public class PathFinder {
     }
   }
 
-  // TODO javadoc
   /**
-   * Relaxes a graph
+   * Relaxes points in a Network graph. The term relaxation should be seen as a
+   * rubber band stretched between two points. If way of lower weight is found,
+   * a relaxation has happend.
    * 
    * @param G
-   *          The graph
+   *          the graph
    * @param p
-   *          the point
+   *          the source point
    */
   private void relax(Network G, int p) {
-    for (Road r : G.adj(p)) {
+    for (Road r : G.adjacent(p)) {
       // Only relax if the road is allowed to be driven/walked on by the
-      // transportation type
-      if (((r.getDirection() == TrafficDirection.BOTH_WAYS || r.getDirection() == TrafficDirection.FROM_TO) || transType == TransportationType.WALK)
+      // transportation type, in the allowed direction
+      if (((r.getDirection() == TrafficDirection.BOTH_WAYS
+            || r.getDirection() == TrafficDirection.FROM_TO)
+           || transType == TransportationType.WALK)
           && r.getType().isAllowed(transType)) {
-        // TODO calculate for highways and ferries
+
+        // Should ferries be included in the route or not?
+        if (!ferries && r.getType() == RoadType.FAERGEFORBINDELSE) continue;
+
+        // Should highways be included in the route or not?
+        if (!highways
+            && (r.getType() == RoadType.MOTORVEJ
+                || r.getType() == RoadType.MOTORVEJSAFKOERSEL
+                || r.getType() == RoadType.MOTORVEJSTUNNEL)) continue;
+
+        // If not a car, motortrafikveje are not allowed
+        if ((transType == TransportationType.WALK || transType == TransportationType.BICYCLE)
+            && (r.getType() == RoadType.MOTORTRAFIKVEJ
+                || r.getType() == RoadType.MOTORTRAFIKVEJSARKOERSEL
+                || r.getType() == RoadType.MOTORTRAFIKVEJSTUNNEL)) continue;
+
+        // Relax
         int w = r.getTo();
         double weight, sWeight;
         if (time) {
@@ -107,9 +126,7 @@ public class PathFinder {
   }
 
   /**
-   * Returns the distance to a given point. If the time boolean was set to false
-   * in the constructor, the distance will be the shortest possible. Otherwise
-   * it will be the distance of the route of shortest time.
+   * Returns the path of shortest distance to a given point.
    * 
    * @param p
    *          The point
@@ -123,9 +140,7 @@ public class PathFinder {
   }
 
   /**
-   * Returns the shortest time to a given point. If the time boolean was set to
-   * true in the constructor, the time will be the shortest possible. Otherwise
-   * it will be the time of the route of shortest distance.
+   * Returns the path of shortest time to a given point.
    * 
    * @param p
    *          The point
@@ -151,12 +166,12 @@ public class PathFinder {
   }
 
   /**
-   * Returns the route to a point as an Iterable. In order from the given point
-   * to the source point.
+   * Returns the route to a point as an Iterable. From source point to given
+   * point.
    * 
    * @param p
    *          The point
-   * @return The route. Returns null if no such path exist.
+   * @return The route to the point. Returns null if no such path exist.
    */
   public Iterable<Road> pathTo(int p) {
     if (!hasPathTo(p))
@@ -172,6 +187,15 @@ public class PathFinder {
     return path;
   }
 
+  /**
+   * Updates the maximum and minimum x and y coordinates of the points in the
+   * route.
+   * 
+   * @param x
+   *          the x-value
+   * @param y
+   *          the y-value
+   */
   private void updatePathBounds(double x, double y) {
     if (x > bounds.get(MapBound.MAXX))
       bounds.put(MapBound.MAXX, x);
@@ -183,6 +207,14 @@ public class PathFinder {
       bounds.put(MapBound.MINY, y);
   }
 
+  /**
+   * Returns one of the maximum or minimum x or y coordinate of the points in
+   * the route.
+   * 
+   * @param mb
+   *          The bound to get
+   * @return the bound specified by the parameter.
+   */
   public double pathBound(MapBound mb) {
     return bounds.get(mb);
   }

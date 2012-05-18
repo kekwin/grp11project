@@ -20,7 +20,7 @@ public class Road {
   private TrafficDirection direction;
   private double length;
   private double time;
-  private static int nxtID = 0;
+  private static int nextID = 0;
   
   
   /**
@@ -40,7 +40,7 @@ public class Road {
     this.direction = direction;
     this.length = length;
     this.time = time;
-    this.id = ++nxtID;
+    this.id = ++nextID;
   }
 
   /**
