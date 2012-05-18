@@ -106,14 +106,14 @@ public class Parser {
    */
   public static Parser getTestParser(File points, File roads, File zip, File... coastFiles) {
     if (ps == null) {
-      if(points == null) points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
-      if(roads == null) roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
-      if(zip == null) zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
+      if(points == null) points = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+      if(roads == null) roads = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+      if(zip == null) zip = new File("src\\dk\\itu\\grp11\\test\\null.txt");
       if(coastFiles == null) {
         coastFiles = new File[3];
-        coastFiles[0] = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
-        coastFiles[1] = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
-        coastFiles[2] = new File("src\\dk\\itu\\grp11\\files\\coastLineGermany.osm");
+        coastFiles[0] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+        coastFiles[1] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+        coastFiles[2] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
         //coastFiles[3] = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
       }
       
@@ -212,7 +212,11 @@ public class Parser {
         }
       };
       for(int i = 0; i < coastFiles.length; i++) {
-        saxParser.parse(coastFiles[i], handler);
+        try {
+          saxParser.parse(coastFiles[i], handler);
+        } catch (IllegalArgumentException e) {
+          continue;
+        }
       }
     } catch (SAXException|ParserConfigurationException|IOException e) {
       System.out.println("Could not parse Coastline points: "+e);

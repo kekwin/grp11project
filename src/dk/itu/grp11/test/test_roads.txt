@@ -1,2 +1,10 @@
 FNODE# TNODE# LENGTH DAV_DK# DAV_DK-ID TYP VEJNAVN FROMLEFT TOLEFT FROMRIGHT TORIGHT FROMLEFT_BOGSTAV TOLEFT_BOGSTAV FROMRIGHT_BOGSTA TORIGHT_BOGSTAV V_SOGNENR H_SOGNENR V_POSTNR H_POSTNR KOMMUNENR VEJKODE SUBNET RUTENR FRAKOERSEL ZONE SPEED DRIVETIME ONE_WAY F_TURN T_TURN VEJNR AENDR_DATO TJEK_ID
-1,2,,,,1,Niceness street,,,,,,,,,,,,,,,,,,,,23,
+1,2,10,,,3,Niceness street,,,,,,,,,,,0,0,,,,,,,,10,'
+3,7,200,,,3,Longness street,,,,,,,,,,,0,0,,,,,,,,20,'
+2,3,1,,,3,Kewin Christian,,,,,,,,,,,0,0,,,,,,,,100,'
+3,5,28,,,1,Christian Kewin,,,,,,,,,,,0,0,,,,,,,,64,'
+3,6,2,,,80,Jensvej,,,,,,,,,,,0,0,,,,,,,,1,'
+6,5,1337,,,3,Mc. Awesomeway,,,,,,,,,,,0,0,,,,,,,,1337,'
+3,4,23,,,3,Legendary kageroad,,,,,,,,,,,0,0,,,,,,,,67,'
+2,4,21,,,3,Anderswayen,,,,,,,,,,,0,0,,,,,,,,5,'
+5,4,50,,,3,Titanic,,,,,,,,,,,0,0,,,,,,,,130,ft
