@@ -61,6 +61,7 @@ public class PathFinder {
       secondaryWeight[p] = Double.POSITIVE_INFINITY;
     }
     primaryWeight[source] = 0.0;
+    secondaryWeight[source] = 0.0;
 
     pq.insert(source, 0.0);
     while (!pq.isEmpty()) {
