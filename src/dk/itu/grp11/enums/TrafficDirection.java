@@ -33,6 +33,6 @@ public enum TrafficDirection {
    * @return
    */
   public static TrafficDirection getDirectionById(String id) {
-    return options.get(id);
+    return options.get(id.trim());
   }
 }
