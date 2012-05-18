@@ -167,7 +167,6 @@ public class RequestParser extends Thread {
       File f = null;
       if (file.indexOf("head.html") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
       else if (file.indexOf("layout.css") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
-      else if (file.indexOf("js_functions.js") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
       else if (file.indexOf("load.js") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
       else f = new File("src\\dk\\itu\\grp11\\files\\"+file);
       outStream = new FileInputStream(f);
