@@ -106,25 +106,22 @@ public class Parser {
    * @return a parser instantiated with the files given
    */
   public static Parser getTestParser(File points, File roads, File zip, File... coastFiles) {
-    if (ps == null) {
-      if(points == null) points = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      if(roads == null) roads = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      if(zip == null) zip = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      if(coastFiles == null) {
-        coastFiles = new File[3];
-        coastFiles[0] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-        coastFiles[1] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-        coastFiles[2] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-        //coastFiles[3] = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
-      }
-      
-      ps = new Parser(points, roads, zip, coastFiles);
-      ps.parsePoints();
-      ps.parsePostalCodes();
-      ps.parseRoads(ps.points());
-      ps.parseCoastline();
-      
+    if(points == null) points = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+    if(roads == null) roads = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+    if(zip == null) zip = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+    if(coastFiles == null) {
+      coastFiles = new File[3];
+      coastFiles[0] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+      coastFiles[1] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+      coastFiles[2] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+      //coastFiles[3] = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
     }
+    
+    ps = new Parser(points, roads, zip, coastFiles);
+    ps.parsePoints();
+    ps.parsePostalCodes();
+    ps.parseRoads(ps.points());
+    ps.parseCoastline();
     return ps;
   }
 

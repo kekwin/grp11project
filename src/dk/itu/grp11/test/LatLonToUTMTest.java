@@ -11,7 +11,7 @@ import dk.itu.grp11.util.LatLonToUTM;;
 public class LatLonToUTMTest {
  
   @Test
-  public void aqccuracyGammelStrandTest() {
+  public void accuracyGammelStrandTest() {
     // Testing a position (lat/lon): 56.824040  9.003210
     // This is inside the map.
     // Should be around these pixels values:
@@ -22,7 +22,7 @@ public class LatLonToUTMTest {
   }
   
   @Test
-  public void aqccuracyLondonTest() {
+  public void accuracyLondonTest() {
     // Testing a position (lat/lon): 51.488438  -0.020599
     // This is below the map and to the left.
     // lat pixel values should therefore be negative
