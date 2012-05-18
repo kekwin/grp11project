@@ -53,7 +53,7 @@ public class Parser {
   private static SortedMap<String, Road> roadNames;
   private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>(); 
   private static Network graph;
-  private static int pointsOffset = 800000; // Coastline point ID's are added this offset to not interfere with id's from Krak data.
+  private static int pointsOffset = 800000; // Coast line point ID's are added this offset to not interfere with id's from Krak data.
   private static int mapBoundOffset = 50000; // Offset to make sure the map is centered.
 
   //TODO javadoc ikke færdig her
@@ -62,7 +62,7 @@ public class Parser {
    * @param pointFile the file containing points
    * @param roadFile the file containing roads
    * @param postalCodesFile the file containing postal code information
-   * @param coastFiles the file(s) containing coastline data
+   * @param coastFiles the file(s) containing coast line data
    */
   private Parser(File pointFile, File roadFile, File postalCodesFile, File... coastFiles) {
     Parser.pointFile = pointFile;
@@ -106,14 +106,14 @@ public class Parser {
    * @return a parser instantiated with the files given
    */
   public static Parser getTestParser(File points, File roads, File zip, File... coastFiles) {
-    if(points == null) points = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-    if(roads == null) roads = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-    if(zip == null) zip = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+    if(points == null) points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
+    if(roads == null) roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
+    if(zip == null) zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
     if(coastFiles == null) {
       coastFiles = new File[3];
-      coastFiles[0] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      coastFiles[1] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      coastFiles[2] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+      coastFiles[0] = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
+      coastFiles[1] = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
+      coastFiles[2] = new File("src\\dk\\itu\\grp11\\files\\coastLineGermany.osm");
       //coastFiles[3] = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
     }
     
