@@ -87,6 +87,6 @@ public class Network {
   }
 
   public int numRoads() {
-    return numRoads;
+    return numRoads/2;
   }
 }
