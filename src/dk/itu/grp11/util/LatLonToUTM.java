@@ -4,6 +4,13 @@ import java.awt.geom.Point2D;
 
 public class LatLonToUTM {
   //TODO javadoc
+  /**
+  * This class is used to convert Lattitude and Longtitude into UTM, this is due
+  * to the fact that our coastline data is defined with lat/lon, and our application
+  * uses UTM, as that is what was defined the the KRAK dat set.
+  *
+  * @author Group 11
+  */
   //TODO cleanup comments
   // Math for the Formula is found here: http://www.uwgb.edu/dutchs/usefuldata/UTMFormulas.HTM
   // It is very complicated.

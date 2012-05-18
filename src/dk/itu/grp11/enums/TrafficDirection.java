@@ -5,6 +5,7 @@ import java.util.HashMap;
 /**
  * Defines traffic directions of roads.
  *
+ * @author Group 11
  */
 public enum TrafficDirection {
   TO_FROM("tf"), FROM_TO("ft"), BOTH_WAYS(""), DRIVING_NOT_ALLOWED("n");
@@ -30,7 +31,7 @@ public enum TrafficDirection {
    * Converts a direction id to the corresponding TrafficDirection
    * 
    * @param id
-   * @return
+   * @return the TrafficDirection enum that matches the id
    */
   public static TrafficDirection getDirectionById(String id) {
     return options.get(id.trim());

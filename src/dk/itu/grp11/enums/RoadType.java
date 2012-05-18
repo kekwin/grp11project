@@ -11,6 +11,7 @@ import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
  * stroke, at what zoom level they should be shown and what types of
  * transportations are allowed.
  * 
+ * @author Group 11
  */
 public enum RoadType {
   COASTLINE(101, 0.1, new Color(0,0,75), 1),

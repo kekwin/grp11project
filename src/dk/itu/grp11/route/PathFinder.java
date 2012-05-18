@@ -39,6 +39,8 @@ public class PathFinder {
    *          false - upon the shortest distance.
    * @param transType
    *          The type of transportation
+   *        
+   * @author Group 11
    */
   public PathFinder(Network G, int source, boolean time,
       TransportationType transType, boolean ferries, boolean highways) {

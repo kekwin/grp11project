@@ -1,5 +1,10 @@
 package dk.itu.grp11.util;
 
+/**
+ * An indexed PriorityQueue which uses a binary heap.
+ *
+ * @author Alghorithms and Datastructures by Robert Sedgewick and Kevin Wayne
+ */
 /*************************************************************************
  *  Compilation:  javac IndexMinPQ.java
  *  Execution:    java IndexMinPQ

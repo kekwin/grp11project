@@ -73,8 +73,7 @@ public class FileServer {
   /**
    * Writes message to the log.
    * 
-   * @param msg
-   *          The message to display
+   * @param msg The message to display
    */
   public void log(String msg) {
     System.err.println("Req no. " + (++reqCount) + "\t " + new Date() + ": "

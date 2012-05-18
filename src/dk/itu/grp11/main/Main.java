@@ -1,10 +1,12 @@
 package dk.itu.grp11.main;
 
-import java.util.Locale;
-
+/**
+ * Main Class, starts a fileserver and runs it.
+ *
+ * @author Group 11
+ */
 public class Main {
   public static void main(String[] args) {
-    Locale.setDefault(new Locale("da"));
     System.out.println("Program started");
     FileServer fs = FileServer.getFileServer();
     fs.run(); 

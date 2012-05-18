@@ -4,7 +4,13 @@ import java.util.HashSet;
 
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.enums.MapBound;
-
+/**
+ * The Session class is used to give each user connecting to our fileserver a unique ID, so that our
+ * application can hold information about things that are specific for each user, such as 
+ * roads drawn, and the viewbox coordinates.
+ *
+ * @author Group 11
+ */
 //TODO javadoc
 public class Session {
   @SuppressWarnings("unused")

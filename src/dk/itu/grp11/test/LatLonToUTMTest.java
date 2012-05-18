@@ -9,7 +9,7 @@ import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.util.LatLonToUTM;;
 
 public class LatLonToUTMTest {
-
+ 
   @Test
   public void aqccuracyGammelStrandTest() {
     // Testing a position (lat/lon): 56.824040  9.003210

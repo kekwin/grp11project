@@ -53,9 +53,10 @@ public class RequestParser extends Thread {
     this.fileserver = fileserver;
     this.map = map;
   }
-  /** Overrided from Thread, this method is needed for running with multiple threads at the same time. */
+  /** 
+   * Overrided from Thread, this method is needed for running with multiple threads at the same time. 
+   */
   public void run() {
-    //long time = System.nanoTime();
     if (request != null) {
       try {
         parseRequest(request);
@@ -65,7 +66,6 @@ public class RequestParser extends Thread {
         System.err.println(e);
       }
     }
-    //System.out.println("Request took: "+((System.nanoTime()-time)/1000000000.0)+"s");
   }
   /**Takes a String that could look like this: /getMap?x=943702&y=6366840&width=69061&height=35214&zoomlevel=1&=1334088780921
    * Then it splits it so we get the data we actually need
@@ -91,7 +91,8 @@ public class RequestParser extends Thread {
     else processRequest(file, params);
   }
   /** Returns a String containing the values of the XStart YStart, XDiff and YDiff
-   * which is needed when you resize the canvas, when you zoom in on the map */
+   * which is needed when you resize the canvas, when you zoom in on the map 
+   */
   private String getMinMax(String sessionID) {
     return FileServer.sessions.get(sessionID).getXStart() + " " + FileServer.sessions.get(sessionID).getYStart() + " " + FileServer.sessions.get(sessionID).getXDiff() + " " + FileServer.sessions.get(sessionID).getYDiff();
   }
@@ -183,14 +184,21 @@ public class RequestParser extends Thread {
     sendOutput(outStream, out); // send raw output
     fileserver.log("Done processing "+request+" (200 OK)");
   }
-  
+  /**
+   * Generates a unique ID for each computer accessing our fileserver, it is based on the Systems current
+   * time as well as well as the RemoteSocketAdress, which is the users IP amongst other information.
+   * @return the ID generated.
+   */
   private String generateSessionID() {
     String sessionID = ""+System.nanoTime()+con.getRemoteSocketAddress();
     FileServer.sessions.put(sessionID, new Session(sessionID));
     return sessionID;
   }
   
-  /** We make our output into a byte[] for the browser to read */
+  /** 
+   * We make our output into a byte[] for the browser to read
+   *  
+   */
   private void sendOutput(InputStream outStream, OutputStream out) 
       throws IOException {
     byte[] buffer = new byte[1000];

@@ -51,10 +51,10 @@ public class Parser {
   private static DimensionalTree<Double, RoadType, Road> roads;
   private static HashMap<Integer, String> postalCodes;
   private static SortedMap<String, Road> roadNames;
-  private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>(); //TODO Hvorfor LinkedList og ikke vores egen DynArray?
+  private static HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>(); 
   private static Network graph;
-  private static int pointsOffset = 800000; //TODO lidt kommentar her
-  private static int mapBoundOffset = 50000; //TODO lidt kommentar her
+  private static int pointsOffset = 800000; // Coastline point ID's are added this offset to not interfere with id's from Krak data.
+  private static int mapBoundOffset = 50000; // Offset to make sure the map is centered.
 
   //TODO javadoc ikke færdig her
   /**
@@ -77,7 +77,6 @@ public class Parser {
     mapBounds.put(MapBound.MAXY, 0.0);
   }
 
-  //TODO javadoc
   public static Parser getParser() {
     if (ps == null) {
       File points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
@@ -132,6 +131,7 @@ public class Parser {
   /**
    * Parses all points in the network and puts it in a HashMap with point-ID as key,
    * and the point as value, as well as establishing the highest and lowest x and y coordinates.
+   * It is then stored in a HashMap<Integer, Point>
    */
   private void parsePoints() {
     System.out.println("- Parsing points");
@@ -158,7 +158,7 @@ public class Parser {
     }
   }
   
-  //TODO javadoc
+  //TODO javadoc forklares bedre 
   /**
    * Parses the coastline data using a SaxParserFactory.
    */
@@ -317,7 +317,9 @@ public class Parser {
         Double.parseDouble(inputSplit[4])); //4 = y coordinate
   }
 
-  //TODO javadoc
+  /**
+   * Parses the postal codes from the .csv file into a HashMap where the postal code is the Key and the city name is the value.
+   */
   private void parsePostalCodes(){
     System.out.println("- Parsing postal codes");
     postalCodes = new HashMap<Integer, String>();
@@ -343,7 +345,11 @@ public class Parser {
     }
   }
   
-  //TODO javadoc
+  /**
+   * This function is called when our points are being parsed, to establish the minimum and maximum values for x and y.
+   * @param x the x value to check.
+   * @param y the y value to check
+   */
   private void updateMapBounds(double x, double y) {
     if (x > mapBounds.get(MapBound.MAXX)-mapBoundOffset)
       mapBounds.put(MapBound.MAXX, x+mapBoundOffset);
@@ -397,6 +403,10 @@ public class Parser {
     return jq.replaceFirst(",", "") + " ]";
   }
   
+  
+  /*
+   * Below are "getter" functions for all data contained within the parser that the rest of our application uses.
+   */
   public static int getPointsOffset() {
     return pointsOffset;
   }
