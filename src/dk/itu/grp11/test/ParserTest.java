@@ -2,30 +2,15 @@ package dk.itu.grp11.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.junit.Test;
 
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.data.Point;
-import dk.itu.grp11.data.Road;
-import dk.itu.grp11.enums.MapBound;
-import dk.itu.grp11.enums.RoadType;
-import dk.itu.grp11.enums.TrafficDirection;
-import dk.itu.grp11.util.DimensionalTree;
-import dk.itu.grp11.util.Interval;
-import dk.itu.grp11.util.Interval2D;
 
 public class ParserTest {
   //Testing to see whether (some) points get the right id and values assigned or not

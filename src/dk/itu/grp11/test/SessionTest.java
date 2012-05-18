@@ -1,14 +1,9 @@
 package dk.itu.grp11.test;
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import org.junit.Test;
-import dk.itu.grp11.data.Map;
+
 import dk.itu.grp11.data.Parser;
-import dk.itu.grp11.main.FileServer;
-import dk.itu.grp11.main.RequestParser;
 import dk.itu.grp11.main.Session;
 
 public class SessionTest {

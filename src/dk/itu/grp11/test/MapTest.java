@@ -3,20 +3,12 @@ package dk.itu.grp11.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.HashMap;
 
 import org.junit.Test;
 
 import dk.itu.grp11.data.Map;
 import dk.itu.grp11.data.Parser;
-import dk.itu.grp11.data.Point;
-import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
-import dk.itu.grp11.enums.RoadType;
-import dk.itu.grp11.enums.TrafficDirection;
-import dk.itu.grp11.main.FileServer;
-import dk.itu.grp11.main.Session;
-import dk.itu.grp11.util.DimensionalTree;
 
 public class MapTest {
   /*
@@ -43,7 +35,8 @@ public class MapTest {
     //(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"))
     //(new File("test_points.txt"), new File("test_roads.txt"))
     
-    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null);
+    @SuppressWarnings("unused")
+    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null, null);
     
     assertEquals(1, Map.getZoomLevelX(Parser.getParser().mapBound(MapBound.MAXX)-Parser.getParser().mapBound(MapBound.MINX)));
   }
@@ -51,7 +44,8 @@ public class MapTest {
   //Testing getZoomLevelY
   @Test
   public void test2() {
-    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null);
+    @SuppressWarnings("unused")
+    dk.itu.grp11.data.Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null, null);
     
     assertEquals(1, Map.getZoomLevelY(Parser.getParser().mapBound(MapBound.MAXY)-Parser.getParser().mapBound(MapBound.MINY)));
   }
