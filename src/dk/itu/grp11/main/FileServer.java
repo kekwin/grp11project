@@ -9,12 +9,11 @@ import java.util.HashMap;
 import dk.itu.grp11.data.Map;
 
 /**
- * This starts a http server at the specified port. It then
- * listens for requests and answers them by creating a new thread
- * of requestparser.
+ * This starts a http server at the specified port. It then listens for requests
+ * and answers them by creating a new thread of RequestParser.
  * 
  * @author Group 11
- *
+ * 
  */
 public class FileServer {
   private static FileServer fs = null;
@@ -26,11 +25,13 @@ public class FileServer {
   private Map map;
 
   /**
-   * Constructor for fileserver. Resets min/max values and sets
-   * port and map to use
+   * Constructor for FileServer. Resets min/max values and sets port and map to
+   * use
    * 
-   * @param port The port to listen to
-   * @param map The map to get data from
+   * @param port
+   *          The port to listen to
+   * @param map
+   *          The map to get data from
    */
   private FileServer(Map map) {
     this.map = map;
@@ -45,38 +46,39 @@ public class FileServer {
    * Runs the fileserver
    */
   public void run() {
-    ServerSocket ss = null; 
+    ServerSocket ss = null;
     try {
-      ss = new ServerSocket(port); 
+      ss = new ServerSocket(port);
     } catch (IOException e) {
-      System.err.println("Could not start server: "+e);
+      System.err.println("Could not start server: " + e);
       System.exit(-1);
     }
-    System.out.println("FileServer accepting connections on port "+
-                       port);
-            
+    System.out.println("FileServer accepting connections on port " + port);
+
     while (true) {
       try {
-        //Listens for request. It stays on this line until a request is made to the server
+        // Listens for request. It stays on this line until a request is made to
+        // the server
         Socket con = ss.accept();
-        //Create a new thread for parsing the request
+        // Create a new thread for parsing the request
         RequestParser p = new RequestParser(this, map, con);
-        //Start the request
+        // Start the request
         p.start();
-      } catch (IOException e) { 
-        System.err.println(e); 
+      } catch (IOException e) {
+        System.err.println(e);
       }
     }
-    
   }
   
   /**
    * Writes message to the log.
    * 
-   * @param msg The message to display
+   * @param msg
+   *          The message to display
    */
   public void log(String msg) {
-    System.err.println("Req no. "+(++reqCount)+"\t "+new Date()+": "+msg);
+    System.err.println("Req no. " + (++reqCount) + "\t " + new Date() + ": "
+        + msg);
   }
 }
 

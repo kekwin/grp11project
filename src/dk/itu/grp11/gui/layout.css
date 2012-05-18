@@ -29,6 +29,9 @@ abbr { /* Removes underline in Gecko */
   transform: scaleY(-1); /* standard */
   filter: FlipW; /* IE 6/7/8 */
 }
+#map:active {
+  cursor:move;
+}
 img.roadtype {
   height: 40px;
   width: 40px;
@@ -36,6 +39,11 @@ img.roadtype {
 h2 {
   margin: 0;
   padding: 0 0 10px 0;
+}
+h3 {
+  font-size:12px;
+  margin: 0;
+  padding: 0 0 5px 0;
 }
 div.loader {
   height: 50px;
@@ -92,6 +100,14 @@ div.left {
   top: 50%;
   margin-top: -15px;
 }
+div#coastline_options {
+  position: fixed;
+  right: -1;
+  bottom: -1;
+  border: 1px gray solid;
+  background:white;
+  padding:0 5 2 5;
+}
 
 
 /* OVERLAY */
@@ -99,24 +115,19 @@ div.overlay {
   position: relative;
   position: absolute;
   z-index: 1;
-  left: 100px;
-  height: 250px;
+  left: 3%;
   width: 220px;
-  margin-top: 20px;
-  background: rgba(59, 189, 255, 0.1);
+  margin-top: 3%;
+  background: rgba(225, 245, 255, 0.8);
   border: 1px solid rgba(0,0,0,0.5);
-  border-radius: 10px 10px 10px 10px;
+  border-radius: 5 5 5 5;
   padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
-  -o-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
-  -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
-  -moz-box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -o-box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 10px rgba(255,255,255,0.2), inset 0 5px 15px rgba(255,255,255,0.25), inset 0 -5px 15px rgba(0,0,0,0.15);
 }
-div.overlay:hover {
-  border: 1px solid rgba(255, 201, 14, 1);
-  background: rgba(255, 242, 0, 0.1);
-}
-div.overlay ul li {
+div.overlay ul#transtype li {
   list-style: none;
   display: inline-block;
   width: 32%;
@@ -125,11 +136,31 @@ div.overlay ul li {
   text-align: center;
   position: relative;
 }
-div.overlay ul {
+div.overlay ul#transtype {
   width: 100%;
   margin: 0;
   padding: 0;
 }
+
+div.overlay ul#options li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+div.overlay ul#options {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+div#routeinfo {
+  opacity: 0;
+}
+div#routeinfo #time {
+  font-style:italic;
+}
+
 input[type=radio] {
   position: absolute;
   left: 0;
@@ -137,90 +168,91 @@ input[type=radio] {
 }
 input[type=text] {
   width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  border:1px rgba(200, 200, 210, 0.8) solid;
+  margin:1px;
+  padding:2px;
+}
+input[type=text]:hover, input[type=text]:focus {
+  background: rgba(255, 255, 255, 0.8);
+}
+input[type=submit] {
+  margin:5 0 0 0;
+}
+div.zoomcontainer {
+  position: absolute;
+  font-size:17px;
+  font-weight:bold;
+  text-align:center;
+  top: 0;
+  right: -33px;
+  text-shadow: rgba(100, 100, 100, 0.1) 1px 1px 0px;
+}
+div.zoom {
+  width:20px;
+  border-radius: 2 2 2 2;
+  border: 1px solid rgba(255, 127, 0, 0.15);
+  color: rgba(255, 127, 0, 0.3);
+  background:rgba(255, 245, 220, 0.8);
+  cursor:pointer;
+  cursor:hand;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 2px rgba(255,255,255,0.2), inset 0 1px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.15);
+  -o-box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 2px rgba(255,255,255,0.2), inset 0 1px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.15);
+  -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 2px rgba(255,255,255,0.2), inset 0 1px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.15);
+  -moz-box-shadow: 0 2px 3px rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.3), inset 0 2px rgba(255,255,255,0.2), inset 0 1px 3px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.15);
+}
+div.zoom:hover {
+  border: 1px solid rgba(255, 127, 0, 0.2);
+  color: rgba(255, 127, 0, 0.8);
+  background:rgba(255, 230, 200, 0.9);
 }
 div.plus {
-  -moz-transform:rotate(90deg);
-  -webkit-transform:rotate(90deg);
-  -o-transform:rotate(90deg);
-  transform:rotate(90deg);
-  position: absolute;
-  top: 0;
-  right: -30px;
+
 }
 div.minus {
-  -moz-transform:rotate(270deg);
-  -webkit-transform:rotate(270deg);
-  -o-transform:rotate(270deg);
-  transform:rotate(270deg);
-  position: absolute;
-  bottom: 0;
-  right: -31px;
+  margin:5 0 0 0;
 }
-div.arrow > div {
-  -moz-transform:rotate(-90deg);
-  -webkit-transform:rotate(-90deg);
-  -o-transform:rotate(-90deg);
-  transform:rotate(-90deg);
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  left: 0;
-  top: -10px;
-  z-index: 10;
-}
-div.minus > div {
-  top: 10px;
-}
-div.line {
-  height: 250px;
-  border: 1px solid #D3D3D3;
-  width: 0px;
-  position: absolute;
-  top: 19.5px;
-  right: -22px;
-}
-div#routeinfo {
-  color:#003399;
-  opacity: 0;
-}
-div#routeinfo #time {
-  font-style:italic;
-}
+
 
 
 /* AUTOCOMPLETION */
 .ui-autocomplete { position: absolute; cursor: default; }	
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
 .ui-menu {
-	list-style:none;
-	padding: 2px;
-	margin: 0;
-	display:block;
-	float: left;
-	overflow:auto;
-	max-height:300px;
-	border:1px gray solid;
-	background: white;
+  list-style:none;
+  padding: 2px;
+  margin: 0;
+  display:block;
+  float: left;
+  overflow:auto;
+  max-height:300px;
+  border:1px gray solid;
+  background: white;
 }
 .ui-menu .ui-menu-item {
-	margin:0;
-	padding: 0;
-	zoom: 1;
-	float: left;
-	clear: left;
-	width: 100%;
+  margin:0;
+  padding: 0;
+  zoom: 1;
+  float: left;
+  clear: left;
+  width: 100%;
 }
 .ui-menu .ui-menu-item a {
-	text-decoration:none;
-	display:block;
-	padding:.2em .4em;
-	line-height:1.5;
-	zoom:1;
+  text-decoration:none;
+  display:block;
+  padding:.2em .4em;
+  line-height:1.5;
+  zoom:1;
 }
 .ui-menu .ui-menu-item a.ui-state-hover,
 .ui-menu .ui-menu-item a.ui-state-active {
-	font-weight: bold;
-	background: #ebebeb;
-	border:1px lightgray solid;
+  font-weight: bold;
+  background: #ebebeb;
+  border:1px lightgray solid;
 }

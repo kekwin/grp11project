@@ -2,8 +2,8 @@ package dk.itu.grp11.data;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
@@ -82,7 +82,7 @@ public class Map {
   		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(y, y+h, roadType);
   		Interval2D<Double, RoadType> i2D = new Interval2D<Double, RoadType>(i1, i2);
   		
-  		HashSet<Road> roadsFound = roads.query2D(i2D);
+  		Set<Road> roadsFound = roads.query2D(i2D);
   		
   		if (roadsFound.size() > 0) {
   		  outputBuilder.append("var svg = document.getElementById('map');\n");
