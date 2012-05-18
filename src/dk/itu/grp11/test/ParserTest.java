@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -109,19 +110,37 @@ public class ParserTest {
     return count;
   }*/
   
+  /*
+   * Testing the speed of the roadname prefix finder
+   */
   @Test
-  public void prefix() {
-    System.out.println("TEST");
-    for(Entry<String, Road> entry : Parser.getParser().roadsWithPrefix("HÅnd").entrySet()) {
-      System.out.println(entry.getValue().getName());
+  public void prefixSpeedTest() {
+    System.out.println("Prefix time test");
+
+    Set<String> p = new HashSet<String>();
+    for (String s : Parser.getParser().roadNames().keySet()) {
+      p.add(s.substring(0, 2));
     }
-  }
-  
-  @Test
-  public void whyStreetsWithZero() {
-    System.out.println("TEST");
-    for(Entry<String, Road> entry : Parser.getParser().roadsWithPrefix("nansensgade").entrySet()) {
-      System.out.println(entry.getValue());
+
+    long max = 0;
+    long accumulated = 0;
+    int zeroOne = 0;
+    for (String s : p) {
+      long start = System.currentTimeMillis();
+      Parser.getParser().roadsWithPrefix(s);
+      long diff = System.currentTimeMillis() - start;
+
+      // System.out.println(s+": " + diff + "ns");
+      if (diff > max)
+        max = diff;
+      if (diff <= 1)
+        zeroOne++;
+      accumulated += diff;
     }
+    System.out.println("Tests: " + p.size());
+    System.out.println("Zero or one: " + zeroOne);
+    System.out.println("Maximum: " + max + "ns");
+    System.out.println("Accumulated: " + accumulated + "ns");
+    System.out.println("Average: " + accumulated / p.size() + "ns");
   }
 }
