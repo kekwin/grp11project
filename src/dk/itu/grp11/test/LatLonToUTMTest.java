@@ -16,6 +16,7 @@ public class LatLonToUTMTest {
     // This is inside the map.
     // Should be around these pixels values:
     // 500198.71052  6297799.08799
+    // Accepting an accuracy within 5 px
 
     assertEquals(500198.71052, LatLonToUTM.convert(56.824040,9.003210).getX(), 5);
     assertEquals(6297799.08799, LatLonToUTM.convert(56.824040,9.003210).getY(), 5);
