@@ -101,6 +101,7 @@ div.left {
   margin-top: -15px;
 }
 div#coastline_options {
+  font-size:18px;
   position: fixed;
   right: -1;
   bottom: -1;
@@ -179,6 +180,10 @@ input[type=text]:hover, input[type=text]:focus {
 input[type=submit] {
   margin:5 0 0 0;
 }
+
+
+
+/* ZOOM BUTTONS */
 div.zoomcontainer {
   position: absolute;
   font-size:17px;
