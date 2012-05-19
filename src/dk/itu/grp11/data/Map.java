@@ -26,7 +26,7 @@ public class Map {
   
   private static Map map = null;
   
-  private HashMap<Integer, QuadTree<Double, Road>> roads;
+  private HashMap<RoadType, QuadTree<Double, Road>> roads;
   private HashMap<Integer, Point> points;
   private HashSet<LinkedList<Integer>> coastline;
   private int routeOffset = 10000;
@@ -38,7 +38,7 @@ public class Map {
 	* @param roads All roads in the network
 	* @param coastline Our coasline data
 	*/
-	private Map(HashMap<Integer, Point> points, HashMap<Integer, QuadTree<Double, Road>> roads, HashSet<LinkedList<Integer>> coastline) {
+	private Map(HashMap<Integer, Point> points, HashMap<RoadType, QuadTree<Double, Road>> roads, HashSet<LinkedList<Integer>> coastline) {
 	  this.points = points;
 		this.roads = roads;
 		this.coastline = coastline;
@@ -48,7 +48,7 @@ public class Map {
 	  if (map == null) {
       Parser p = Parser.getParser();
 	    HashMap<Integer, Point> points = p.points();
-	    HashMap<Integer, QuadTree<Double, Road>> roads = p.roads();
+	    HashMap<RoadType, QuadTree<Double, Road>> roads = p.roads();
 	    HashSet<LinkedList<Integer>> coastline = p.coastline();
 	    map = new Map(points, roads, coastline);
 	  }
@@ -84,7 +84,7 @@ public class Map {
   		Interval2D<Double> i2D = new Interval2D<Double>(i1, i2);
   		
   		try {
-  		  Set<Road> roadsFound = roads.get(roadType.getId()).query2D(i2D);
+  		  Set<Road> roadsFound = roads.get(roadType).query2D(i2D);
     		if (roadsFound.size() > 0) {
           StringBuffer id = new StringBuffer();
           StringBuffer path = new StringBuffer();

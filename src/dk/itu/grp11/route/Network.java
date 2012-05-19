@@ -67,7 +67,7 @@ public class Network {
         r.getFromZip(), r.getToZip(), r.getType(), d, r.getLength(),
         r.getTime());
     adj[opposite.getFrom()].add(opposite);
-    numRoads += 2; // +2 as the opposite road is also added
+    numRoads++; // Actually there are added 2 edges. But only 1 real-word road.
   }
 
   /**
@@ -87,6 +87,6 @@ public class Network {
   }
 
   public int numRoads() {
-    return numRoads/2;
+    return numRoads;
   }
 }

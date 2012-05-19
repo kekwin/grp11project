@@ -61,7 +61,7 @@ public class ParserTest {
       Interval1D<Double> intervalX = new Interval1D<Double>(ps.mapBound(MapBound.MINX), ps.mapBound(MapBound.MAXX));
       Interval1D<Double> intervalY = new Interval1D<Double>(ps.mapBound(MapBound.MINY), ps.mapBound(MapBound.MAXY));
       Interval2D<Double> rect = new Interval2D<Double>(intervalX, intervalY);
-      Set<Road> roadsInViewbox = ps.roads().get(rt.getId()).query2D(rect);
+      Set<Road> roadsInViewbox = ps.roads().get(rt).query2D(rect);
       roadCount += roadsInViewbox.size();
     }
     
