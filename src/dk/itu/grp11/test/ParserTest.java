@@ -73,10 +73,6 @@ public class ParserTest {
   
   //Counts number of roads directly from file
   public int countRoads(Set<RoadType> roadTypes) throws IOException {
-    // Reading all points
-    HashMap<Integer, Point> points = ps.points();
-    
-    // Counting roads
     File f = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
     BufferedReader input = new BufferedReader(new FileReader(f));
     String line = input.readLine(); line = input.readLine();
@@ -84,10 +80,6 @@ public class ParserTest {
     while(line != null) {
       String[] r = line.split(",");
       if(roadTypes.contains(RoadType.getById(Integer.parseInt(r[5])))) count++;
-      // Subtracting roads where x and y coordinates are equal
-      if(roadTypes.contains(RoadType.getById(Integer.parseInt(r[5]))) &&
-         points.get(Integer.parseInt(r[0])).getX() == points.get(Integer.parseInt(r[1])).getX() &&
-         points.get(Integer.parseInt(r[0])).getY() == points.get(Integer.parseInt(r[1])).getY()) count--;
       line = input.readLine();
     }
     return count;
