@@ -59,15 +59,8 @@ jQuery(function($){
         path.setAttributeNS(null, 'd', 'M'+split[0]+','+split[1]+'L'+(parseInt(split[0])+parseInt(split[2]))+','+split[1]+'L'+(parseInt(split[0])+parseInt(split[2]))+','+(parseInt(split[1])+parseInt(split[3]))+'L'+split[0]+','+(parseInt(split[1])+parseInt(split[3]))+'Z');
         group.appendChild(path);
         setViewBox(resp);
-        $.ajax({
-          url: "setCanvas",
-          cache: false,
-          type: "GET",
-          data: "sessionID="+sessionID+"&x="+xStart+"&y="+yStart+"&width="+xDiff+"&height="+yDiff,
-        }).done(function() {
-          refreshSVG();
-          setFullVariables();
-        });
+        refreshSVG();
+        setFullVariables();
       });
     });
   }
