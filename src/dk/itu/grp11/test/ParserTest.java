@@ -17,13 +17,10 @@ import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
-import dk.itu.grp11.util.Interval;
+import dk.itu.grp11.util.Interval1D;
 import dk.itu.grp11.util.Interval2D;
 
 public class ParserTest {
-  
-  //Needs the default files for this test
-  Parser ps = Parser.getTestParser(null, null, null);
   
   //Testing to see whether (some) points get the right id and values assigned or not
   @Test
@@ -36,14 +33,16 @@ public class ParserTest {
     assertEquals(6402050.98297, points.get(1).getY(), 0);
     
     //The last point
-    assertEquals(675902, points.get(points.size()).getID());
+    //TODO REWRITE: The use of a hashmap renders this code wrong in some cases. You are not guaranteed that there will be anything at that place.
+    /*assertEquals(675902, points.get(points.size()).getID());
     assertEquals(692067.66450, points.get(points.size()).getX(), 0);
-    assertEquals(6049914.43018, points.get(points.size()).getY(), 0);
+    assertEquals(6049914.43018, points.get(points.size()).getY(), 0);*/
   }
 
   //Testing if all roads, with zoom level 1, are included at zoom level 1
   @Test
   public void allRoadsTest() throws IOException {
+    Parser ps = Parser.getParser();
     // Road types to count
     Set<RoadType> roadTypes = new HashSet<>();
     roadTypes.add(RoadType.MOTORVEJ);
@@ -59,10 +58,10 @@ public class ParserTest {
     
     // Count number of roads for every road type
     for(RoadType rt : roadTypes) {
-      Interval<Double, RoadType> intervalX = new Interval<Double, RoadType>(Parser.getParser().mapBound(MapBound.MINX), Parser.getParser().mapBound(MapBound.MAXX), rt);
-      Interval<Double, RoadType> intervalY = new Interval<Double, RoadType>(Parser.getParser().mapBound(MapBound.MINY), Parser.getParser().mapBound(MapBound.MAXY), rt);
-      Interval2D<Double, RoadType> rect = new Interval2D<Double, RoadType>(intervalX, intervalY);
-      Set<Road> roadsInViewbox = ps.roads().query2D(rect);
+      Interval1D<Double> intervalX = new Interval1D<Double>(ps.mapBound(MapBound.MINX), ps.mapBound(MapBound.MAXX));
+      Interval1D<Double> intervalY = new Interval1D<Double>(ps.mapBound(MapBound.MINY), ps.mapBound(MapBound.MAXY));
+      Interval2D<Double> rect = new Interval2D<Double>(intervalX, intervalY);
+      Set<Road> roadsInViewbox = ps.roads().get(rt.getId()).query2D(rect);
       roadCount += roadsInViewbox.size();
     }
     
@@ -89,6 +88,7 @@ public class ParserTest {
    */
   @Test
   public void prefixSpeedTest() {
+    Parser ps = Parser.getParser();
     System.out.println("Prefix time test");
 
     Set<String> p = new HashSet<String>();

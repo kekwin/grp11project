@@ -11,10 +11,10 @@ import dk.itu.grp11.enums.TransportationType;
 import dk.itu.grp11.main.Session;
 import dk.itu.grp11.route.Network;
 import dk.itu.grp11.route.PathFinder;
-import dk.itu.grp11.util.DimensionalTree;
 import dk.itu.grp11.util.DynArray;
-import dk.itu.grp11.util.Interval;
+import dk.itu.grp11.util.Interval1D;
 import dk.itu.grp11.util.Interval2D;
+import dk.itu.grp11.util.QuadTree;
 
 /**
  * Represents a map with roads
@@ -26,7 +26,7 @@ public class Map {
   
   private static Map map = null;
   
-  private DimensionalTree<Double, RoadType, Road> roads;
+  private HashMap<Integer, QuadTree<Double, Road>> roads;
   private HashMap<Integer, Point> points;
   private HashSet<LinkedList<Integer>> coastline;
   private int routeOffset = 10000;
@@ -38,7 +38,7 @@ public class Map {
 	* @param roads All roads in the network
 	* @param coastline Our coasline data
 	*/
-	private Map(HashMap<Integer, Point> points, DimensionalTree<Double, RoadType, Road> roads, HashSet<LinkedList<Integer>> coastline) {
+	private Map(HashMap<Integer, Point> points, HashMap<Integer, QuadTree<Double, Road>> roads, HashSet<LinkedList<Integer>> coastline) {
 	  this.points = points;
 		this.roads = roads;
 		this.coastline = coastline;
@@ -48,7 +48,7 @@ public class Map {
 	  if (map == null) {
       Parser p = Parser.getParser();
 	    HashMap<Integer, Point> points = p.points();
-	    DimensionalTree<Double, RoadType, Road> roads = p.roads();
+	    HashMap<Integer, QuadTree<Double, Road>> roads = p.roads();
 	    HashSet<LinkedList<Integer>> coastline = p.coastline();
 	    map = new Map(points, roads, coastline);
 	  }
@@ -79,40 +79,43 @@ public class Map {
 		
 	  // Adding all calculated road types within the viewbox
 		for (RoadType roadType : roadTypes) {
-  		Interval<Double, RoadType> i1 = new Interval<Double, RoadType>(x, x+w, roadType);
-  		Interval<Double, RoadType> i2 = new Interval<Double, RoadType>(y, y+h, roadType);
-  		Interval2D<Double, RoadType> i2D = new Interval2D<Double, RoadType>(i1, i2);
+  		Interval1D<Double> i1 = new Interval1D<Double>(x, x+w);
+  		Interval1D<Double> i2 = new Interval1D<Double>(y, y+h);
+  		Interval2D<Double> i2D = new Interval2D<Double>(i1, i2);
   		
-  		Set<Road> roadsFound = roads.query2D(i2D);
-  		
-  		if (roadsFound.size() > 0) {
-  		  outputBuilder.append("var svg = document.getElementById('map');\n");
-        StringBuffer id = new StringBuffer();
-        StringBuffer path = new StringBuffer();
-  	    for (Road roadFound : roadsFound) {
-	        if (roadFound != null) {
-	          if (session != null) {
-	            synchronized(session) {
-	              if (!session.isRoadDrawn(roadFound.getId())) {
-	                id.append(roadFound.getId()+",");
-	                session.addRoadID(roadFound.getId());
-	                path.append("M"+points.get(roadFound.getFrom()).getX()+","+points.get(roadFound.getFrom()).getY()+"L"+points.get(roadFound.getTo()).getX()+","+points.get(roadFound.getTo()).getY()+"");
-	              }
-	            }
-	          }
-	        }
-	      }
-  	    if (id.length() > 0) {
-  	      outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
-	        outputBuilder.append("path.setAttributeNS(null, 'fill-opacity', '0');\n");
-	        outputBuilder.append("path.setAttributeNS(null, 'stroke', 'rgb("+roadType.getColorAsString()+")');\n");
-	        outputBuilder.append("path.setAttributeNS(null, 'stroke-width', '"+roadType.getStroke()+"%');\n");
-    	    outputBuilder.append("path.setAttributeNS(null, 'd', '"+path.toString()+"');");
-    	    outputBuilder.append("path.setAttributeNS(null, 'id', '"+id.toString()+"');");
-    	    outputBuilder.append("path.setAttributeNS(null, 'class', 'zoom"+roadType.getZoomLevel()+"');");
-    	    outputBuilder.append("svg.appendChild(path);");
-  	    }
-  		}
+  		try {
+  		  Set<Road> roadsFound = roads.get(roadType.getId()).query2D(i2D);
+    		if (roadsFound.size() > 0) {
+          StringBuffer id = new StringBuffer();
+          StringBuffer path = new StringBuffer();
+    	    for (Road roadFound : roadsFound) {
+  	        if (roadFound != null) {
+  	          if (session != null) {
+  	            synchronized(session) {
+  	              if (!session.isRoadDrawn(roadFound.getId())) {
+  	                id.append(roadFound.getId()+",");
+  	                session.addRoadID(roadFound.getId());
+  	                path.append("M"+points.get(roadFound.getFrom()).getX()+","+points.get(roadFound.getFrom()).getY()+"L"+points.get(roadFound.getTo()).getX()+","+points.get(roadFound.getTo()).getY()+"");
+  	              }
+  	            }
+  	          }
+  	        }
+  	      }
+    	    if (id.length() > 0) {
+    	      outputBuilder.append("var svg = document.getElementById('map');\n");
+    	      outputBuilder.append("var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');\n");
+  	        outputBuilder.append("path.setAttributeNS(null, 'fill-opacity', '0');\n");
+  	        outputBuilder.append("path.setAttributeNS(null, 'stroke', 'rgb("+roadType.getColorAsString()+")');\n");
+  	        outputBuilder.append("path.setAttributeNS(null, 'stroke-width', '"+roadType.getStroke()+"%');\n");
+      	    outputBuilder.append("path.setAttributeNS(null, 'd', '"+path.toString()+"');\n");
+      	    outputBuilder.append("path.setAttributeNS(null, 'id', '"+id.toString()+"');\n");
+      	    outputBuilder.append("path.setAttributeNS(null, 'class', 'zoom"+roadType.getZoomLevel()+"');\n");
+      	    outputBuilder.append("svg.appendChild(path);\n");
+    	    }
+    		}
+  		} catch (NullPointerException e) { //Some roadtypes does not have an associated QuadTree, and a NullPointerException will be thrown
+        continue;
+      }
 		}
 		
 		return outputBuilder.toString();
@@ -224,7 +227,6 @@ public class Map {
       dataString = null;
       outputBuilder.append("svg.appendChild(path);");
       outputBuilder.append("zoomSVGCoords("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", 2000, true);");
-      //outputBuilder.append("svg.rect("+(pf.pathBound(MapBound.MINX)-routeOffset)+", "+(pf.pathBound(MapBound.MINY)-routeOffset)+", "+((pf.pathBound(MapBound.MAXX)-pf.pathBound(MapBound.MINX))+routeOffset*2)+", "+((pf.pathBound(MapBound.MAXY)-pf.pathBound(MapBound.MINY))+routeOffset*2)+", {stroke: 'rgb(0,0,0)', strokeWidth: '0.2%', fill: 'none'});");
       return outputBuilder.toString();
     }
     else return "";

@@ -11,5 +11,5 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ LatLonToUTMTest.class, MapTest.class, NetworkTest.class, ParserTest.class, PathFinderTest.class,
 PointTest.class, RoadTest.class, SessionTest.class, TrafficDirectionTest.class })
 public class AllTests {
-
+  
 }

@@ -1,8 +1,10 @@
 package dk.itu.grp11.enums;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import dk.itu.grp11.exceptions.RoadTypeDoesNotExistException;
 
@@ -52,7 +54,7 @@ public enum RoadType {
   UKENDT1(95, 0.1, new Color(0,0,0), 32, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
   UKENDT2(0, 0.1, new Color(0,0,0), 32, TransportationType.CAR, TransportationType.BICYCLE, TransportationType.WALK), //Unknown roadtype, not described by krak
   
-  STEDNAVN(99, 0.3, new Color(255,255,0), 10000),
+  STEDNAVN(99, 0.3, new Color(255,255,0), 100000),
   
   ROUTE(100, 0.5, new Color(0,0,255), 100000);
   
@@ -62,12 +64,16 @@ public enum RoadType {
   private int zoomLevel;
   private HashSet<TransportationType> transportation;
   
-  private static java.util.Map<Integer, RoadType> roadTypes = new HashMap<>();
+  private static Map<Integer, RoadType> roadTypes = new HashMap<>();
   
   static {
     for(RoadType rt : RoadType.values()) {
       roadTypes.put(rt.getId(), rt);
     }
+  }
+  
+  public static Collection<RoadType> getRoadTypes() {
+    return roadTypes.values();
   }
 
   private RoadType(int id, double stroke, Color color, int zoomLevel, TransportationType... transportation) {
