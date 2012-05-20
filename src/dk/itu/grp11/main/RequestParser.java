@@ -38,9 +38,8 @@ public class RequestParser extends Thread {
   private BufferedReader in;
   private OutputStream out;
   private PrintStream pout;
-  private FileServer fileserver;
   
-  public RequestParser(FileServer fileserver, Map map, Socket con) throws IOException {
+  public RequestParser(Map map, Socket con) throws IOException {
     this.con = con;
     
     in = new BufferedReader
@@ -50,7 +49,6 @@ public class RequestParser extends Thread {
     out = new BufferedOutputStream(con.getOutputStream());
     pout = new PrintStream(out);
     
-    this.fileserver = fileserver;
     this.map = map;
   }
   /** 
@@ -182,7 +180,7 @@ public class RequestParser extends Thread {
     pout.print(": "+new Date()+"\r\n"+
                "Server: IXWT FileServer 1.0\r\n\r\n");
     sendOutput(outStream, out); // send raw output
-    fileserver.log("Done processing "+request+" (200 OK)");
+    FileServer.log("Done processing "+request+" (200 OK)");
   }
   /**
    * Generates a unique ID for each computer accessing our fileserver, it is based on the Systems current
