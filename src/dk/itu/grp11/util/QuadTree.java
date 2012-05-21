@@ -14,6 +14,7 @@ import java.util.Set;
 public class QuadTree<Key extends Comparable<Key>, Value>  {
     private Node root;
     private int size = 0;
+    private int maxDepth = 0;
 
     // helper node data type
     private class Node {
@@ -33,17 +34,22 @@ public class QuadTree<Key extends Comparable<Key>, Value>  {
     *  Insert (x, y) into appropriate quadrant
     ***********************************************************************/
     public void insert(Key x, Key y, Value value) {
-        root = insert(root, x, y, value);
+      int depth = 0;
+        root = insert(root, x, y, value, depth);
         size++;
     }
 
-    private Node insert(Node h, Key x, Key y, Value value) {
-        if (h == null) return new Node(x, y, value);
+    private Node insert(Node h, Key x, Key y, Value value, int depth) {
+        depth++;
+        if (h == null) {
+          if (depth > maxDepth) maxDepth = depth;
+          return new Node(x, y, value);
+        }
         //// if (eq(x, h.x) && eq(y, h.y)) h.value = value;  // duplicate
-        else if ( less(x, h.x) &&  less(y, h.y)) h.SW = insert(h.SW, x, y, value);
-        else if ( less(x, h.x) && !less(y, h.y)) h.NW = insert(h.NW, x, y, value);
-        else if (!less(x, h.x) &&  less(y, h.y)) h.SE = insert(h.SE, x, y, value);
-        else if (!less(x, h.x) && !less(y, h.y)) h.NE = insert(h.NE, x, y, value);
+        else if ( less(x, h.x) &&  less(y, h.y)) h.SW = insert(h.SW, x, y, value, depth);
+        else if ( less(x, h.x) && !less(y, h.y)) h.NW = insert(h.NW, x, y, value, depth);
+        else if (!less(x, h.x) &&  less(y, h.y)) h.SE = insert(h.SE, x, y, value, depth);
+        else if (!less(x, h.x) && !less(y, h.y)) h.NE = insert(h.NE, x, y, value, depth);
         return h;
     }
 
@@ -84,4 +90,5 @@ public class QuadTree<Key extends Comparable<Key>, Value>  {
     *************************************************************************/
     
     public int size() { return size; }
+    public int depth() { return maxDepth; }
 }
