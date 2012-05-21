@@ -27,10 +27,10 @@ public class NetworkTest {
       adjacent.add(road.getFrom()+"-"+road.getTo());
     }
     assertEquals(5, adjacent.size());
-    assert(adjacent.contains("3-2"));
-    assert(adjacent.contains("3-4"));
-    assert(adjacent.contains("3-5"));
-    assert(adjacent.contains("3-6"));
-    assert(adjacent.contains("3-7"));
+    assertEquals(true, adjacent.contains("3-2"));
+    assertEquals(true, adjacent.contains("3-4"));
+    assertEquals(true, adjacent.contains("3-5"));
+    assertEquals(true, adjacent.contains("3-6"));
+    assertEquals(true, adjacent.contains("3-7"));
   }
 }

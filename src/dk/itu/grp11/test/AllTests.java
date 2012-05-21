@@ -9,7 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
 */
 @RunWith(Suite.class)
 @SuiteClasses({ LatLonToUTMTest.class, MapTest.class, NetworkTest.class, ParserTest.class, PathFinderTest.class,
-PointTest.class, RoadTest.class, SessionTest.class, TrafficDirectionTest.class })
+PointTest.class, RoadTest.class, SessionTest.class, TrafficDirectionTest.class, QuadTreeTest.class })
 public class AllTests {
   
 }

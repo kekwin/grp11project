@@ -1,5 +1,7 @@
 package dk.itu.grp11.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
@@ -21,6 +23,7 @@ public class QuadTreeTest {
       double best = Math.ceil(Math.log(roadType.size())/Math.log(4));
       DecimalFormat d = new DecimalFormat("#.##");
       System.out.println("Factor compared to balanced tree: "+d.format(depth/best)+"x for tree with "+roadType.size()+" elements");
+      assertEquals(true, (depth/best)<20);
     }
   }
 

@@ -53,7 +53,7 @@ public class Parser {
   private SortedMap<String, Road> roadNames;
   private HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>(); 
   private Network graph;
-  private static int pointsOffset = 800000; // Coast line point ID's are added this offset to not interfere with id's from Krak data.
+  private static int pointsOffset = 900000; // Coast line point ID's are added this offset to not interfere with id's from Krak data.
   private int mapBoundOffset = 50000; // Offset to make sure the map is centered.
 
   //TODO javadoc ikke færdig her
