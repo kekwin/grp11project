@@ -61,7 +61,7 @@ public class FileServer {
         // the server
         Socket con = ss.accept();
         // Create a new thread for parsing the request
-        RequestParser p = new RequestParser(this, map, con);
+        RequestParser p = new RequestParser(map, con);
         // Start the request
         p.start();
       } catch (IOException e) {
@@ -75,7 +75,7 @@ public class FileServer {
    * 
    * @param msg The message to display
    */
-  public void log(String msg) {
+  public static void log(String msg) {
     System.err.println("Req no. " + (++reqCount) + "\t " + new Date() + ": "
         + msg);
   }

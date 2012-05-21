@@ -48,7 +48,7 @@ public class Parser {
   
   private EnumMap<MapBound, Double> mapBounds;
   private HashMap<Integer, Point> points;
-  private HashMap<Integer, QuadTree<Double, Road>> roads = new HashMap<Integer, QuadTree<Double, Road>>();
+  private HashMap<RoadType, QuadTree<Double, Road>> roads = new HashMap<RoadType, QuadTree<Double, Road>>();
   private HashMap<Integer, String> postalCodes;
   private SortedMap<String, Road> roadNames;
   private HashSet<LinkedList<Integer>> coastline = new HashSet<LinkedList<Integer>>(); 
@@ -247,9 +247,9 @@ public class Parser {
         Double yS = points.get(r.getFrom()).getY();
         Double xE = points.get(r.getTo()).getX();
         Double yE = points.get(r.getTo()).getY();
-        if (!roads.containsKey(r.getType().getId())) roads.put(r.getType().getId(), new QuadTree<Double, Road>());
-        roads.get(r.getType().getId()).insert(xS, yS, r);
-        roads.get(r.getType().getId()).insert(xE, yE, r);
+        if (!roads.containsKey(r.getType())) roads.put(r.getType(), new QuadTree<Double, Road>());
+        roads.get(r.getType()).insert(xS, yS, r);
+        roads.get(r.getType()).insert(xE, yE, r);
         roadsForGraph.add(r);
       }
       System.out.println("- Creating network graph");
@@ -412,7 +412,7 @@ public class Parser {
     return points;
   }
   
-  public HashMap<Integer, QuadTree<Double, Road>> roads() {
+  public HashMap<RoadType, QuadTree<Double, Road>> roads() {
     return roads;
   }
   

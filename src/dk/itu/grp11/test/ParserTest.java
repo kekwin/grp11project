@@ -33,10 +33,9 @@ public class ParserTest {
     assertEquals(6402050.98297, points.get(1).getY(), 0);
     
     //The last point
-    //TODO REWRITE: The use of a hashmap renders this code wrong in some cases. You are not guaranteed that there will be anything at that place.
-    /*assertEquals(675902, points.get(points.size()).getID());
-    assertEquals(692067.66450, points.get(points.size()).getX(), 0);
-    assertEquals(6049914.43018, points.get(points.size()).getY(), 0);*/
+    assertEquals(675902, points.get(675902).getID());
+    assertEquals(692067.66450, points.get(675902).getX(), 0);
+    assertEquals(6049914.43018, points.get(675902).getY(), 0);
   }
 
   //Testing if all roads, with zoom level 1, are included at zoom level 1
@@ -61,7 +60,7 @@ public class ParserTest {
       Interval1D<Double> intervalX = new Interval1D<Double>(ps.mapBound(MapBound.MINX), ps.mapBound(MapBound.MAXX));
       Interval1D<Double> intervalY = new Interval1D<Double>(ps.mapBound(MapBound.MINY), ps.mapBound(MapBound.MAXY));
       Interval2D<Double> rect = new Interval2D<Double>(intervalX, intervalY);
-      Set<Road> roadsInViewbox = ps.roads().get(rt.getId()).query2D(rect);
+      Set<Road> roadsInViewbox = ps.roads().get(rt).query2D(rect);
       roadCount += roadsInViewbox.size();
     }
     
@@ -86,6 +85,7 @@ public class ParserTest {
   /*
    * Testing the speed of the roadname prefix finder
    */
+  //TODO Well, her er ikke noget assertion - det er blot tidstagning. Vi kunne sige at det max måtte tage x tid, men det giver vel næppe mening? Det ville i øvrigt konstant faile på langsomme computere tænker jeg.
   @Test
   public void prefixSpeedTest() {
     Parser ps = Parser.getParser();

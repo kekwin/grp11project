@@ -106,8 +106,10 @@ public class PathFinder {
                 || r.getType() == RoadType.MOTORTRAFIKVEJSARKOERSEL
                 || r.getType() == RoadType.MOTORTRAFIKVEJSTUNNEL)) continue;
 
-        // Relax
-        int w = r.getTo();
+        // -------------------------- 
+        // Relaxation
+        // --------------------------
+        int w = r.getTo(); // The vertex to go to
         double weight, sWeight;
         if (time) {
           weight = r.getTime();
@@ -116,11 +118,12 @@ public class PathFinder {
           weight = r.getLength();
           sWeight = r.getTime();
         }
-        if (primaryWeight[w] > primaryWeight[p] + weight) {
-          primaryWeight[w] = primaryWeight[p] + weight;
-          secondaryWeight[w] = secondaryWeight[p] + sWeight;
-          roadTo[w] = r;
-          if (pq.contains(w))
+        // Only if the new path is of lower weight than the previous lowest
+        if (primaryWeight[w] > primaryWeight[p] + weight) { 
+          primaryWeight[w] = primaryWeight[p] + weight; // New primary weight
+          secondaryWeight[w] = secondaryWeight[p] + sWeight; // New secondary weight
+          roadTo[w] = r; // The now lowest-weight edge to get to vertex w
+          if (pq.contains(w)) //Update PQ with the new weight to w
             pq.change(w, primaryWeight[w]);
           else
             pq.insert(w, primaryWeight[w]);
@@ -130,7 +133,7 @@ public class PathFinder {
   }
 
   /**
-   * Returns the path of shortest distance to a given point.
+   * Returns the distance of the shortest path to a given point.
    * 
    * @param p
    *          The point
@@ -144,7 +147,7 @@ public class PathFinder {
   }
 
   /**
-   * Returns the path of shortest time to a given point.
+   * Returns the time of the shortest path to a given point.
    * 
    * @param p
    *          The point
@@ -183,6 +186,7 @@ public class PathFinder {
     Queue<Road> path = new LinkedList<Road>();
     for (Road r = roadTo[p]; r != null; r = roadTo[r.getFrom()]) {
       path.add(r);
+      // Updates the paths bounds
       Point p1 = Parser.getParser().points().get(r.getFrom());
       Point p2 = Parser.getParser().points().get(r.getTo());
       updatePathBounds(p1.getX(), p1.getY());
