@@ -3,6 +3,11 @@ package dk.itu.grp11.util;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A Quad-Tree class.
+ *
+ * @author Alghorithms, 4th edt. by Robert Sedgewick and Kevin Wayne
+ */
 /*************************************************************************
  *  Compilation:  javac QuadTree.java
  *  Execution:    java QuadTree M N
