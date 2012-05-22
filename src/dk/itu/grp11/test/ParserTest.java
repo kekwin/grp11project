@@ -85,7 +85,6 @@ public class ParserTest {
   /*
    * Testing the speed of the roadname prefix finder
    */
-  //TODO Well, her er ikke noget assertion - det er blot tidstagning. Vi kunne sige at det max måtte tage x tid, men det giver vel næppe mening? Det ville i øvrigt konstant faile på langsomme computere tænker jeg.
   @Test
   public void prefixSpeedTest() {
     Parser ps = Parser.getParser();
