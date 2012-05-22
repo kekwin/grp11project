@@ -177,25 +177,25 @@ public class Parser {
         LinkedList<Integer> currWay;
         
         public void startElement(String uri, String localName,String qName, Attributes attributes) throws SAXException {
-          if (qName.equalsIgnoreCase("NODE")) {
+          if (qName.equalsIgnoreCase("NODE")) { //Element node
             int id = -1;
             double lat = -1, lon = -1;
-            for (int i=0; i<attributes.getLength(); i++) {
+            for (int i=0; i<attributes.getLength(); i++) { //Runs through all attributes of the element
               if (attributes.getQName(i).equalsIgnoreCase("LAT")) lat = Double.parseDouble(attributes.getValue(i));
               if (attributes.getQName(i).equalsIgnoreCase("LON")) lon = Double.parseDouble(attributes.getValue(i));
               if (attributes.getQName(i).equalsIgnoreCase("ID")) id = Integer.parseInt(attributes.getValue(i));
             }
             if (id > 0 && lat > 0 && lon > 0) {
 	            Point2D coords = LatLonToUTM.convert(lat, lon);
-            	if (coords.getX() < maxX && coords.getX() > minX && coords.getY() < maxY && coords.getY() > minY) {
+            	if (coords.getX() < maxX && coords.getX() > minX && coords.getY() < maxY && coords.getY() > minY) { //Is the point in our map
             	  Point p = new Point(id, coords.getX(), coords.getY());
   	              points.put(p.getID()+pointsOffset, p);
             	}
             }
-          } else if (qName.equalsIgnoreCase("WAY")) {
+          } else if (qName.equalsIgnoreCase("WAY")) { //Element way
             inWay = true;
             currWay = new LinkedList<Integer>();
-          } else if (qName.equalsIgnoreCase("ND") && inWay) {
+          } else if (qName.equalsIgnoreCase("ND") && inWay) { //Element nd, but only if we are in a way element.
             int currID = -1;
             for (int i=0; i<attributes.getLength(); i++) {
               if (attributes.getQName(i).equalsIgnoreCase("REF")) {
@@ -211,7 +211,7 @@ public class Parser {
         }
         
         public void endElement(String uri, String localName, String qName) throws SAXException {
-          if (qName.equalsIgnoreCase("WAY")) {
+          if (qName.equalsIgnoreCase("WAY")) { //Now we are not in way element anymore
             inWay = false;
             coastline.add(currWay);
           }
@@ -221,7 +221,7 @@ public class Parser {
         try {
           saxParser.parse(coastFiles[i], handler);
         } catch (IllegalArgumentException e) {
-          continue;
+          continue; //If file does not contain start XML tag, ignore it.
         }
       }
     } catch (SAXException|ParserConfigurationException|IOException e) {
