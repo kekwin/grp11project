@@ -111,7 +111,7 @@ public class Parser {
   public static Parser getTestParser(InputStream points, InputStream roads, InputStream zip, InputStream... coastFiles) {
     if(points == null) points = ResourceGetter.class.getResourceAsStream("null.txt");
     if(roads == null) roads = ResourceGetter.class.getResourceAsStream("null.txt");
-    if(zip == null) zip = ResourceGetter.class.getResourceAsStream("null.txt");
+    if(zip == null) zip = ResourceGetter.class.getResourceAsStream("postNR.csv");
     if(coastFiles == null) {
       coastFiles = new InputStream[3];
       coastFiles[0] = ResourceGetter.class.getResourceAsStream("null.txt");
