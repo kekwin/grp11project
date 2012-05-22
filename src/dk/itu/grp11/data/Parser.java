@@ -2,10 +2,8 @@ package dk.itu.grp11.data;
 
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -27,6 +25,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
 import dk.itu.grp11.enums.TrafficDirection;
+import dk.itu.grp11.files.ResourceGetter;
 import dk.itu.grp11.route.Network;
 import dk.itu.grp11.util.LatLonToUTM;
 import dk.itu.grp11.util.QuadTree;
@@ -41,10 +40,10 @@ import dk.itu.grp11.util.QuadTree;
 public class Parser {
   private static Parser ps = null;
   
-  private static File pointFile;
-  private static File roadFile;
-  private static File postalCodesFile;
-  private static File coastFiles[];
+  private static InputStream pointFile;
+  private static InputStream roadFile;
+  private static InputStream postalCodesFile;
+  private static InputStream coastFiles[];
   
   private EnumMap<MapBound, Double> mapBounds;
   private HashMap<Integer, Point> points;
@@ -64,7 +63,7 @@ public class Parser {
    * @param postalCodesFile the file containing postal code information
    * @param coastFiles the file(s) containing coast line data
    */
-  private Parser(File pointFile, File roadFile, File postalCodesFile, File... coastFiles) {
+  private Parser(InputStream pointFile, InputStream roadFile, InputStream postalCodesFile, InputStream... coastFiles) {
     Parser.pointFile = pointFile;
     Parser.roadFile = roadFile;
     Parser.postalCodesFile = postalCodesFile;
@@ -79,12 +78,12 @@ public class Parser {
 
   public static Parser getParser() {
     if (ps == null) {
-      File points = new File("src\\dk\\itu\\grp11\\files\\kdv_node_unload.txt");
-      File roads = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
-      File zip = new File("src\\dk\\itu\\grp11\\files\\postNR.csv");
-      File coastFileDenmark = new File("src\\dk\\itu\\grp11\\files\\coastLine.osm");
-      File coastFileSweden = new File("src\\dk\\itu\\grp11\\files\\coastLineSweden.osm");
-      File coastFileGermany = new File("src\\dk\\itu\\grp11\\files\\coastLineGermany.osm");
+      InputStream points = ResourceGetter.class.getResourceAsStream("kdv_node_unload.txt");
+      InputStream roads = ResourceGetter.class.getResourceAsStream("kdv_unload.txt");
+      InputStream zip = ResourceGetter.class.getResourceAsStream("postNR.csv");
+      InputStream coastFileDenmark = ResourceGetter.class.getResourceAsStream("coastLine.osm");
+      InputStream coastFileSweden = ResourceGetter.class.getResourceAsStream("coastLineSweden.osm");
+      InputStream coastFileGermany = ResourceGetter.class.getResourceAsStream("coastLineGermany.osm");
       ps = new Parser(points, roads, zip, coastFileDenmark, coastFileSweden, coastFileGermany);
       ps.parsePoints();
       ps.parsePostalCodes();
@@ -105,16 +104,16 @@ public class Parser {
    * @param coast coast files
    * @return a parser instantiated with the files given
    */
-  public static Parser getTestParser(File points, File roads, File zip, File... coastFiles) {
-    if(points == null) points = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-    if(roads == null) roads = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-    if(zip == null) zip = new File("src\\dk\\itu\\grp11\\test\\null.txt");
+  public static Parser getTestParser(InputStream points, InputStream roads, InputStream zip, InputStream... coastFiles) {
+    if(points == null) points = ResourceGetter.class.getResourceAsStream("null.txt");
+    if(roads == null) roads = ResourceGetter.class.getResourceAsStream("null.txt");
+    if(zip == null) zip = ResourceGetter.class.getResourceAsStream("null.txt");
     if(coastFiles == null) {
-      coastFiles = new File[3];
-      coastFiles[0] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      coastFiles[1] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      coastFiles[2] = new File("src\\dk\\itu\\grp11\\test\\null.txt");
-      //coastFiles[3] = new File("src\\dk\\itu\\grp11\\files\\coastTest.osm"); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
+      coastFiles = new InputStream[3];
+      coastFiles[0] = ResourceGetter.class.getResourceAsStream("null.txt");
+      coastFiles[1] = ResourceGetter.class.getResourceAsStream("null.txt");
+      coastFiles[2] = ResourceGetter.class.getResourceAsStream("null.txt");
+      //coastFiles[3] = new File(ResourceGetter.class.getResource("coastTest.osm").getFile()); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
     }
     
     Parser ps_tmp = new Parser(points, roads, zip, coastFiles);
@@ -133,7 +132,7 @@ public class Parser {
   private void parsePoints() {
     System.out.println("- Parsing points");
     points = new HashMap<Integer, Point>();
-    try(BufferedReader input = new BufferedReader(new FileReader(pointFile))) {  
+    try(BufferedReader input = new BufferedReader(new InputStreamReader(pointFile))) {  
       String line = null;
       /*
        * readLine is a bit quirky : it returns the content of a line MINUS the
@@ -233,7 +232,7 @@ public class Parser {
     System.out.println("- Parsing roads");
     HashSet<Road> roadsForGraph = new HashSet<>(); //Temporary set for building the Graph
     roadNames = new TreeMap<>();
-    try(BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(roadFile), "ISO8859_1"))) {
+    try(BufferedReader input = new BufferedReader(new InputStreamReader(roadFile, "ISO8859_1"))) {
       String line = null;
       /*
        * readLine is a bit quirky : it returns the content of a line MINUS the
@@ -321,7 +320,7 @@ public class Parser {
     System.out.println("- Parsing postal codes");
     postalCodes = new HashMap<Integer, String>();
     
-    try(BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(postalCodesFile), "ISO8859_1"))) {  
+    try(BufferedReader input = new BufferedReader(new InputStreamReader(postalCodesFile, "ISO8859_1"))) {  
       String line = null;
       /*
        * readLine is a bit quirky : it returns the content of a line MINUS the

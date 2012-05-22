@@ -241,14 +241,10 @@ public class Map {
 	 * @return zoom level as int. 1 if w = (total map width). 2 if w = (total map width)/2.
 	 *         w if w = (total map width)/(total map width).
 	 */
-	private static int zoomLevelX(double w) {
+	public static int getZoomLevelX(double w) {
 	  int zoomlevel = (int)((Math.ceil(Parser.getParser().mapBound(MapBound.MAXX))-Math.floor(Parser.getParser().mapBound(MapBound.MINX)))/w);
 	  return (zoomlevel < 1 ? 1 : zoomlevel);
 	}
-	
-  public static int getZoomLevelX(double w) {
-    return zoomLevelX(w);
-  }
 	
 	 /**
    * Calculates a zoomlevel based on the viewbox height
@@ -259,12 +255,8 @@ public class Map {
    * @return zoom level as int. 1 if h = (total map height). 2 if h = (total map height)/2.
    *         h if h = (total map height)/(total map height).
    */
-	private static int zoomLevelY(double h) {
+	public static int getZoomLevelY(double h) {
     int zoomlevel = (int)((Math.ceil(Parser.getParser().mapBound(MapBound.MAXY))-Math.floor(Parser.getParser().mapBound(MapBound.MINY)))/h);
     return (zoomlevel < 1 ? 1 : zoomlevel);
-  }
-	
-  public static int getZoomLevelY(double h) {
-    return zoomLevelY(h);
   }
 }

@@ -2,7 +2,6 @@ package dk.itu.grp11.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.HashSet;
 
 import org.junit.Test;
@@ -15,7 +14,7 @@ public class NetworkTest {
   private Network g;
   
   public NetworkTest() {
-    Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null, null);
+    Parser p = Parser.getTestParser(getClass().getResourceAsStream("test_points.txt"), getClass().getResourceAsStream("test_roads.txt"), null, null, null);
     g = p.network();
   }
   @Test
