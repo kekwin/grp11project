@@ -55,8 +55,12 @@ public class Parser {
   private static int pointsOffset = 900000; // Coast line point ID's are added this offset to not interfere with id's from Krak data.
   private int mapBoundOffset = 50000; // Offset to make sure the map is centered.
 
-  //TODO javadoc ikke færdig her
   /**
+   * The parser class is responsible for parsing all our data. While parsing points it 
+   * keeps track of the minimum and maximum coordinates for drawing our viewbox.
+   * It parses points, roads, coastline and postalcodes for use in map.
+   * 
+   * The class is a singleton, as only one instance should ever be created of it.
    * 
    * @param pointFile the file containing points
    * @param roadFile the file containing roads
@@ -113,7 +117,7 @@ public class Parser {
       coastFiles[0] = ResourceGetter.class.getResourceAsStream("null.txt");
       coastFiles[1] = ResourceGetter.class.getResourceAsStream("null.txt");
       coastFiles[2] = ResourceGetter.class.getResourceAsStream("null.txt");
-      //coastFiles[3] = new File(ResourceGetter.class.getResource("coastTest.osm").getFile()); //TODO Hvad bruges den til? Der opstår fejl hvis den parses med. Hvis den slettes - slet da også filen.
+      //coastFiles[3] = new File(ResourceGetter.class.getResource("coastTest.osm").getFile()); //Test file, not needed
     }
     
     Parser ps_tmp = new Parser(points, roads, zip, coastFiles);
@@ -154,9 +158,10 @@ public class Parser {
     }
   }
   
-  //TODO javadoc forklares bedre 
   /**
-   * Parses the coastline data using a SaxParserFactory.
+   * Parses the coastline data using a SaxParser. This parser runs through all elements and
+   * calls the methods startElement and endElement for start and end elements respectively. The entire handler
+   * is stored in a variable called handler, that is passed to the SaxParsers parse method
    */
   private void parseCoastline() {
     try {
