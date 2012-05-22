@@ -3,9 +3,9 @@ package dk.itu.grp11.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +17,7 @@ import dk.itu.grp11.data.Point;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.MapBound;
 import dk.itu.grp11.enums.RoadType;
+import dk.itu.grp11.files.ResourceGetter;
 import dk.itu.grp11.util.Interval1D;
 import dk.itu.grp11.util.Interval2D;
 
@@ -70,8 +71,8 @@ public class ParserTest {
   
   //Counts number of roads directly from file
   public int countRoads(Set<RoadType> roadTypes) throws IOException {
-    File f = new File("src\\dk\\itu\\grp11\\files\\kdv_unload.txt");
-    BufferedReader input = new BufferedReader(new FileReader(f));
+    InputStream f = ResourceGetter.class.getResourceAsStream("kdv_unload.txt");
+    BufferedReader input = new BufferedReader(new InputStreamReader(f));
     String line = input.readLine(); line = input.readLine();
     int count = 0;
     while(line != null) {

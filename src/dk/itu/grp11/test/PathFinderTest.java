@@ -1,8 +1,6 @@
 package dk.itu.grp11.test;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -14,7 +12,7 @@ import dk.itu.grp11.route.PathFinder;
 public class PathFinderTest {
   private Network g;
   public PathFinderTest() {
-    Parser p = Parser.getTestParser(new File("src\\dk\\itu\\grp11\\test\\test_points.txt"), new File("src\\dk\\itu\\grp11\\test\\test_roads.txt"), null, null, null);
+    Parser p = Parser.getTestParser(getClass().getResourceAsStream("test_points.txt"), getClass().getResourceAsStream("test_roads.txt"), null, null, null);
     g = p.network();
   }
   

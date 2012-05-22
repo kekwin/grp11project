@@ -3,8 +3,6 @@ package dk.itu.grp11.main;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,6 +17,8 @@ import dk.itu.grp11.data.Map;
 import dk.itu.grp11.data.Parser;
 import dk.itu.grp11.data.Road;
 import dk.itu.grp11.enums.TransportationType;
+import dk.itu.grp11.files.ResourceGetter;
+import dk.itu.grp11.gui.GUIResourceGetter;
 /**
  * 
  * @author Group 11
@@ -163,12 +163,12 @@ public class RequestParser extends Thread {
       }
       outStream = new ByteArrayInputStream(("Success").getBytes("UTF-8"));
     } else {
-      File f = null;
-      if (file.indexOf("head.html") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
-      else if (file.indexOf("layout.css") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
-      else if (file.indexOf("load.js") != -1) f = new File("src\\dk\\itu\\grp11\\gui\\"+file);
-      else f = new File("src\\dk\\itu\\grp11\\files\\"+file);
-      outStream = new FileInputStream(f);
+      InputStream f = null;
+      if (file.indexOf("head.html") != -1) f = GUIResourceGetter.class.getResourceAsStream(file);
+      else if (file.indexOf("layout.css") != -1) f = GUIResourceGetter.class.getResourceAsStream(file);
+      else if (file.indexOf("load.js") != -1) f = GUIResourceGetter.class.getResourceAsStream(file);
+      else f = ResourceGetter.class.getResourceAsStream(file);
+      outStream = f;
       if (file.indexOf(".js") != -1) contenttype = "text/javascript";
       else if (file.indexOf(".html") != -1) contenttype = "text/html";
       else if (file.indexOf(".css") != -1) contenttype = "text/css";
