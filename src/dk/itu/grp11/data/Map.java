@@ -139,7 +139,7 @@ public class Map {
 	    StringBuffer data = new StringBuffer();
 	    if (outline.size() > 0) {
     	  for (Integer point : outline) {
-  	  	    data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
+  	  	  data.append(command+""+points.get(point+Parser.getPointsOffset()).getX()+","+points.get(point+Parser.getPointsOffset()).getY()+"");
     	    command = "L";
     	  }
     	  //data.append("Z");
@@ -205,7 +205,7 @@ public class Map {
       double[] currX = new double[2], currY = new double[2];
       StringBuffer dataString = new StringBuffer();
       for (Road road : roads) { 
-        if (lastX == points.get(road.getFrom()).getX() && lastY == points.get(road.getFrom()).getY()) {
+        if (lastX == points.get(road.getFrom()).getX() && lastY == points.get(road.getFrom()).getY()) { //To be able to draw one continous line we have to make sure the coordinates match or flip the line
           currX[0] = points.get(road.getFrom()).getX();
           currX[1] = points.get(road.getTo()).getX();
           currY[0] = points.get(road.getFrom()).getY();

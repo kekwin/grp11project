@@ -14,7 +14,7 @@ public class LatLonToUTM {
   //TODO cleanup comments
   // Math for the Formula is found here: http://www.uwgb.edu/dutchs/usefuldata/UTMFormulas.HTM
   // It is very complicated.
-  // Here its made into java code, and seems to work, but i have trouble with my eclipse and will have to test it later
+  // Here its made into java code, and seems to work
   public static Point2D convert(double lat, double lon) {
     double a = 6378137; 
     double b = 6356752.314; 

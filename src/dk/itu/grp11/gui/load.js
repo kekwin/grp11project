@@ -75,7 +75,7 @@ jQuery(function($){
   }
   function setViewBox(resp) {
     var split = resp.split(" ");
-    if (wider == true && wider != null) {
+    if (wider == true && wider != null) { //Reset values by undoing calculations
       xDiff = Math.floor(parseInt(split[3])/ratio);
       xStart = Math.ceil(parseInt(split[0])+((parseInt(split[2])-xDiff)/2));
       yDiff = parseInt(split[3]);
@@ -91,7 +91,7 @@ jQuery(function($){
       xDiff = parseInt(split[2]);
       yDiff = parseInt(split[3]);
     }
-    if ($(window).height() < $(window).width()) {
+    if ($(window).height() < $(window).width()) { //Calculate w/h
       ratio = $(window).width()/$(window).height();
       xDiff2 = Math.ceil(yDiff*ratio);
       yDiff2 = yDiff;
